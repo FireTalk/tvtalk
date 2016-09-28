@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/main_row_relativelayout"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingTop="12dp"
+    android:paddingBottom="12dp"
+    android:background="@drawable/underline_bar"
+    >
+    <ImageView
+        android:id="@+id/broadcast_image"
+        android:layout_width="match_parent"
+        android:layout_height="214dp"
+        android:layout_marginBottom="10dp"
+        />
+    <TextView
+        android:id="@+id/broadcast_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="temp"
+        android:layout_below="@id/broadcast_image"
+        android:layout_marginBottom="6dp"
+        android:layout_marginLeft="12dp"
+        android:textColor="#252525"
+        />
+    <ImageView
+        android:id="@+id/isbookmark"
+        android:layout_width="23dp"
+        android:layout_height="22dp"
+        android:padding="5dp"
+        android:src="@drawable/bookmark_false"
+        android:layout_alignRight="@id/broadcast_image"
+        android:layout_below="@id/broadcast_image"
+        android:layout_marginRight="9dp"
+        />
+    <ImageView
+        android:id="@+id/broadcast_kind_of"
+        android:layout_width="34dp"
+        android:layout_height="14dp"
+        android:src="@drawable/sbs"
+        android:layout_below="@id/broadcast_name"
+        android:layout_marginLeft="10dp"
+        />
+    <TextView
+        android:id="@+id/broadcast_description"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="temp"
+        android:layout_toRightOf="@id/broadcast_kind_of"
+        android:layout_below="@id/broadcast_name"
+        android:textSize="12dp"
+        android:layout_marginLeft="4dp"
+        android:textColor="#777777"
+        />
+
+</RelativeLayout>

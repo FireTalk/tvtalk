@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/main_drama_list_row"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginLeft="13dp"
+    android:layout_marginRight="13dp"
+    android:background="@drawable/underline_bar"
+    android:paddingBottom="13dp"
+    >
+    <ImageView
+        android:id="@+id/mdl_drama_image"
+        android:layout_width="match_parent"
+        android:layout_height="130dp"
+        android:src="@drawable/mdl_test_img"
+        android:layout_marginTop="13dp"
+        android:scaleType="fitXY"
+        android:layout_marginBottom="9dp"
+        />
+    <TextView
+        android:id="@+id/drama_count_infomation"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="13sp"
+        android:text="13화"
+        android:layout_below="@id/mdl_drama_image"
+
+        />
+    <TextView
+        android:id="@+id/drama_broadcast_day"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/mdl_drama_image"
+        android:text="2016.08.31"
+        android:layout_toRightOf="@id/drama_count_infomation"
+        android:layout_marginLeft="4dp"
+        android:textSize="13dp"
+        />
+    <TextView
+        android:id="@+id/infomation_enter_chatting_room"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="13dp"
+        android:text="10분후 반영"
+        android:layout_alignParentRight="true"
+        android:layout_below="@id/mdl_drama_image"
+        android:textColor="#ff0453"
+        />
+    <ImageView
+        android:id="@+id/icon_enter_chatting_room"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/mdl_drama_image"
+        android:layout_toLeftOf="@id/infomation_enter_chatting_room"
+        android:src="@drawable/icon_clock"
+        android:layout_marginRight="2dp"
+        android:layout_marginTop="2dp"
+        />
+
+
+</RelativeLayout>

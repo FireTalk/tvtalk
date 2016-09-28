@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "276781873007",
+    "firebase_url": "https://tvtalk-c4d50.firebaseio.com",
+    "project_id": "tvtalk-c4d50",
+    "storage_bucket": "tvtalk-c4d50.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:276781873007:android:3a50b3ac2de5f62f",
+        "android_client_info": {
+          "package_name": "kr.co.tvtalk"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "276781873007-ihpjac9ro48faf0vk25plodf4v8mp2b2.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "kr.co.tvtalk",
+            "certificate_hash": "88FD6A5F479C524E60543AA1637B626976D5B468"
+          }
+        },
+        {
+          "client_id": "276781873007-j2eb3rrnsk8jt52ku7gmsbvg3dr8kggp.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCCN4drjfNPuelk9SVDxwOkYHg745n4wfA"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "276781873007-j2eb3rrnsk8jt52ku7gmsbvg3dr8kggp.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

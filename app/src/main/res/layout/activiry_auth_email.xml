@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    >
+    <RelativeLayout
+        android:id="@+id/auth_email_action_bar"
+        android:layout_width="match_parent"
+        android:layout_height="46dp"
+        android:background="@drawable/underline_bar"
+        >
+    <ImageView
+        android:id="@+id/email_back_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/back_btn"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="15dp"
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp"
+        android:paddingRight="10dp"
+        />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="이메일 인증"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:textSize="17sp"
+            />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center_vertical"
+
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true">
+
+        <EditText
+            android:id="@+id/auth_email"
+            android:backgroundTint="#252525"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="textEmailAddress"
+            android:layout_marginRight="48dp"
+            android:layout_marginLeft="48dp"
+            android:paddingBottom="20dp"
+            android:hint="hottalk@hotmail.com"
+            android:textSize="14sp"
+            android:paddingLeft="60dp"
+            />
+        <TextView
+            android:id="@+id/auth_email_description"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="이메일"
+            android:textSize="14sp"
+            android:layout_alignLeft="@id/auth_email"
+            android:layout_alignBaseline="@id/auth_email"
+            android:layout_marginLeft="2dp"
+            />
+
+
+
+
+        <EditText
+            android:id="@+id/auth_nickname"
+            android:backgroundTint="#252525"
+            android:layout_below="@id/auth_email"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="48dp"
+            android:layout_marginLeft="48dp"
+            android:paddingBottom="20dp"
+            android:hint="닉네임을 정해주세요(특수문자 제외 2~12자리)"
+            android:textSize="14sp"
+            android:paddingLeft="60dp"
+            android:layout_marginTop="14dp"
+            />
+
+        <TextView
+            android:id="@+id/auth_nickname_description"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="닉네임"
+            android:textSize="14sp"
+            android:layout_alignLeft="@id/auth_nickname"
+            android:layout_alignBaseline="@id/auth_nickname"
+            android:layout_marginLeft="2dp"
+            />
+
+        <EditText
+            android:id="@+id/auth_password"
+            android:backgroundTint="#252525"
+            android:layout_below="@id/auth_nickname"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="48dp"
+            android:layout_marginLeft="48dp"
+            android:paddingBottom="20dp"
+            android:hint="영문, 숫자 혼용 6~12 자리"
+            android:textSize="14sp"
+            android:paddingLeft="60dp"
+            android:layout_marginTop="14dp"
+            />
+        <TextView
+            android:id="@+id/auth_password_description1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="비밀번호"
+            android:textSize="14sp"
+            android:layout_alignLeft="@id/auth_password"
+            android:layout_alignBaseline="@id/auth_password"
+            android:layout_marginLeft="2dp"
+            />
+
+        <EditText
+            android:id="@+id/auth_password_confirm"
+            android:backgroundTint="#252525"
+            android:layout_below="@id/auth_password"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="48dp"
+            android:layout_marginLeft="48dp"
+            android:paddingBottom="20dp"
+            android:hint="다시 한번 입력해주세요."
+            android:textSize="14sp"
+            android:paddingLeft="60dp"
+            android:layout_marginTop="14dp"
+            />
+        <TextView
+            android:id="@+id/auth_password_confirm_description1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="번호확인"
+            android:textSize="14sp"
+            android:layout_alignLeft="@id/auth_password_confirm"
+            android:layout_alignBaseline="@id/auth_password_confirm"
+            android:layout_marginLeft="2dp"
+            />
+
+        <Button
+            android:id="@+id/confirm_request"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="가입하기"
+            android:textColor="#252525"
+            android:background="@drawable/register_request_btn"
+            android:onClick="confirm_request"
+            android:layout_marginRight="48dp"
+            android:layout_marginLeft="48dp"
+            android:layout_marginTop="40dp"
+            android:layout_below="@id/auth_password_confirm"
+            />
+    </RelativeLayout>
+
+
+</RelativeLayout>
