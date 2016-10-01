@@ -18,31 +18,27 @@ import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import kr.co.tvtalk.model.MemberDTO;
 
 
 public class EmailAuthActivity extends AppCompatActivity {
 
-    private FirebaseAuth auth;
-    private FirebaseDatabase db;
-    private DatabaseReference Ref;
-    private FirebaseUser user;
-    private FirebaseAuth.AuthStateListener authStateListener;
+        private FirebaseAuth auth;
+        private FirebaseDatabase db;
+        private DatabaseReference Ref;
+        private FirebaseUser user;
+        private FirebaseAuth.AuthStateListener authStateListener;
 
-    private EditText email;
-    private EditText nickname;
-    private EditText pw1;
-    private EditText pw2;
-    private Button btn;
+        private EditText email;
+        private EditText nickname;
+        private EditText pw1;
+        private EditText pw2;
+        private Button btn;
 
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
+        @Override
+        protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activiry_auth_email);
         ButterKnife.bind(this);
@@ -97,7 +93,6 @@ public class EmailAuthActivity extends AppCompatActivity {
                                     @Override
                                     public void onComplete(@NonNull Task<Void> task1) {
                                         if(task1.isSuccessful()){
-//                                            MemberDTO mem = new MemberDTO(user.getEmail(), user.getDisplayName(), user.getPhotoUrl().toString(), false);
                                             Ref.child(user.getUid()+"/email").setValue(e);
                                             Ref.child(user.getUid()+"/nickname").setValue(n);
                                             Ref.child(user.getUid()+"/profile").setValue(user.getPhotoUrl());

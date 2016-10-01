@@ -1,23 +1,45 @@
 package kr.co.tvtalk.model;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
- * Created by 병윤 on 2016-09-26.
+ * Created by 병윤 on 2016-09-29.
  */
 
 public class MemberDTO {
-    public String email;
-    public String nickname;
-    public String profile;
-    public boolean facebook;
+    String nickname;
+    String profile;
+    String email;
+    boolean facebook;
 
     public MemberDTO(){
 
     }
 
-    public MemberDTO(String email, String nickname, String profile, boolean facebook) {
-        this.email = email;
+    public MemberDTO(String nickname, String profile, String email, boolean facebook) {
         this.nickname = nickname;
         this.profile = profile;
+        this.email = email;
         this.facebook = facebook;
+
     }
+
+    public Map<String, Boolean> member = new HashMap<>();
+
+    public Map<String, Object> toMap(){
+
+        HashMap<String, Object> result = new HashMap<>();
+        result.put("email", email);
+        result.put("profile", profile);
+        result.put("nickname", nickname);
+        result.put("facebook", facebook);
+
+        return result;
+    }
+
+
+
+
+
 }

@@ -33,11 +33,15 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import kr.co.tvtalk.activitySupport.FontFactory;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import kr.co.tvtalk.model.MemberDTO;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -65,6 +69,7 @@ public class LoginActivity extends AppCompatActivity {
         registerBtn.setVisibility(View.GONE);
         registerLinear.setVisibility(View.VISIBLE);
     }
+
     @Bind(R.id.login_logo)
     ImageView loginLogo;
 
@@ -159,10 +164,14 @@ public class LoginActivity extends AppCompatActivity {
                 if( user != null){
                     Uri photo = user.getPhotoUrl();
 
-                    Ref.child(user.getUid()+"/nickname").setValue(user.getDisplayName());
-                    Ref.child(user.getUid()+"/profile").setValue(photo.toString());
-                    Ref.child(user.getUid()+"/facebook").setValue(true);
-                    Ref.child(user.getUid()+"/email").setValue(user.getEmail());
+//                    MemberDTO memberDTO = new memberDTO(user.getDisplayName(),  user.getPhotoUrl(), user.getEmail(), true );
+//                    Map<String, Object> postValues = memberDTO.toMap();
+
+                    Map<String, Object> memberdb = new HashMap<>();
+                    memberdb.put("email", user.getEmail());
+                    memberdb.put("profile", photo);
+                    memberdb.put("nickname", user.getDisplayName());
+                    memberdb.put("facebook", true);
 
                     startActivity(new Intent().setClass(getApplicationContext(),MainActivity.class));
                 }else{
