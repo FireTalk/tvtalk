@@ -1,6 +1,7 @@
 package kr.co.tvtalk;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -12,6 +13,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import kr.co.tvtalk.R;
@@ -75,11 +77,17 @@ public class ChattingActivity extends AppCompatActivity {
         inputMethodManager = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
         lastAskPerson="";
         saveChattingData = new ArrayList<ChattingData>();
+        Intent intent = getIntent();
+        String key = intent.getStringExtra("key");
+        String order = intent.getStringExtra("order");
+        Toast.makeText(ChattingActivity.this, key+"_"+order,
+                Toast.LENGTH_SHORT).show();
+
         new Thread(){
             public void run(){
                 while(true) {
                     try {
-                        Thread.sleep(2000);
+                        Thread.sleep(3000);
                         runOnUiThread(new Runnable(){
                             public void run(){
 

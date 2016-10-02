@@ -57,7 +57,7 @@ public class MainDataViewHolder extends CustomViewHolder<MainData> {
     @BindDrawable(R.drawable.bookmark_true)
     Drawable bookmarkTrue;
 
-
+    String key;
 
     public static CustomPreference customPreference;
 
@@ -75,6 +75,8 @@ public class MainDataViewHolder extends CustomViewHolder<MainData> {
     public void onBindView(MainData item) {
         broadcastName.setText(item.broadcastName);
         broadcastDescription.setText(item.broadcastDescription);
+        key = item.key;
+
     }
 
     public void onBindView(MainData item , Context context) {
@@ -119,8 +121,10 @@ public class MainDataViewHolder extends CustomViewHolder<MainData> {
     }
     @OnClick(R.id.main_row_relativelayout)
     public void mainRowRelativelayoutClick(View v) {
+
         Intent intent = new Intent();
-        intent.putExtra("broadcastName",broadcastName.getText().toString());
+        intent.putExtra("key", key);
+        intent.putExtra("broadcastName", broadcastName.getText().toString());
         intent.putExtra("broadcastDescription",broadcastDescription.getText().toString());
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         intent.setClass(MainActivity.context,DramaListActivity.class);
