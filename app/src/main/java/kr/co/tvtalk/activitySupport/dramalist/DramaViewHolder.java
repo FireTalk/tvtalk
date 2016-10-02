@@ -46,6 +46,9 @@ public class DramaViewHolder extends CustomViewHolder<DramaData> {
     @BindDrawable(R.drawable.icon_clock)
     Drawable iconClock;
 
+    String key;//드라마 고유키값
+    String order;
+
     public DramaViewHolder(View itemView) {
         super(itemView);
         ButterKnife.bind(this,itemView);
@@ -60,6 +63,8 @@ public class DramaViewHolder extends CustomViewHolder<DramaData> {
         dramaCountInfomation.setText( item.dramaCountInfomation );
         dramaBroadcastDay.setText( item.dramaBroadcastDay );
         infomationEnterChattingRoom.setText( item.infomationEnterChattingRoom );
+        key = item.key;//드라마 고유키값
+        order = item.dramaCountInfomation.split("화")[0]; // 회차
     }
     public void onBindView(DramaData item , Context context) {
         onBindView(item);
@@ -72,6 +77,8 @@ public class DramaViewHolder extends CustomViewHolder<DramaData> {
     @OnClick(R.id.main_drama_list_row)
     public void mainDramaListRowClick(View v) {
         Intent intent = new Intent();
+        intent.putExtra("key", key);
+        intent.putExtra("order", order);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         intent.setClass(DramaListActivity.context,ChattingActivity.class);
         DramaListActivity.context.startActivity(intent);

@@ -8,13 +8,15 @@ public class DramaData {
     public String dramaBroadcastDay;
     public String infomationEnterChattingRoom;
     public int iconEnterChattingRoom;
+    public String key;
 
-    public DramaData(String dramaImage, String dramaCountInfomation, String dramaBroadcastDay, String infomationEnterChattingRoom, int iconEnterChattingRoom) {
+    public DramaData(String dramaImage, String dramaCountInfomation, String dramaBroadcastDay, String infomationEnterChattingRoom, int iconEnterChattingRoom, String key) {
         this.dramaImage = dramaImage;
         this.dramaCountInfomation = dramaCountInfomation;
         this.dramaBroadcastDay = dramaBroadcastDay;
         this.infomationEnterChattingRoom = infomationEnterChattingRoom;
         this.iconEnterChattingRoom = iconEnterChattingRoom;
+        this.key = key;
     }
 }
 

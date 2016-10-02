@@ -77,7 +77,7 @@ public class MainActivity extends AppCompatActivity {
         ref.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot db, String s) {
-                MainData mainData = new MainData(db.child("img").getValue().toString(), db.child("title").getValue().toString(), R.drawable.bookmark_false, R.drawable.sbs, db.child("time").getValue().toString());
+                MainData mainData = new MainData(db.child("img").getValue().toString(), db.child("title").getValue().toString(), R.drawable.bookmark_false, R.drawable.sbs, db.child("time").getValue().toString(), db.getKey());
                 mainAdapter.add(mainData);
             }
 
