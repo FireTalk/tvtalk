@@ -58,7 +58,7 @@ public class PasswordValidator{
         if(password.length()>12 || password.length() < 6)
             return false;
         matcher = pattern.matcher(password);
-        if( !matcher.matches() || !Pattern.compile("^[0-9]*$").matcher(password).matches() )
+        if( !matcher.matches() | Pattern.compile("^[0-9]*$").matcher(password).matches() )
             return false;
 
         return true;
