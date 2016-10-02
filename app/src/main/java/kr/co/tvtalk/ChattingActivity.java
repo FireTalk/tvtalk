@@ -16,6 +16,15 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
 import kr.co.tvtalk.R;
 import kr.co.tvtalk.activitySupport.FontFactory;
 import kr.co.tvtalk.activitySupport.catting.ChattingAdapter;
@@ -27,9 +36,16 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.OnTextChanged;
+import kr.co.tvtalk.model.MemberDTO;
 
 public class ChattingActivity extends AppCompatActivity {
     private static boolean isLiveActivity = false;
+
+    private FirebaseAuth auth;
+    private FirebaseDatabase db;
+    private DatabaseReference ref, ref2;
+
+
 
     private static Context context;
 
@@ -80,32 +96,142 @@ public class ChattingActivity extends AppCompatActivity {
         Intent intent = getIntent();
         String key = intent.getStringExtra("key");
         String order = intent.getStringExtra("order");
-        Toast.makeText(ChattingActivity.this, key+"_"+order,
-                Toast.LENGTH_SHORT).show();
 
-        new Thread(){
-            public void run(){
-                while(true) {
-                    try {
-                        Thread.sleep(3000);
-                        runOnUiThread(new Runnable(){
-                            public void run(){
+        auth = FirebaseAuth.getInstance();
+        db = FirebaseDatabase.getInstance();
 
-                                addChattingLine(
-                                        R.drawable.gong, // 프로필 이미지
-                                        "공블리", // 사용자 이름
-                                        "어이가 아리마생 이 상황 뭥미?ㅋㅋ진짜 어마무시한 전개다 예측불허 ㅋㅋㅋㅋ너무 웃곀ㅋ",  // 텍스트 메시지
-                                        lastAskPerson.equals("공블리") ? ChattingData.AskPersonInfo.SAME : ChattingData.AskPersonInfo.ANOTHER // 같은사람이 말 했는지 아닌지
-                                );
+        ref = db.getReference().child("chat/"+key+"_"+order);
+        ref2= db.getReference().child("member");
 
-                            }
-                        });
-                    } catch ( Exception ex ) {
-                        ex.printStackTrace();
-                    }
+
+        ref.addChildEventListener(new ChildEventListener() {
+            String nickname ;
+            String photo;
+            String uid;
+            String msg;
+            String type;
+            String emoticon;
+
+            @Override
+            public void onChildAdded(DataSnapshot data, String s) {
+                uid = data.child("uid").getValue().toString();
+
+                type = data.child("type").getValue().toString();
+                if(type.equals("1")){
+                    msg = data.child("msg").getValue().toString();
+                }else if(type.equals("2")) {
+                    emoticon = data.child("emo").getValue().toString();
+
+                }else if(type.equals("3")){
+                    msg = data.child("msg").getValue().toString();
+                    emoticon = data.child("emo").getValue().toString();
                 }
+
+                ref2.child(uid).addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot data2) {
+
+
+                        MemberDTO dto = data2.getValue(MemberDTO.class);
+
+                        if(dto == null){
+//                            Toast.makeText(ChattingActivity.this, "null이넹", Toast.LENGTH_SHORT).show();
+                            nickname = "";
+                            photo = "";
+
+                        }else{
+//                            Toast.makeText(ChattingActivity.this, dto.getNickname(), Toast.LENGTH_SHORT).show();
+                            nickname = dto.getNickname();
+                            Toast.makeText(ChattingActivity.this, dto.getNickname(), Toast.LENGTH_SHORT).show();
+                            photo = dto.getProfile();
+                            final FirebaseUser user = auth.getCurrentUser();
+                            if(user != null){ // 로그인 된 경우
+                                if(user.getUid().toString().equals(uid)){//내가 했던말
+                                    addChattingLine(
+                                            photo,
+                                            nickname, // 사용자 이름
+                                            msg,  // 텍스트 메시지
+                                            ChattingData.AskPersonInfo.SAME // 같은사람이 말 했는지 아닌지
+                                    );
+
+                                }else{//남이 했던말
+                                    addChattingLine(
+                                            photo,
+                                            nickname, // 사용자 이름
+                                            msg,  // 텍스트 메시지
+                                            ChattingData.AskPersonInfo.ANOTHER // 같은사람이 말 했는지 아닌지
+                                    );
+                                }
+
+
+                            }else{//로그인X
+                                addChattingLine(
+                                        photo,
+                                        nickname, // 사용자 이름
+                                        msg,  // 텍스트 메시지
+                                        ChattingData.AskPersonInfo.ANOTHER // 같은사람이 말 했는지 아닌지
+                                );
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
+
+
+
             }
-        }.start();
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
+
+
+
+//        new Thread(){
+//            public void run(){
+//                while(true) {
+//                    try {
+//                        Thread.sleep(3000);
+//                        runOnUiThread(new Runnable(){
+//                            public void run(){
+//
+//                                addChattingLine(
+//                                        R.drawable.gong, // 프로필 이미지
+//                                        "공블리", // 사용자 이름
+//                                        "어이가 아리마생 이 상황 뭥미?ㅋㅋ진짜 어마무시한 전개다 예측불허 ㅋㅋㅋㅋ너무 웃곀ㅋ",  // 텍스트 메시지
+//                                        lastAskPerson.equals("공블리") ? ChattingData.AskPersonInfo.SAME : ChattingData.AskPersonInfo.ANOTHER // 같은사람이 말 했는지 아닌지
+//                                );
+//
+//                            }
+//                        });
+//                    } catch ( Exception ex ) {
+//                        ex.printStackTrace();
+//                    }
+//                }
+//            }
+//        }.start();
 
 
     }
@@ -173,11 +299,11 @@ public class ChattingActivity extends AppCompatActivity {
     @OnClick(R.id.send_btn)
     public void sendBtnClick(View v) {
         addChattingLine(
-                R.drawable.icon_profile,//프로필 이미지
-                "송블리",  // 사용자 이름
-                typingMessage.getText().toString(), // 할말
-                ChattingData.AskPersonInfo.ME
-                //lastAskPerson.equals("송블리") ? ChattingData.AskPersonInfo.SAME : ChattingData.AskPersonInfo.ANOTHER // 같은 사용자인지 아닌지
+            "",//프로필 이미지
+            "송블리",  // 사용자 이름
+            typingMessage.getText().toString(), // 할말
+            ChattingData.AskPersonInfo.ME
+            //lastAskPerson.equals("송블리") ? ChattingData.AskPersonInfo.SAME : ChattingData.AskPersonInfo.ANOTHER // 같은 사용자인지 아닌지
         );
     }
 
@@ -214,7 +340,7 @@ public class ChattingActivity extends AppCompatActivity {
      * @param textMessage 말한사람의 텍스트 메시지
      * @param isSamePerson 방금전에 말한 사람과 같은 사람이 말했는지 체크하는 boolean.
      */
-    private synchronized void addChattingLine(int profileImage,String speaker , String textMessage , ChattingData.AskPersonInfo isSamePerson)  {
+    private synchronized void addChattingLine(String profileImage,String speaker , String textMessage , ChattingData.AskPersonInfo isSamePerson)  {
         ChattingData chattingData =  new ChattingData(profileImage,speaker, textMessage , isSamePerson );
         if(!isLiveActivity) {  // 액티비티가 죽은경우.
             saveChattingData.add(chattingData);
