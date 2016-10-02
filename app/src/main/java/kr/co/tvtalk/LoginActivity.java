@@ -51,10 +51,6 @@ public class LoginActivity extends AppCompatActivity {
     private DatabaseReference Ref;
 
 
-    private EditText input_email;
-    private EditText input_pw ;
-    private Button fbBtn;
-
     CallbackManager callbackManager;
 
 
@@ -86,30 +82,29 @@ public class LoginActivity extends AppCompatActivity {
 
     @Bind(R.id.forget_password)
     TextView forgetPassword;
+
+    @Bind(R.id.register_facebook_btn)
+    Button fbBtn;
+
+    @Bind(R.id.email_id)
+    EditText inputEmail;
+
+    @Bind(R.id.password)
+    EditText inputPw;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         FacebookSdk.sdkInitialize(getApplicationContext());
         setContentView(R.layout.activity_login);
         ButterKnife.bind(this);
-
-        loginDescription.setTypeface(FontFactory.getFont(getApplicationContext() , FontFactory.Font.NOTOSANS_BOLD )); // 이거 아님 이거 임시임.
-        idDescription.setTypeface(FontFactory.getFont(getApplicationContext() , FontFactory.Font.NOTOSANS_BOLD ));
-        passwordDescription.setTypeface(FontFactory.getFont(getApplicationContext() , FontFactory.Font.NOTOSANS_BOLD ));
-        loginBtn.setTypeface(FontFactory.getFont(getApplicationContext(),FontFactory.Font.NOTOSANS_BOLD ));
-        registerBtn.setTypeface(FontFactory.getFont(getApplicationContext(),FontFactory.Font.NOTOSANS_BOLD ));
-        forgetPassword.setTypeface(FontFactory.getFont(getApplicationContext(),FontFactory.Font.NOTOSANS_REGULAR ));
+        /*글씨체 등록.*/
+        registerTypeface();
 
         auth = FirebaseAuth.getInstance();
         db = FirebaseDatabase.getInstance();
         Ref = db.getReference("member");
 
 
-
-        input_email = (EditText)findViewById(R.id.email_id);
-        input_pw = (EditText)findViewById(R.id.password);
-
-        fbBtn = (Button)findViewById(R.id.register_facebook_btn);
 
         callbackManager = CallbackManager.Factory.create();
         LoginManager.getInstance().registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
@@ -132,30 +127,6 @@ public class LoginActivity extends AppCompatActivity {
                         Toast.LENGTH_SHORT).show();
             }
         });
-
-
-
-        fbBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                AccessToken accessToken = AccessToken.getCurrentAccessToken();
-                if(accessToken == null){
-                    LoginManager.getInstance().setLoginBehavior(LoginBehavior.NATIVE_WITH_FALLBACK);
-                    LoginManager.getInstance().logInWithReadPermissions(LoginActivity.this, null);
-
-
-                }else{
-                    Toast.makeText(LoginActivity.this, "이미 로그인 중입니다.",
-                            Toast.LENGTH_SHORT).show();
-                    startActivity(new Intent().setClass(getApplicationContext(),MainActivity.class));
-
-                }
-            }
-        });
-
-
-
-
         authListener = new FirebaseAuth.AuthStateListener() {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
@@ -168,6 +139,33 @@ public class LoginActivity extends AppCompatActivity {
                 }
             }
         };
+    }
+    @OnClick(R.id.register_facebook_btn)
+    public void fbBtnClick(View v) {
+        AccessToken accessToken = AccessToken.getCurrentAccessToken();
+        if(accessToken == null){
+            LoginManager.getInstance().setLoginBehavior(LoginBehavior.NATIVE_WITH_FALLBACK);
+            LoginManager.getInstance().logInWithReadPermissions(LoginActivity.this, null);
+
+
+        }else{
+            Toast.makeText(LoginActivity.this, "이미 로그인 중입니다.",
+                    Toast.LENGTH_SHORT).show();
+            startActivity(new Intent().setClass(getApplicationContext(),MainActivity.class));
+
+        }
+    }
+
+    /**
+     * 해당 액티비티의 모든 글씨체를 등록하는 메소드이다.
+     */
+    private void registerTypeface(){
+        loginDescription.setTypeface(FontFactory.getFont(getApplicationContext() , FontFactory.Font.NOTOSANS_BOLD )); // 이거 아님 이거 임시임.
+        idDescription.setTypeface(FontFactory.getFont(getApplicationContext() , FontFactory.Font.NOTOSANS_BOLD ));
+        passwordDescription.setTypeface(FontFactory.getFont(getApplicationContext() , FontFactory.Font.NOTOSANS_BOLD ));
+        loginBtn.setTypeface(FontFactory.getFont(getApplicationContext(),FontFactory.Font.NOTOSANS_BOLD ));
+        registerBtn.setTypeface(FontFactory.getFont(getApplicationContext(),FontFactory.Font.NOTOSANS_BOLD ));
+        forgetPassword.setTypeface(FontFactory.getFont(getApplicationContext(),FontFactory.Font.NOTOSANS_REGULAR ));
     }
 
     private void handleFacebookAccessToken(AccessToken token) {
@@ -198,10 +196,10 @@ public class LoginActivity extends AppCompatActivity {
 
                                 startActivity(new Intent().setClass(getApplicationContext(),MainActivity.class));
 
+                            }
                         }
                     }
-                }
-        });
+                });
     }
 
 
@@ -211,8 +209,8 @@ public class LoginActivity extends AppCompatActivity {
     public void loginBtn(View v) {
 
 
-        String email = input_email.getText().toString();
-        String password = input_pw.getText().toString();
+        String email = inputEmail.getText().toString();
+        String password = inputPw.getText().toString();
 
         if(email != "" && password != "" && !email.equals("") && !password.equals("")){
             auth.signInWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
