@@ -41,6 +41,8 @@ import kr.co.tvtalk.activitySupport.FontFactory;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import kr.co.tvtalk.validator.EmailValidator;
+import kr.co.tvtalk.validator.PasswordValidator;
 
 
 public class LoginActivity extends AppCompatActivity {
@@ -208,11 +210,14 @@ public class LoginActivity extends AppCompatActivity {
     @OnClick(R.id.login_btn)
     public void loginBtn(View v) {
 
-
         String email = inputEmail.getText().toString();
         String password = inputPw.getText().toString();
 
-        if(email != "" && password != "" && !email.equals("") && !password.equals("")){
+        boolean isEmailValid = EmailValidator.getInstance().isValid(email);
+        boolean isPasswordValid = PasswordValidator.getInstance().tvtalkValidate(password);
+
+        if(isEmailValid && isPasswordValid) {
+
             auth.signInWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                 @Override
                 public void onComplete(@NonNull Task<AuthResult> task) {

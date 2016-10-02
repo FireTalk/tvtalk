@@ -104,27 +104,28 @@ public class EmailValidator implements Serializable {
      * @return true if the email address is valid.
      */
     public boolean isValid(String email) {
-        if (email == null) {
+        if (email == null || email.trim().equals(""))
             return false;
-        }
+
         Matcher asciiMatcher = MATCH_ASCII_PATTERN.matcher(email);
-        if (!asciiMatcher.matches()) {
+
+        if (!asciiMatcher.matches())
             return false;
-        }
+
         // Check the whole email address structure
         Matcher emailMatcher = EMAIL_PATTERN.matcher(email);
-        if (!emailMatcher.matches()) {
+        if (!emailMatcher.matches())
             return false;
-        }
-        if (email.endsWith(".")) {
+
+        if (email.endsWith("."))
             return false;
-        }
-        if (!isValidUser(emailMatcher.group(1))) {
+
+        if (!isValidUser(emailMatcher.group(1)))
             return false;
-        }
-        if (!isValidDomain(emailMatcher.group(2))) {
+
+        if (!isValidDomain(emailMatcher.group(2)))
             return false;
-        }
+
         return true;
     }
     /**

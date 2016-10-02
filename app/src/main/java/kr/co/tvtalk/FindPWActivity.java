@@ -11,13 +11,18 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 
+import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import kr.co.tvtalk.validator.EmailValidator;
 
 public class FindPWActivity extends AppCompatActivity {
 
-    private EditText et;
+
     private FirebaseAuth auth;
+
+    @Bind(R.id.findpw_email_edit)
+    EditText findpwEmailEdit;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,7 +32,6 @@ public class FindPWActivity extends AppCompatActivity {
 
         auth = FirebaseAuth.getInstance();
 
-        et = (EditText)findViewById(R.id.findpw_email_edit);
 
     }
     @OnClick(R.id.findpw_back_btn)
@@ -38,9 +42,11 @@ public class FindPWActivity extends AppCompatActivity {
     @OnClick(R.id.confirm_request)
     public void confirmRequest(View v) {
         //이메일 형식인지 판별조건 필요
-        String email = et.getText().toString();
+        String email = findpwEmailEdit.getText().toString();
 
-        if(!email.equals("") && email != ""){
+        boolean isEmail = EmailValidator.getInstance().isValid(email);
+
+        if( isEmail ){
             auth.sendPasswordResetEmail(email).addOnCompleteListener(new OnCompleteListener<Void>() {
                 @Override
                 public void onComplete(@NonNull Task<Void> task) {
