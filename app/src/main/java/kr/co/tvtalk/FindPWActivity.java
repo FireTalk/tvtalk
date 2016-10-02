@@ -18,7 +18,6 @@ import kr.co.tvtalk.validator.EmailValidator;
 
 public class FindPWActivity extends AppCompatActivity {
 
-
     private FirebaseAuth auth;
 
     @Bind(R.id.findpw_email_edit)
@@ -54,15 +53,12 @@ public class FindPWActivity extends AppCompatActivity {
                         Toast.makeText(getApplicationContext(),"메일이 전송되었습니다.",Toast.LENGTH_SHORT).show();
                         finish();
                     }
-
                     else Toast.makeText(getApplicationContext(),"존재하지 않는 회원입니다.",Toast.LENGTH_SHORT).show();
                 }
             });
-
         }else{
             Toast.makeText(getApplicationContext(),"잘못된 이메일 형식입니다.",Toast.LENGTH_SHORT).show();
         }
-
     }
 
 
