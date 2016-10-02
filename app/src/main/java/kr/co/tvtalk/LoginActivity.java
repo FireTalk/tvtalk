@@ -41,7 +41,7 @@ import kr.co.tvtalk.activitySupport.FontFactory;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import kr.co.tvtalk.model.MemberDTO;
+
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -54,7 +54,6 @@ public class LoginActivity extends AppCompatActivity {
     private EditText input_email;
     private EditText input_pw ;
     private Button fbBtn;
-
 
     CallbackManager callbackManager;
 
@@ -162,18 +161,8 @@ public class LoginActivity extends AppCompatActivity {
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
                 FirebaseUser user= auth.getCurrentUser();
                 if( user != null){
-                    Uri photo = user.getPhotoUrl();
 
-//                    MemberDTO memberDTO = new memberDTO(user.getDisplayName(),  user.getPhotoUrl(), user.getEmail(), true );
-//                    Map<String, Object> postValues = memberDTO.toMap();
 
-                    Map<String, Object> memberdb = new HashMap<>();
-                    memberdb.put("email", user.getEmail());
-                    memberdb.put("profile", photo);
-                    memberdb.put("nickname", user.getDisplayName());
-                    memberdb.put("facebook", true);
-
-                    startActivity(new Intent().setClass(getApplicationContext(),MainActivity.class));
                 }else{
 
                 }
@@ -195,12 +184,27 @@ public class LoginActivity extends AppCompatActivity {
                         }else{
                             Toast.makeText(LoginActivity.this, "Facebook 로그인 완료",
                                     Toast.LENGTH_LONG).show();
+                            FirebaseUser user= auth.getCurrentUser();
+                            if( user != null){
+                                Uri photo = user.getPhotoUrl();
 
-//                            startActivity(new Intent().setClass(getApplicationContext(),MainActivity.class));
+                                Map<String, Object> memberdb = new HashMap<>();
+
+                                memberdb.put("profile", photo.toString());
+                                memberdb.put("nickname", user.getDisplayName());
+                                memberdb.put("facebook", true);
+                                Ref.child(user.getUid()).setValue(memberdb);
+
+
+                                startActivity(new Intent().setClass(getApplicationContext(),MainActivity.class));
+
                         }
                     }
-                });
+                }
+        });
     }
+
+
 
 
     @OnClick(R.id.login_btn)
