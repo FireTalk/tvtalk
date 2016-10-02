@@ -15,6 +15,11 @@ import com.facebook.FacebookSdk;
 import com.facebook.login.LoginManager;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import kr.co.tvtalk.activitySupport.main.MainAdapter;
 import kr.co.tvtalk.activitySupport.main.MainData;
@@ -29,7 +34,9 @@ import butterknife.OnClick;
 public class MainActivity extends AppCompatActivity {
 
     private FirebaseAuth auth;
-    private FirebaseAuth.AuthStateListener authStateListener;
+    private FirebaseDatabase db;
+    private DatabaseReference ref;
+
 
     @Bind(R.id.main_activity_recycler)
     RecyclerView mainActivityRecyler;
@@ -57,7 +64,8 @@ public class MainActivity extends AppCompatActivity {
         ButterKnife.bind(this);
 
         auth = FirebaseAuth.getInstance();
-
+        db = FirebaseDatabase.getInstance();
+        ref = db.getReference().child("drama");
 
         context = getApplicationContext();
         datas = new ArrayList<MainData>();
@@ -65,10 +73,36 @@ public class MainActivity extends AppCompatActivity {
         mainActivityRecyler.setLayoutManager(layoutManager);
         mainAdapter = new MainAdapter ( getApplicationContext() , datas );
         mainActivityRecyler.setAdapter(mainAdapter);
-        for(int i=0;i<6;i++) {
-            MainData mainData = new MainData(tempLink[i],tempDramaName.split(",")[i],R.drawable.bookmark_false,R.drawable.sbs,tempDramaTime.split(",")[i]);
-            mainAdapter.add(mainData);
-        }
+
+        ref.addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(DataSnapshot db, String s) {
+                MainData mainData = new MainData(db.child("img").getValue().toString(), db.child("title").getValue().toString(), R.drawable.bookmark_false, R.drawable.sbs, db.child("time").getValue().toString());
+                mainAdapter.add(mainData);
+            }
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
+
     }
     /*
     액티비티 없어질 때
