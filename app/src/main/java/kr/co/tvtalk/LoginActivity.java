@@ -216,8 +216,7 @@ public class LoginActivity extends AppCompatActivity {
         boolean isEmailValid = EmailValidator.getInstance().isValid(email);
         boolean isPasswordValid = PasswordValidator.getInstance().tvtalkValidate(password);
 
-        if(isEmailValid && isPasswordValid) {
-            Toast.makeText(LoginActivity.this, password, Toast.LENGTH_LONG).show();
+        if(!(isEmailValid && isPasswordValid)) {
 
             auth.signInWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                 @Override
