@@ -1,22 +1,21 @@
 package kr.co.tvtalk.activitySupport.catting;
 
 
-public class ChattingData {
-    public String anotherProfileImage;
-    public String anotherName;
+
+public class ChattingData extends Data{
+
+
     public String anotherTextMessage;
-    public AskPersonInfo personInfo;
 
-    public ChattingData(String anotherProfileImage, String anotherName, String anotherTextMessage, AskPersonInfo personInfo) {
-        this.anotherProfileImage = anotherProfileImage;
-        this.anotherName = anotherName;
-        this.anotherTextMessage = anotherTextMessage;
-        this.personInfo = personInfo;
+
+    public ChattingData(String anotherProfileImage, String anotherName,String anotherTextMessage ,AskPersonInfo personInfo ){
+        super(anotherProfileImage,anotherName,personInfo);
+        this.anotherTextMessage=anotherTextMessage;
+
+    }
+    @Override
+    public String getAnotherTextMessage(){
+        return anotherTextMessage;
     }
 
-    public enum AskPersonInfo{
-        SAME ,
-        ANOTHER,
-        ME
-    }
 }

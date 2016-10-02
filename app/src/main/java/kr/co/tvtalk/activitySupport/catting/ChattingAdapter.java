@@ -16,11 +16,11 @@ import java.util.List;
 /**
  * Created by kwongyo on 2016-08-29.
  */
-public class ChattingAdapter extends CustomAdapter<ChattingData , CustomViewHolder> {
+public class ChattingAdapter extends CustomAdapter<Data , CustomViewHolder> {
 
     public static int activeNode = 0;
     //provide a suitable cons ( depends on the kind of dataset)
-    public ChattingAdapter(Context context, List<ChattingData> lists) {
+    public ChattingAdapter(Context context, List<Data> lists) {
         super( context , lists );
     }
     /* create new views ( invoked by the layout manager)
@@ -44,6 +44,10 @@ public class ChattingAdapter extends CustomAdapter<ChattingData , CustomViewHold
                 View meView = LayoutInflater.from(parent.getContext()).inflate(R.layout.chatting_me , parent , false);
                 ChattingMeViewHolder meViewHolder = new ChattingMeViewHolder(meView);
                 return meViewHolder;//break;
+            case ME_EMOTION :
+                View meEmotionView = LayoutInflater.from(parent.getContext()).inflate(R.layout.chatting_me_emotion,parent,false);
+                ChattingMeEmotionViewHolder meEmotionViewHolder = new ChattingMeEmotionViewHolder(meEmotionView);
+                return meEmotionViewHolder;
             default:
                 return null;
         }
@@ -58,7 +62,7 @@ public class ChattingAdapter extends CustomAdapter<ChattingData , CustomViewHold
         switch (list.get(position).personInfo) {
             case SAME :
                 ChattingContinueViewHolder continueHolder = (ChattingContinueViewHolder)holder;
-                continueHolder.onBindView( list . get(position) . anotherTextMessage );
+                continueHolder.onBindView( list . get(position) . getAnotherTextMessage() );
                 break;
             case ANOTHER :
                 ChattingViewHolder anotherHolder = ( ChattingViewHolder )holder;
@@ -66,8 +70,11 @@ public class ChattingAdapter extends CustomAdapter<ChattingData , CustomViewHold
                 break;
             case ME:
                 ChattingMeViewHolder meHolder = (ChattingMeViewHolder) holder;
-                meHolder.onBindView( list . get(position) . anotherTextMessage );
+                meHolder.onBindView( list . get(position) . getAnotherTextMessage() );
                 break;
+            case ME_EMOTION:
+                ChattingMeEmotionViewHolder meEmotionViewHolder = (ChattingMeEmotionViewHolder)holder;
+                meEmotionViewHolder.onBindView( list . get(position) . getEmotion() , context );
             default :
                 Log.e("onBindViewHolder","not connected");
                 break;
@@ -78,21 +85,3 @@ public class ChattingAdapter extends CustomAdapter<ChattingData , CustomViewHold
         return list.size();
     }
 }
-/*public static class ChattingViewHolder extends RecyclerView.ViewHolder {
-        public ImageView anotherProfileImage;
-        public TextView anotherName;
-        public TextView anotherTextMessage;
-        public ChattingViewHolder(View v) {
-            super(v);
-            anotherProfileImage = (ImageView) v.findViewById(R.id.another_profile_image);
-            anotherName = (TextView) v.findViewById(R.id.another_name);
-            anotherTextMessage = (TextView) v.findViewById(R.id.another_text_message);
-        }
-    }*/
-    /*public static class ChattingContinueViewHolder extends  RecyclerView.ViewHolder {
-        public TextView anotherTextMessageContinue;
-        public ChattingContinueViewHolder (View v) {
-            super(v);
-            anotherTextMessageContinue = (TextView)v.findViewById(R.id.another_text_message_continue);
-        }
-    }*/

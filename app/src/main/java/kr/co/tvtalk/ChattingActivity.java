@@ -2,12 +2,15 @@ package kr.co.tvtalk;
 
 import android.content.Context;
 import android.content.Intent;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -16,6 +19,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.ChildEventListener;
@@ -25,7 +29,12 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-import kr.co.tvtalk.R;
+
+import com.matthewtamlin.sliding_intro_screen_library.indicators.DotIndicator;
+
+import butterknife.OnPageChange;
+
+
 import kr.co.tvtalk.activitySupport.FontFactory;
 import kr.co.tvtalk.activitySupport.catting.ChattingAdapter;
 import kr.co.tvtalk.activitySupport.catting.ChattingData;
@@ -36,9 +45,15 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.OnTextChanged;
+
 import kr.co.tvtalk.model.MemberDTO;
 
+import kr.co.tvtalk.activitySupport.catting.Data;
+import kr.co.tvtalk.activitySupport.catting.emotion.EmotionPagerAdapter;
+
+
 public class ChattingActivity extends AppCompatActivity {
+    public static ChattingActivity instance;
     private static boolean isLiveActivity = false;
 
     private FirebaseAuth auth;
@@ -58,9 +73,9 @@ public class ChattingActivity extends AppCompatActivity {
      * 각 채팅방마다 사용자가 마지막으로 들렀을 방이 있으니까
      * 그 방에 대해서 access 하는게 좋을듯.
      */
-    private static ArrayList<ChattingData> saveChattingData ;
+    private static ArrayList<Data> saveChattingData ;
 
-    ArrayList<ChattingData> datas = new ArrayList<ChattingData>();
+    ArrayList<Data> datas = new ArrayList<Data>();
 
     @Bind(R.id.talking_room_title)
     TextView talkingRoomTitle;
@@ -76,15 +91,41 @@ public class ChattingActivity extends AppCompatActivity {
     @Bind(R.id.chatting_preview)
     RelativeLayout chattingPreview;
 
+    /*emotion*/
+    @Bind(R.id.dotindicator)
+    DotIndicator dotIndicator;
+    @Bind(R.id.viewpager)
+    ViewPager viewPager;
 
+    private static int status=0;
+
+    private static final int STATUS_BASIC=0;
+    private static final int STATUS_INPUT_MODE=1;
+    private static final int STATUS_EMOTION=2;
+
+    @Override
+    public void onBackPressed() {
+        switch (status) {
+            case STATUS_EMOTION :
+                emotionArea.setVisibility(View.GONE);
+                setInputFormLayoutParams(0);
+                status=STATUS_BASIC;
+                break;
+        }
+
+        Toast.makeText(getApplicationContext(),"backbtnclick",Toast.LENGTH_SHORT).show();
+
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chatting);
         ButterKnife.bind(this);
-
+        instance = this;
         context = getApplicationContext();
+
+
 
         talkingRoomTitle.setTypeface(FontFactory.getFont(getApplicationContext() , FontFactory.Font.NOTOSANS_BOLD));
         previewTextMessage.setTypeface(FontFactory.getFont(getApplicationContext() , FontFactory.Font.NOTOSANS_REGULAR));
@@ -92,10 +133,11 @@ public class ChattingActivity extends AppCompatActivity {
         initAnother();
         inputMethodManager = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
         lastAskPerson="";
-        saveChattingData = new ArrayList<ChattingData>();
+        saveChattingData = new ArrayList<Data>();
         Intent intent = getIntent();
         String key = intent.getStringExtra("key");
         String order = intent.getStringExtra("order");
+
 
         auth = FirebaseAuth.getInstance();
         db = FirebaseDatabase.getInstance();
@@ -115,6 +157,9 @@ public class ChattingActivity extends AppCompatActivity {
             @Override
             public void onChildAdded(DataSnapshot data, String s) {
                 uid = data.child("uid").getValue().toString();
+
+
+
 
                 type = data.child("type").getValue().toString();
                 if(type.equals("1")){
@@ -209,31 +254,16 @@ public class ChattingActivity extends AppCompatActivity {
 
 
 
-//        new Thread(){
-//            public void run(){
-//                while(true) {
-//                    try {
-//                        Thread.sleep(3000);
-//                        runOnUiThread(new Runnable(){
-//                            public void run(){
-//
-//                                addChattingLine(
-//                                        R.drawable.gong, // 프로필 이미지
-//                                        "공블리", // 사용자 이름
-//                                        "어이가 아리마생 이 상황 뭥미?ㅋㅋ진짜 어마무시한 전개다 예측불허 ㅋㅋㅋㅋ너무 웃곀ㅋ",  // 텍스트 메시지
-//                                        lastAskPerson.equals("공블리") ? ChattingData.AskPersonInfo.SAME : ChattingData.AskPersonInfo.ANOTHER // 같은사람이 말 했는지 아닌지
-//                                );
-//
-//                            }
-//                        });
-//                    } catch ( Exception ex ) {
-//                        ex.printStackTrace();
-//                    }
-//                }
-//            }
-//        }.start();
 
+        /*emotion*/
+        EmotionPagerAdapter emotionPagerAdapter = new EmotionPagerAdapter(getLayoutInflater() , getApplicationContext());
+        viewPager.setAdapter(emotionPagerAdapter);
 
+    }
+    /*emotion*/
+    @OnPageChange(R.id.viewpager)
+    public void viewPagerClick(int position) {
+        dotIndicator.setSelectedItem(viewPager.getCurrentItem()%2,true);
     }
 
     @Override
@@ -310,9 +340,25 @@ public class ChattingActivity extends AppCompatActivity {
     /*@Bind(R.id.indicator)
     CircleIndicator indicator;*/
     /* 아이콘 버튼 눌렀을 때 채팅바를 없애는 이벤트를 갖고 있는 hideKeyBroad메소드를 호출. */
+    @Bind(R.id.input_form)
+    RelativeLayout inputForm;
+    @Bind(R.id.emotion_area)
+    RelativeLayout emotionArea;
     @OnClick(R.id.icon_btn)
     public void iconBtnClick(View v){
+
         hideKeybroad(v);
+        emotionArea.setVisibility(View.VISIBLE);
+        setInputFormLayoutParams(220);
+
+
+
+
+    }
+    private void setInputFormLayoutParams(int dpiValue) {
+        RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams)inputForm.getLayoutParams();
+        layoutParams.bottomMargin = (int)TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,dpiValue,context.getResources().getDisplayMetrics());
+        inputForm.setLayoutParams(layoutParams);
     }
     /*  상동  */
     @OnClick(R.id.chat_recyclerview)
@@ -330,8 +376,8 @@ public class ChattingActivity extends AppCompatActivity {
     }
 
 
-    private synchronized void addChattingLine(ChattingData data) {
-        addChattingLine(data.anotherProfileImage , data.anotherName , data.anotherTextMessage , data.personInfo);
+    private synchronized void addChattingLine(Data data) {
+        addChattingLine(data.anotherProfileImage , data.anotherName , data.getAnotherTextMessage() , data.personInfo);
     }
     /**
      * 채팅메시지 하나하나를 띄워주는 메소드.
@@ -341,7 +387,7 @@ public class ChattingActivity extends AppCompatActivity {
      * @param isSamePerson 방금전에 말한 사람과 같은 사람이 말했는지 체크하는 boolean.
      */
     private synchronized void addChattingLine(String profileImage,String speaker , String textMessage , ChattingData.AskPersonInfo isSamePerson)  {
-        ChattingData chattingData =  new ChattingData(profileImage,speaker, textMessage , isSamePerson );
+        Data chattingData =  new ChattingData( profileImage,speaker, textMessage , isSamePerson );
         if(!isLiveActivity) {  // 액티비티가 죽은경우.
             saveChattingData.add(chattingData);
             return ;
@@ -389,8 +435,33 @@ public class ChattingActivity extends AppCompatActivity {
         isEmotionTrue.setVisibility(View.VISIBLE);
     }
 
+    @Bind(R.id.emotion_prview)
+    ImageView emotionPreview;
+    @Bind(R.id.emotion_preview_area)
+    RelativeLayout emotionPreviewArea;
+    
+    private long emotionLastClick;
+    static int clickEmotionNo ;
+    public void emotionClick(int emotion) {
+        status = STATUS_EMOTION;
+        if( emotion != clickEmotionNo ) {
+            clickEmotionNo = emotion;
+            Glide.with(this).load("http://211.249.50.198:5000/images/emoticon_test.png").into(emotionPreview);
+            emotionPreviewArea.setVisibility(View.VISIBLE);
+        }
+        else if( System.currentTimeMillis() < emotionLastClick+1000) { // 1초 이내로 2번 클릭 시
+            addChattingLine(
+                    "https://avatars2.githubusercontent.com/u/14024193?v=3&s=466", // 프로필 이미지
+                    "기호", // 사용자 이름
+                    "",  // 텍스트 메시지
+                    //lastAskPerson.equals("기호") ? ChattingData.AskPersonInfo.SAME : ChattingData.AskPersonInfo.ANOTHER // 같은사람이 말 했는지 아닌지
+                    Data.AskPersonInfo.ME_EMOTION
+            );
+            emotionPreviewArea.setVisibility(View.GONE);
+        }
+        emotionLastClick = System.currentTimeMillis();
+        
+
+    }
 
 }
-/*
-* recyclerView . getChildCount() <- 현재 포커스 되어있는 화면에서 가장 아래에 있는 뷰
-* */
