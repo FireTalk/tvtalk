@@ -2,12 +2,15 @@ package kr.co.tvtalk;
 
 import android.content.Context;
 import android.content.Intent;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -16,6 +19,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.matthewtamlin.sliding_intro_screen_library.indicators.DotIndicator;
+
+import butterknife.OnPageChange;
 import kr.co.tvtalk.R;
 import kr.co.tvtalk.activitySupport.FontFactory;
 import kr.co.tvtalk.activitySupport.catting.ChattingAdapter;
@@ -27,8 +33,11 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.OnTextChanged;
+import kr.co.tvtalk.activitySupport.catting.Data;
+import kr.co.tvtalk.activitySupport.catting.emotion.EmotionPagerAdapter;
 
 public class ChattingActivity extends AppCompatActivity {
+    public static ChattingActivity instance;
     private static boolean isLiveActivity = false;
 
     private static Context context;
@@ -44,7 +53,7 @@ public class ChattingActivity extends AppCompatActivity {
      */
     private static ArrayList<ChattingData> saveChattingData ;
 
-    ArrayList<ChattingData> datas = new ArrayList<ChattingData>();
+    ArrayList<Data> datas = new ArrayList<Data>();
 
     @Bind(R.id.talking_room_title)
     TextView talkingRoomTitle;
@@ -60,15 +69,41 @@ public class ChattingActivity extends AppCompatActivity {
     @Bind(R.id.chatting_preview)
     RelativeLayout chattingPreview;
 
+    /*emotion*/
+    @Bind(R.id.dotindicator)
+    DotIndicator dotIndicator;
+    @Bind(R.id.viewpager)
+    ViewPager viewPager;
 
+    private static int status=0;
+
+    private static final int STATUS_BASIC=0;
+    private static final int STATUS_INPUT_MODE=1;
+    private static final int STATUS_EMOTION=2;
+
+    @Override
+    public void onBackPressed() {
+        switch (status) {
+            case STATUS_EMOTION :
+                emotionArea.setVisibility(View.GONE);
+                setInputFormLayoutParams(0);
+                status=STATUS_BASIC;
+                break;
+        }
+
+        Toast.makeText(getApplicationContext(),"backbtnclick",Toast.LENGTH_SHORT).show();
+
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chatting);
         ButterKnife.bind(this);
-
+        instance = this;
         context = getApplicationContext();
+
+
 
         talkingRoomTitle.setTypeface(FontFactory.getFont(getApplicationContext() , FontFactory.Font.NOTOSANS_BOLD));
         previewTextMessage.setTypeface(FontFactory.getFont(getApplicationContext() , FontFactory.Font.NOTOSANS_REGULAR));
@@ -82,6 +117,8 @@ public class ChattingActivity extends AppCompatActivity {
         String order = intent.getStringExtra("order");
         Toast.makeText(ChattingActivity.this, key+"_"+order,
                 Toast.LENGTH_SHORT).show();
+
+
 
         new Thread(){
             public void run(){
@@ -107,7 +144,15 @@ public class ChattingActivity extends AppCompatActivity {
             }
         }.start();
 
+        /*emotion*/
+        EmotionPagerAdapter emotionPagerAdapter = new EmotionPagerAdapter(getLayoutInflater() , getApplicationContext());
+        viewPager.setAdapter(emotionPagerAdapter);
 
+    }
+    /*emotion*/
+    @OnPageChange(R.id.viewpager)
+    public void viewPagerClick(int position) {
+        dotIndicator.setSelectedItem(viewPager.getCurrentItem()%2,true);
     }
 
     @Override
@@ -184,9 +229,25 @@ public class ChattingActivity extends AppCompatActivity {
     /*@Bind(R.id.indicator)
     CircleIndicator indicator;*/
     /* 아이콘 버튼 눌렀을 때 채팅바를 없애는 이벤트를 갖고 있는 hideKeyBroad메소드를 호출. */
+    @Bind(R.id.input_form)
+    RelativeLayout inputForm;
+    @Bind(R.id.emotion_area)
+    RelativeLayout emotionArea;
     @OnClick(R.id.icon_btn)
     public void iconBtnClick(View v){
+
         hideKeybroad(v);
+        emotionArea.setVisibility(View.VISIBLE);
+        setInputFormLayoutParams(220);
+
+
+
+
+    }
+    private void setInputFormLayoutParams(int dpiValue) {
+        RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams)inputForm.getLayoutParams();
+        layoutParams.bottomMargin = (int)TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,dpiValue,context.getResources().getDisplayMetrics());
+        inputForm.setLayoutParams(layoutParams);
     }
     /*  상동  */
     @OnClick(R.id.chat_recyclerview)
@@ -263,8 +324,33 @@ public class ChattingActivity extends AppCompatActivity {
         isEmotionTrue.setVisibility(View.VISIBLE);
     }
 
+    @Bind(R.id.emotion_prview)
+    ImageView emotionPreview;
+    @Bind(R.id.emotion_preview_area)
+    RelativeLayout emotionPreviewArea;
+    
+    private long emotionLastClick;
+    static int clickEmotionNo ;
+    public void emotionClick(int emotion) {
+        status = STATUS_EMOTION;
+        if( emotion != clickEmotionNo ) {
+            clickEmotionNo = emotion;
+            Glide.with(this).load("http://211.249.50.198:5000/images/emoticon_test.png").into(emotionPreview);
+            emotionPreviewArea.setVisibility(View.VISIBLE);
+        }
+        else if( System.currentTimeMillis() < emotionLastClick+1000) { // 1초 이내로 2번 클릭 시
+            addChattingLine(
+                    R.drawable.gong, // 프로필 이미지
+                    "기호", // 사용자 이름
+                    "",  // 텍스트 메시지
+                    //lastAskPerson.equals("기호") ? ChattingData.AskPersonInfo.SAME : ChattingData.AskPersonInfo.ANOTHER // 같은사람이 말 했는지 아닌지
+                    Data.AskPersonInfo.ME_EMOTION
+            );
+            emotionPreviewArea.setVisibility(View.GONE);
+        }
+        emotionLastClick = System.currentTimeMillis();
+        
+
+    }
 
 }
-/*
-* recyclerView . getChildCount() <- 현재 포커스 되어있는 화면에서 가장 아래에 있는 뷰
-* */

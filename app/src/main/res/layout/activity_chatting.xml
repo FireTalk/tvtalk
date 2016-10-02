@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context="kr.co.tvtalk.ChattingActivity"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/color_main"
-    >
+    android:background="@color/color_main">
     <RelativeLayout
         android:id="@+id/catting_action_bar"
         android:layout_width="match_parent"
@@ -98,6 +98,7 @@
             android:layout_marginRight="43.4dp"
             android:layout_toRightOf="@id/preview_profile_image"
             android:layout_marginLeft="11dp"
+            android:textSize="12sp"
             />
         <ImageView
             android:id="@+id/preview_arrow_btn"
@@ -110,13 +111,33 @@
             />
     </RelativeLayout>
 
-
     <RelativeLayout
+        android:id="@+id/emotion_preview_area"
+        android:layout_width="match_parent"
+        android:layout_height="110dp"
+        android:layout_above="@+id/input_form"
+        android:background="#b3000000"
+        android:visibility="gone"
+        >
+        <ImageView
+            android:id="@+id/emotion_prview"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_centerHorizontal="true"
+            android:layout_margin="18dp"
+            />
+
+    </RelativeLayout>
+    <RelativeLayout
+        android:id="@+id/input_form"
         android:layout_width="match_parent"
         android:layout_height="40dp"
-        android:background="#F1F1F1"
+        android:background="#F8F8F8"
         android:layout_alignParentBottom="true"
-        android:padding="5dp"
+        android:paddingLeft="5dp"
+        android:paddingRight="5dp"
+        android:paddingTop="5dp"
         >
         <ImageView
             android:id="@+id/icon_btn"
@@ -130,7 +151,8 @@
         <EditText
             android:id="@+id/typing_message"
             android:layout_width="match_parent"
-            android:layout_height="34dp"
+            android:layout_height="wrap_content"
+            android:maxHeight="100dp"
             android:paddingTop="2dp"
             android:paddingBottom="2dp"
             android:paddingLeft="8dp"
@@ -152,4 +174,34 @@
             android:visibility="gone"
             />
     </RelativeLayout>
+    <RelativeLayout
+        android:id="@+id/emotion_area"
+        android:layout_width="match_parent"
+        android:layout_height="227dp"
+        android:background="#f8f8f8"
+        android:layout_alignParentBottom="true"
+        android:visibility="gone"
+
+        >
+        <android.support.v4.view.ViewPager
+            android:id="@+id/viewpager"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginBottom="30dp"
+            />
+        <com.matthewtamlin.sliding_intro_screen_library.indicators.DotIndicator
+            android:id="@+id/dotindicator"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:numberOfDots="2"
+            app:selectedDotIndex="0"
+            android:layout_centerHorizontal="true"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="30dp"
+            app:selectedDotColor="#000000"
+            app:unselectedDotColor="#14000000"
+            />
+    </RelativeLayout>
+
 </RelativeLayout>
