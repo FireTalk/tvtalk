@@ -40,6 +40,8 @@ import kr.co.tvtalk.activitySupport.catting.ChattingAdapter;
 import kr.co.tvtalk.activitySupport.catting.ChattingData;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -58,7 +60,7 @@ public class ChattingActivity extends AppCompatActivity {
 
     private FirebaseAuth auth;
     private FirebaseDatabase db;
-    private DatabaseReference ref, ref2;
+    private DatabaseReference ref, ref2, titleRef;
 
 
 
@@ -136,11 +138,24 @@ public class ChattingActivity extends AppCompatActivity {
         saveChattingData = new ArrayList<Data>();
         Intent intent = getIntent();
         String key = intent.getStringExtra("key");
-        String order = intent.getStringExtra("order");
+        final String order = intent.getStringExtra("order");
 
 
         auth = FirebaseAuth.getInstance();
         db = FirebaseDatabase.getInstance();
+
+        titleRef = db.getReference().child("drama/"+key+"/title");
+        titleRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot data) {
+                talkingRoomTitle.setText(data.getValue().toString()+" "+order+"화");//채팅방 이름 동기화
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
 
         ref = db.getReference().child("chat/"+key+"_"+order);
         ref2= db.getReference().child("member");
@@ -170,10 +185,6 @@ public class ChattingActivity extends AppCompatActivity {
                     emoticon = data.child("emo").getValue().toString();
                     getMsg(uid, msg, emoticon);
                 }
-
-
-
-
             }
 
             @Override
@@ -336,15 +347,44 @@ public class ChattingActivity extends AppCompatActivity {
         Log.e("changeActivity","start - "+start+"/ before - "+before+"/count-"+count);
     }
     public static String lastAskPerson = "";
+
+    long cnt;
     @OnClick(R.id.send_btn)
     public void sendBtnClick(View v) {
-        addChattingLine(
-            "",//프로필 이미지
-            "송블리",  // 사용자 이름
-            typingMessage.getText().toString(), // 할말
-            ChattingData.AskPersonInfo.ME
-            //lastAskPerson.equals("송블리") ? ChattingData.AskPersonInfo.SAME : ChattingData.AskPersonInfo.ANOTHER // 같은 사용자인지 아닌지
-        );
+        final FirebaseUser user = auth.getCurrentUser();
+
+        if(user != null){
+            ref.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot data) {
+                    if(data == null) cnt = 0;
+                    cnt = data.getChildrenCount()+1;
+
+                    Map<String, Object> chatdb = new HashMap<String, Object>();
+
+                    chatdb.put("uid", user.getUid());
+                    chatdb.put("msg", typingMessage.getText().toString());
+                    chatdb.put("type", 1);
+//                    chatdb.put("emo", );
+                    ref.child(""+cnt).setValue(chatdb);
+                    typingMessage.setText("");
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+
+                }
+            });
+        }
+
+
+//        addChattingLine(
+//            "",//프로필 이미지
+//            "송블리",  // 사용자 이름
+//            typingMessage.getText().toString(), // 할말
+//            ChattingData.AskPersonInfo.ME
+//            //lastAskPerson.equals("송블리") ? ChattingData.AskPersonInfo.SAME : ChattingData.AskPersonInfo.ANOTHER // 같은 사용자인지 아닌지
+//        );
     }
 
     /*@Bind(R.id.indicator)
