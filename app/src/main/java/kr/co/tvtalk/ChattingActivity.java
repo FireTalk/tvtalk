@@ -147,8 +147,6 @@ public class ChattingActivity extends AppCompatActivity {
 
 
         ref.addChildEventListener(new ChildEventListener() {
-            String nickname ;
-            String photo;
             String uid;
             String msg;
             String type;
@@ -159,72 +157,20 @@ public class ChattingActivity extends AppCompatActivity {
                 uid = data.child("uid").getValue().toString();
 
 
-
-
                 type = data.child("type").getValue().toString();
-                if(type.equals("1")){
+                if (type.equals("1")) {
                     msg = data.child("msg").getValue().toString();
-                }else if(type.equals("2")) {
+                    getMsg(uid, msg, "");
+                } else if (type.equals("2")) {
                     emoticon = data.child("emo").getValue().toString();
+                    getMsg(uid, "", emoticon);
 
-                }else if(type.equals("3")){
+                } else if (type.equals("3")) {
                     msg = data.child("msg").getValue().toString();
                     emoticon = data.child("emo").getValue().toString();
+                    getMsg(uid, msg, emoticon);
                 }
 
-                ref2.child(uid).addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(DataSnapshot data2) {
-
-
-                        MemberDTO dto = data2.getValue(MemberDTO.class);
-
-                        if(dto == null){
-//                            Toast.makeText(ChattingActivity.this, "null이넹", Toast.LENGTH_SHORT).show();
-                            nickname = "";
-                            photo = "";
-
-                        }else{
-//                            Toast.makeText(ChattingActivity.this, dto.getNickname(), Toast.LENGTH_SHORT).show();
-                            nickname = dto.getNickname();
-                            Toast.makeText(ChattingActivity.this, dto.getNickname(), Toast.LENGTH_SHORT).show();
-                            photo = dto.getProfile();
-                            final FirebaseUser user = auth.getCurrentUser();
-                            if(user != null){ // 로그인 된 경우
-                                if(user.getUid().toString().equals(uid)){//내가 했던말
-                                    addChattingLine(
-                                            photo,
-                                            nickname, // 사용자 이름
-                                            msg,  // 텍스트 메시지
-                                            ChattingData.AskPersonInfo.SAME // 같은사람이 말 했는지 아닌지
-                                    );
-
-                                }else{//남이 했던말
-                                    addChattingLine(
-                                            photo,
-                                            nickname, // 사용자 이름
-                                            msg,  // 텍스트 메시지
-                                            ChattingData.AskPersonInfo.ANOTHER // 같은사람이 말 했는지 아닌지
-                                    );
-                                }
-
-
-                            }else{//로그인X
-                                addChattingLine(
-                                        photo,
-                                        nickname, // 사용자 이름
-                                        msg,  // 텍스트 메시지
-                                        ChattingData.AskPersonInfo.ANOTHER // 같은사람이 말 했는지 아닌지
-                                );
-                            }
-                        }
-                    }
-
-                    @Override
-                    public void onCancelled(DatabaseError databaseError) {
-
-                    }
-                });
 
 
 
@@ -249,10 +195,9 @@ public class ChattingActivity extends AppCompatActivity {
             public void onCancelled(DatabaseError databaseError) {
 
             }
+
+
         });
-
-
-
 
 
         /*emotion*/
@@ -260,6 +205,71 @@ public class ChattingActivity extends AppCompatActivity {
         viewPager.setAdapter(emotionPagerAdapter);
 
     }
+
+    public void getMsg(final String uid, final String msg, final String emo){
+        ref2.child(uid).addListenerForSingleValueEvent(new ValueEventListener() {
+            String nickname;
+            String photo;
+
+
+            @Override
+            public void onDataChange(DataSnapshot data2) {
+
+
+                MemberDTO dto = data2.getValue(MemberDTO.class);
+
+                if(dto != null){
+
+                    nickname = dto.getNickname();
+//                            Toast.makeText(ChattingActivity.this, dto.getNickname(), Toast.LENGTH_SHORT).show();
+                    photo = dto.getProfile();
+
+                    final FirebaseUser user = auth.getCurrentUser();
+                    if(user != null){ // 로그인 된 경우
+                        if(user.getUid().toString().equals(uid)){//내가 했던말
+                            addChattingLine(
+                                    photo,
+                                    nickname, // 사용자 이름
+                                    msg,  // 텍스트 메시지
+                                    ChattingData.AskPersonInfo.ME // 같은사람이 말 했는지 아닌지
+                            );
+
+                        }else{//남이 했던말
+                            addChattingLine(
+                                    photo,
+                                    nickname, // 사용자 이름
+                                    msg,  // 텍스트 메시지
+                                    ChattingData.AskPersonInfo.ANOTHER // 같은사람이 말 했는지 아닌지
+                            );
+                        }
+
+
+                    }else{//로그인X
+
+                        addChattingLine(
+                                photo,
+                                nickname, // 사용자 이름
+                                msg,  // 텍스트 메시지
+                                ChattingData.AskPersonInfo.ANOTHER // 같은사람이 말 했는지 아닌지
+                        );
+                    }
+
+
+                }else{
+                    nickname = "";
+                    photo = "";
+                }
+
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+    }
+
     /*emotion*/
     @OnPageChange(R.id.viewpager)
     public void viewPagerClick(int position) {
