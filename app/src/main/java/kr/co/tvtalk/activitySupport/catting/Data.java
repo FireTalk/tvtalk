@@ -25,7 +25,9 @@ public abstract class Data {
 
     public enum AskPersonInfo{
         SAME ,
+        SAME_EMOTION,
         ANOTHER,
+        ANOTHER_EMOTION,
         ME,
         ME_EMOTION
     }

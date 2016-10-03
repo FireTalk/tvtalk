@@ -40,14 +40,24 @@ public class ChattingAdapter extends CustomAdapter<Data , CustomViewHolder> {
                 ChattingViewHolder anotherViewHolder = new ChattingViewHolder(anotherView);
                 anotherView.findFocus();
                 return anotherViewHolder;//break;
+
             case ME:
                 View meView = LayoutInflater.from(parent.getContext()).inflate(R.layout.chatting_me , parent , false);
                 ChattingMeViewHolder meViewHolder = new ChattingMeViewHolder(meView);
                 return meViewHolder;//break;
+
             case ME_EMOTION :
                 View meEmotionView = LayoutInflater.from(parent.getContext()).inflate(R.layout.chatting_me_emotion,parent,false);
                 ChattingMeEmotionViewHolder meEmotionViewHolder = new ChattingMeEmotionViewHolder(meEmotionView);
                 return meEmotionViewHolder;
+            case SAME_EMOTION:
+                View continueEmotionView = LayoutInflater.from(parent.getContext()).inflate(R.layout.chatting_another_continue_emotion,parent,false);
+                ChattingContinueEmotionViewHolder continueEmotionViewHolder = new ChattingContinueEmotionViewHolder(continueEmotionView);
+                return continueEmotionViewHolder;
+            case ANOTHER_EMOTION:
+                View emotionView = LayoutInflater.from(parent.getContext()).inflate(R.layout.chatting_antoher_emotion , parent ,false);
+                ChattingEmotionViewHolder emotionViewHolder = new ChattingEmotionViewHolder(emotionView);
+                return emotionViewHolder;
             default:
                 return null;
         }
@@ -75,6 +85,15 @@ public class ChattingAdapter extends CustomAdapter<Data , CustomViewHolder> {
             case ME_EMOTION:
                 ChattingMeEmotionViewHolder meEmotionViewHolder = (ChattingMeEmotionViewHolder)holder;
                 meEmotionViewHolder.onBindView( list . get(position) . getEmotion() , context );
+                break;
+            case SAME_EMOTION :
+                ChattingContinueEmotionViewHolder continueEmotionViewHolder = (ChattingContinueEmotionViewHolder)holder;
+                continueEmotionViewHolder . onBindView( list . get(position) . getEmotion() , context );
+                break;
+            case ANOTHER_EMOTION:
+                ChattingEmotionViewHolder emotionViewHolder = (ChattingEmotionViewHolder)holder;
+                emotionViewHolder.onBindView( list . get(position) , context);
+                break;
             default :
                 Log.e("onBindViewHolder","not connected");
                 break;
