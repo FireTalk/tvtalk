@@ -9,6 +9,30 @@
     tools:context="kr.co.tvtalk.LoginAfterActivity"
     android:background="#ffffff"
     >
+    <RelativeLayout
+        android:id="@+id/loginafter_action_bar"
+        android:layout_width="match_parent"
+        android:layout_height="46dp"
+        android:background="@drawable/underline_bar"
+        >
+        <ImageView
+            android:id="@+id/loginafter_back_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/back_btn"
+            android:padding="10dp"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="5dp"
+            />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:text="계정정보 변경"
+            android:textSize="17sp"
+            />
+    </RelativeLayout>
     <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/profile_image"
         android:layout_width="96dp"
@@ -44,14 +68,14 @@
             />
     </LinearLayout>
 
-    <EditText
+    <TextView
         android:id="@+id/login_email_id"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="hottalk@hotmail.com"
+        android:text="hottalk@hotmail.com"
         android:paddingLeft="63dp"
         android:backgroundTint="#252525"
-        android:textColorHint="#4d252525"
+        android:textColor="#252525"
         android:layout_below="@id/profile_layout"
         android:layout_marginTop="30dp"
         android:layout_marginRight="30dp"
@@ -70,65 +94,14 @@
         android:textSize="14sp"
         android:layout_marginLeft="2dp"
         />
-    <EditText
-        android:id="@+id/login_password"
-        android:layout_below="@id/login_email_id"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingLeft="63dp"
-        android:paddingBottom="15dp"
-        android:hint="영문,숫자 혼용 4~6자리"
-        android:backgroundTint="#252525"
-        android:textColorHint="#4d252525"
-        android:layout_centerVertical="true"
-        android:layout_marginRight="30dp"
-        android:layout_marginLeft="30dp"
-        android:textSize="14sp"
-        />
-    <TextView
-        android:id="@+id/login_password_description"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="비밀번호"
-        android:textColor="#252525"
-        android:layout_alignBaseline="@id/login_password"
-        android:layout_alignLeft="@id/login_password"
-        android:textSize="14sp"
-        android:layout_marginLeft="2dp"
-        />
-    <EditText
-        android:id="@+id/login_confirm"
-        android:layout_below="@id/login_password"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingLeft="63dp"
-        android:paddingBottom="15dp"
-        android:hint="다시 한번 입력해주세요"
-        android:backgroundTint="#252525"
-        android:textColorHint="#4d252525"
-        android:layout_centerVertical="true"
-        android:layout_marginRight="30dp"
-        android:layout_marginLeft="30dp"
-        android:textSize="14sp"
-        />
-    <TextView
-        android:id="@+id/login_confrim_password"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="번호확인"
-        android:textColor="#252525"
-        android:layout_alignBaseline="@id/login_confirm"
-        android:layout_alignLeft="@id/login_confirm"
-        android:textSize="14sp"
-        android:layout_marginLeft="2dp"
-        />
+
 
     <Button
         android:id="@+id/login_repair_btn"
-        android:layout_below="@id/login_confirm"
+        android:layout_below="@id/login_email_id"
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:text="정보변경"
+        android:text="비밀번호 변경하기"
         android:textColor="#252525"
         android:background="@drawable/registent_button"
         android:layout_marginRight="30dp"

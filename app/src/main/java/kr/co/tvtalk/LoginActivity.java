@@ -223,6 +223,7 @@ public class LoginActivity extends AppCompatActivity {
                 public void onComplete(@NonNull Task<AuthResult> task) {
                     if(task.isSuccessful()){
                         startActivity(new Intent().setClass(getApplicationContext(),MainActivity.class));
+
                     }else{
                         Toast.makeText(LoginActivity.this, "잘못된 로그인 정보입니다.", Toast.LENGTH_LONG).show();
                     }

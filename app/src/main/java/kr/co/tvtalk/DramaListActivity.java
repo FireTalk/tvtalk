@@ -130,11 +130,14 @@ import kr.co.tvtalk.activitySupport.dramalist.DramaListAdapter;
         SpannableString content1 = new SpannableString("MBC 다시보기");
         content1.setSpan(new UnderlineSpan(),0,content1.length(),0);
         broadLink.setText(content1);
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {     //sdk 24 일때
-            broadLink.setText(Html.fromHtml("<a href=\"http://www.imbc.com\">MBC</a>", Html.FROM_HTML_MODE_LEGACY));
+        if (android.os.Build.VERSION.SDK_INT <android.os.Build.VERSION_CODES.N) {     //sdk 24 일때
+            result = Html.fromHtml("<a href=\"http://www.imbc.com\">MBC</a>");
+
         }
-        else                                                                            //sdk 24 아닐때
-            broadLink.setText(Html.fromHtml("<a href=\"http://www.imbc.com\">MBC</a>"));
+        else {                                                                           //sdk 24 아닐때
+            result = Html.fromHtml("<a href=\"http://www.imbc.com\">MBC</a>", Html.FROM_HTML_MODE_LEGACY);
+        }
+        broadLink.setText(result);
     }
     @OnClick(R.id.mdl_back_btn)
         public void mdlBackBtn(View v) {
