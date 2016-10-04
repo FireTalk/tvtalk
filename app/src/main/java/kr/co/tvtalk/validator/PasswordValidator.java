@@ -1,5 +1,7 @@
 package kr.co.tvtalk.validator;
 
+import android.util.Log;
+
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -38,7 +40,7 @@ public class PasswordValidator{
             "((?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*()]).{6,20})";
 
     private static final String TVTALK_PASSWORD_PATTERN =
-            "^[a-zA-Z]*$";
+            "^[a-zA-Z0-9]*$";
 
     private PasswordValidator(){
         pattern = Pattern.compile(TVTALK_PASSWORD_PATTERN);
@@ -57,6 +59,7 @@ public class PasswordValidator{
     public boolean tvtalkValidate(final String password) {
         if(password.length()>12 || password.length() < 6)
             return false;
+
         matcher = pattern.matcher(password);
         if( !matcher.matches() | Pattern.compile("^[0-9]*$").matcher(password).matches() )
             return false;
