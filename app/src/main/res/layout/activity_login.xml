@@ -153,6 +153,7 @@
         android:layout_marginTop="62dp"
         android:textColor="#252525"
         android:padding="10dp"
+        android:backgroundTint="#252525"
         />
 
 

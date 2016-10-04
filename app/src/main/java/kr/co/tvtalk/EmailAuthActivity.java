@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -22,6 +23,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import butterknife.OnTextChanged;
 import kr.co.tvtalk.R;
 import kr.co.tvtalk.validator.EmailValidator;
 import kr.co.tvtalk.validator.NickNameValidator;
@@ -69,8 +71,14 @@ public class EmailAuthActivity extends AppCompatActivity {
     public void confirmRequestBtnClick(View v) {
         final String email = authEmail.getText().toString();
         final String nickName = authNickName.getText().toString();
-        String pw1 = authPassword.getText().toString();
-        String pw2 = authPasswordConfrim.getText().toString();
+        String pw1 = authPassword.getText().toString().trim();
+        String pw2 = authPasswordConfrim.getText().toString().trim();
+        Toast.makeText(getApplication(),
+                "pw1-"+PasswordValidator.getInstance().tvtalkValidate(pw1)
+                +"/pw2-"+PasswordValidator.getInstance().tvtalkValidate(pw2)
+                ,
+                Toast.LENGTH_SHORT
+        ).show();
 
         // 이메일 형식이 올바르지 않을경우.
         if( !EmailValidator.getInstance().isValid(email) )
@@ -128,6 +136,21 @@ public class EmailAuthActivity extends AppCompatActivity {
 
 
 
+    }
+    /*여기 카페가서 추가적으로 할게요*/
+    @OnTextChanged(R.id.auth_password)
+    public void authPasswordTextChanged(CharSequence s, int start, int before, int count) {
+        isPasswordMatchers();
+    }
+    @OnTextChanged(R.id.auth_password_confirm)
+    public void authPasswordConfrimTextChanged(CharSequence s, int start, int before, int count) {
+        isPasswordMatchers();
+    }
+    private boolean isPasswordMatchers() {
+        return authPassword.getText().toString().equals(authPasswordConfrim.getText().toString());
+    }
+    private boolean isPasswordMatchers(final String authPassword , final String authPasswordConfirm) {
+        return false;
     }
 
     @OnClick(R.id.email_back_btn)
