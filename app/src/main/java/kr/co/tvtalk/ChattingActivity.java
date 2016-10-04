@@ -27,6 +27,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 
@@ -39,7 +40,9 @@ import kr.co.tvtalk.activitySupport.FontFactory;
 import kr.co.tvtalk.activitySupport.catting.ChattingAdapter;
 import kr.co.tvtalk.activitySupport.catting.ChattingData;
 
+import java.lang.reflect.Member;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -48,6 +51,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.OnTextChanged;
 
+import kr.co.tvtalk.model.ChatDTO;
 import kr.co.tvtalk.model.MemberDTO;
 
 import kr.co.tvtalk.activitySupport.catting.Data;
@@ -61,7 +65,6 @@ public class ChattingActivity extends AppCompatActivity {
     private FirebaseAuth auth;
     private FirebaseDatabase db;
     private DatabaseReference ref, ref2, titleRef;
-
 
 
     private static Context context;
@@ -78,6 +81,8 @@ public class ChattingActivity extends AppCompatActivity {
     private static ArrayList<Data> saveChattingData ;
 
     ArrayList<Data> datas = new ArrayList<Data>();
+
+    ArrayList<ChatDTO> syncList = new ArrayList<ChatDTO>();
 
     @Bind(R.id.talking_room_title)
     TextView talkingRoomTitle;
@@ -127,8 +132,6 @@ public class ChattingActivity extends AppCompatActivity {
         instance = this;
         context = getApplicationContext();
 
-
-
         talkingRoomTitle.setTypeface(FontFactory.getFont(getApplicationContext() , FontFactory.Font.NOTOSANS_BOLD));
         previewTextMessage.setTypeface(FontFactory.getFont(getApplicationContext() , FontFactory.Font.NOTOSANS_REGULAR));
 
@@ -136,15 +139,16 @@ public class ChattingActivity extends AppCompatActivity {
         inputMethodManager = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
         lastAskPerson="";
         saveChattingData = new ArrayList<Data>();
+
         Intent intent = getIntent();
-        String key = intent.getStringExtra("key");
-        final String order = intent.getStringExtra("order");
+        String key = intent.getStringExtra("key");//드라마 고유값 정보 받아오기
+        final String order = intent.getStringExtra("order");//드라마 회차 정보 받아오기
 
 
         auth = FirebaseAuth.getInstance();
         db = FirebaseDatabase.getInstance();
 
-        titleRef = db.getReference().child("drama/"+key+"/title");
+        titleRef = db.getReference().child("drama/"+key+"/title"); //드라마 제목 db reference
         titleRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot data) {
@@ -157,57 +161,74 @@ public class ChattingActivity extends AppCompatActivity {
             }
         });
 
-        ref = db.getReference().child("chat/"+key+"_"+order);
-        ref2= db.getReference().child("member");
+        ref = db.getReference().child("chat/"+key+"_"+order);//채팅방 db reference
+        ref2= db.getReference().child("member");// 회원 db reference
 
 
         ref.addChildEventListener(new ChildEventListener() {
-            String uid;
+            String uid; // 회원 고유값
+            String before_uid;
             String msg;
-            String type;
+            String type; // 1 이면 only 텍스트, 2면 only 이모티콘, 3은 둘다
             String emoticon;
+            int cnt;
+
+            ChattingData.AskPersonInfo isSamePerson;
+
+            ChatDTO dto = new ChatDTO();
 
             @Override
             public void onChildAdded(DataSnapshot data, String s) {
+
+                if(!data.getKey().toString().equals("1")){
+                    before_uid = uid;
+                }
                 uid = data.child("uid").getValue().toString();
 
 
                 type = data.child("type").getValue().toString();
                 if (type.equals("1")) {
-                    msg = data.child("msg").getValue().toString();
-                    getMsg(uid, msg, "");
+                    dto.setMsg(data.child("msg").getValue().toString());
+                    dto.setEmoticon("");
                 } else if (type.equals("2")) {
-                    emoticon = data.child("emo").getValue().toString();
-                    getMsg(uid, "", emoticon);
+                    dto.setMsg("");
+                    dto.setEmoticon(data.child("emo").getValue().toString());
 
                 } else if (type.equals("3")) {
-                    msg = data.child("msg").getValue().toString();
-                    emoticon = data.child("emo").getValue().toString();
-                    getMsg(uid, msg, emoticon);
+                    dto.setMsg(data.child("msg").getValue().toString());
+                    dto.setEmoticon(data.child("emo").getValue().toString());
                 }
+
+                final FirebaseUser user = auth.getCurrentUser();
+                if(user != null && user.getUid().toString().equals(uid)){//내가 했던말
+                    dto.setIsSamePerson(ChattingData.AskPersonInfo.ME);
+
+
+                }else{//남이 했던말
+                    if(uid.equals(before_uid)){
+                        dto.setIsSamePerson(ChattingData.AskPersonInfo.SAME);
+                    }else{
+                        dto.setIsSamePerson(ChattingData.AskPersonInfo.ANOTHER);
+                    }
+                    getUserInfo(uid, dto.getKey());
+                }
+
+                addChattingLine(
+                    "",//프로필 이미지
+                    "",  // 사용자 이름
+                    dto.getMsg(), // 할말
+                    dto.getIsSamePerson()
+                );
             }
 
             @Override
-            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-
-            }
-
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {}
             @Override
-            public void onChildRemoved(DataSnapshot dataSnapshot) {
-
-            }
-
+            public void onChildRemoved(DataSnapshot dataSnapshot) {}
             @Override
-            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-
-            }
-
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {}
             @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-
-
+            public void onCancelled(DatabaseError databaseError) {}
         });
 
 
@@ -217,69 +238,31 @@ public class ChattingActivity extends AppCompatActivity {
 
     }
 
-    public void getMsg(final String uid, final String msg, final String emo){
-        ref2.child(uid).addListenerForSingleValueEvent(new ValueEventListener() {
-            String nickname;
-            String photo;
+    public void getUserInfo(String uid, String key){
 
+        ref2.child(uid).addListenerForSingleValueEvent(new ValueEventListener() {
+            String nickName;
+            String photo;
 
             @Override
             public void onDataChange(DataSnapshot data2) {
 
-
-                MemberDTO dto = data2.getValue(MemberDTO.class);
-
+                ChatDTO dto = data2.getValue(ChatDTO.class);
                 if(dto != null){
+                    nickName = dto.getNickname();
+                    photo = dto.getPhoto();
 
-                    nickname = dto.getNickname();
-//                            Toast.makeText(ChattingActivity.this, dto.getNickname(), Toast.LENGTH_SHORT).show();
-                    photo = dto.getProfile();
-
-                    final FirebaseUser user = auth.getCurrentUser();
-                    if(user != null){ // 로그인 된 경우
-                        if(user.getUid().toString().equals(uid)){//내가 했던말
-                            addChattingLine(
-                                    photo,
-                                    nickname, // 사용자 이름
-                                    msg,  // 텍스트 메시지
-                                    ChattingData.AskPersonInfo.ME // 같은사람이 말 했는지 아닌지
-                            );
-
-                        }else{//남이 했던말
-                            addChattingLine(
-                                    photo,
-                                    nickname, // 사용자 이름
-                                    msg,  // 텍스트 메시지
-                                    ChattingData.AskPersonInfo.ANOTHER // 같은사람이 말 했는지 아닌지
-                            );
-                        }
-
-
-                    }else{//로그인X
-
-                        addChattingLine(
-                                photo,
-                                nickname, // 사용자 이름
-                                msg,  // 텍스트 메시지
-                                ChattingData.AskPersonInfo.ANOTHER // 같은사람이 말 했는지 아닌지
-                        );
-                    }
-
-
-                }else{
-                    nickname = "";
-                    photo = "";
                 }
-
-
             }
-
             @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
+            public void onCancelled(DatabaseError databaseError) {}
         });
+
+
+
     }
+
+
 
     /*emotion*/
     @OnPageChange(R.id.viewpager)
@@ -350,10 +333,12 @@ public class ChattingActivity extends AppCompatActivity {
 
     long cnt;
     @OnClick(R.id.send_btn)
-    public void sendBtnClick(View v) {
+    public void sendBtnClick(View v) { // 전송 버튼 이벤트  => 이모티콘만 눌렀을때도 활성화 돼야함!
         final FirebaseUser user = auth.getCurrentUser();
 
-        if(user != null){
+        if(user != null){//로그인 한 경우
+
+
             ref.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot data) {
@@ -366,8 +351,9 @@ public class ChattingActivity extends AppCompatActivity {
                     chatdb.put("msg", typingMessage.getText().toString());
                     chatdb.put("type", 1);
 //                    chatdb.put("emo", );
-                    ref.child(""+cnt).setValue(chatdb);
+                    ref.child(""+cnt).setValue(chatdb); // db에 저장하면 추가된 메세지는 알아서 불러와짐 - 위에 childadded 이벤트에서..
                     typingMessage.setText("");
+
                 }
 
                 @Override
@@ -375,6 +361,8 @@ public class ChattingActivity extends AppCompatActivity {
 
                 }
             });
+        }else{ // 로그인 X
+            Toast.makeText(ChattingActivity.this, "로그인이 필요합니다!", Toast.LENGTH_SHORT).show();
         }
 
 
@@ -385,6 +373,7 @@ public class ChattingActivity extends AppCompatActivity {
 //            ChattingData.AskPersonInfo.ME
 //            //lastAskPerson.equals("송블리") ? ChattingData.AskPersonInfo.SAME : ChattingData.AskPersonInfo.ANOTHER // 같은 사용자인지 아닌지
 //        );
+
     }
 
     /*@Bind(R.id.indicator)
@@ -436,7 +425,7 @@ public class ChattingActivity extends AppCompatActivity {
      * @param textMessage 말한사람의 텍스트 메시지
      * @param isSamePerson 방금전에 말한 사람과 같은 사람이 말했는지 체크하는 boolean.
      */
-    private synchronized void addChattingLine(String profileImage,String speaker , String textMessage , ChattingData.AskPersonInfo isSamePerson)  {
+    private synchronized void addChattingLine(String profileImage, String speaker , String textMessage , ChattingData.AskPersonInfo isSamePerson)  {
         Data chattingData =  new ChattingData( profileImage,speaker, textMessage , isSamePerson );
         if(!isLiveActivity) {  // 액티비티가 죽은경우.
             saveChattingData.add(chattingData);
@@ -470,6 +459,7 @@ public class ChattingActivity extends AppCompatActivity {
     public void backButtonClick(View v) {
         finish();
     }
+
     @Bind(R.id.is_emotion_true)
     ImageView isEmotionTrue;
     @OnClick(R.id.is_emotion_true)
@@ -477,6 +467,7 @@ public class ChattingActivity extends AppCompatActivity {
         isEmotionTrue.setVisibility(View.GONE);
         isEmotionFalse.setVisibility(View.VISIBLE);
     }
+
     @Bind(R.id.is_emotion_false)
     ImageView isEmotionFalse;
     @OnClick(R.id.is_emotion_false)
@@ -494,7 +485,7 @@ public class ChattingActivity extends AppCompatActivity {
     static int clickEmotionNo ;
     public void emotionClick(int emotion) {
         status = STATUS_EMOTION;
-        if( emotion != clickEmotionNo ) {
+        if( emotion != clickEmotionNo ) {//이모티콘 누를 시 영역띄우기
             clickEmotionNo = emotion;
             Glide.with(this).load("http://211.249.50.198:5000/images/emoticon_test.png").into(emotionPreview);
             emotionPreviewArea.setVisibility(View.VISIBLE);
