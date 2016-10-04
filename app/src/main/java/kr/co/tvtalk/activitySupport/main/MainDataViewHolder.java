@@ -1,5 +1,6 @@
 package kr.co.tvtalk.activitySupport.main;
 
+import android.animation.ObjectAnimator;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
@@ -10,6 +11,9 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.request.animation.ViewPropertyAnimation;
+
 import kr.co.tvtalk.DramaListActivity;
 import kr.co.tvtalk.MainActivity;
 import kr.co.tvtalk.R;
@@ -81,9 +85,20 @@ public class MainDataViewHolder extends CustomViewHolder<MainData> {
 
     public void onBindView(MainData item , Context context) {
         onBindView(item);
+        /*ViewPropertyAnimation.Animator animator = new ViewPropertyAnimation.Animator(){
+            @Override
+            public void animate(View v) {
+                v.setAlpha(0f);
+                ObjectAnimator fadeAnim = ObjectAnimator.ofFloat(v,"alpha",0f,1f);
+                fadeAnim.setDuration(1500);
+                fadeAnim.start();
+          }
+        };*/
         Glide.with(context).load(item.broadcastImage)
-                .thumbnail(0.5f)
+                .thumbnail(0.8f)
                 .crossFade()
+                .diskCacheStrategy(DiskCacheStrategy.ALL)
+                //.animate(animator)
                 .into(broadcastImage);
 
         if( !customPreference.getValue(broadcastName.getText().toString() , false)  ) {

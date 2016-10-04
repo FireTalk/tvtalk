@@ -8,8 +8,12 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+
+import org.w3c.dom.Text;
+
 import kr.co.tvtalk.ChattingActivity;
 import kr.co.tvtalk.DramaListActivity;
 import kr.co.tvtalk.R;
@@ -22,6 +26,7 @@ import butterknife.BindDrawable;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 public class DramaViewHolder extends CustomViewHolder<DramaData> {
+
     @Nullable
     @Bind(R.id.mdl_drama_image)
     ImageView dramaImage;
@@ -76,6 +81,7 @@ public class DramaViewHolder extends CustomViewHolder<DramaData> {
     RelativeLayout mainDramaListRow;
     @OnClick(R.id.main_drama_list_row)
     public void mainDramaListRowClick(View v) {
+
         Intent intent = new Intent();
         intent.putExtra("key", key);
         intent.putExtra("order", order);

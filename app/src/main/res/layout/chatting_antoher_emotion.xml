@@ -7,27 +7,26 @@
     android:layout_marginTop="5dp"
     >
     <de.hdodenhof.circleimageview.CircleImageView
-        android:id="@+id/another_profile_image"
+        android:id="@+id/another_profile_image_emotion"
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:src="@drawable/icon_profile"
 
         />
     <TextView
-        android:id="@+id/another_name"
+        android:id="@+id/another_name_emotion"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_toRightOf="@id/another_profile_image"
+        android:layout_toRightOf="@id/another_profile_image_emotion"
         android:text="gong"
         android:layout_marginLeft="7dp"
         />
-    <TextView
-        android:id="@+id/another_text_message"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:background="@drawable/icon_catbox"
+    <ImageView
+        android:id="@+id/another_text_message_emotion"
+        android:layout_width="120dp"
+        android:layout_height="90dp"
         android:layout_below="@id/another_name"
-        android:layout_toRightOf="@id/another_profile_image"
+        android:layout_toRightOf="@id/another_profile_image_emotion"
         android:paddingLeft="10dp"
         android:paddingTop="5dp"
         android:paddingRight="10dp"
@@ -36,5 +35,4 @@
         android:textColor="#FFFFFF"
         android:layout_marginLeft="7dp"
         />
-
 </RelativeLayout>

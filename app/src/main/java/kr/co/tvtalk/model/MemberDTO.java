@@ -17,26 +17,30 @@ public class MemberDTO {
 
     }
 
-    public MemberDTO(String nickname, String profile, String email, boolean facebook) {
+    public MemberDTO(String nickname, String profile) {
         this.nickname = nickname;
         this.profile = profile;
-        this.email = email;
-        this.facebook = facebook;
-
     }
 
-    public Map<String, Boolean> member = new HashMap<>();
-
-    public Map<String, Object> toMap(){
-
-        HashMap<String, Object> result = new HashMap<>();
-        result.put("email", email);
-        result.put("profile", profile);
-        result.put("nickname", nickname);
-        result.put("facebook", facebook);
-
-        return result;
+    public String getNickname() {
+        return nickname;
     }
+
+    public String getProfile() {
+        return profile;
+    }
+//    public Map<String, Boolean> member = new HashMap<>();
+//
+//    public Map<String, Object> toMap(){
+//
+//        HashMap<String, Object> result = new HashMap<>();
+//        result.put("email", email);
+//        result.put("profile", profile);
+//        result.put("nickname", nickname);
+//        result.put("facebook", facebook);
+//
+//        return result;
+//    }
 
 
 
