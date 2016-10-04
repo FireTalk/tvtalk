@@ -1,5 +1,6 @@
 package kr.co.tvtalk;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -45,13 +46,13 @@ public class LoginAfterActivity extends AppCompatActivity {
         setContentView(R.layout.activity_loginafter);
         ButterKnife.bind(this);
 
-        auth = FirebaseAuth.getInstance();
-        db = FirebaseDatabase.getInstance();
-        Ref = db.getReference("member");
-        user = auth.getCurrentUser();
+     //   auth = FirebaseAuth.getInstance();
+     //   db = FirebaseDatabase.getInstance();
+     //   Ref = db.getReference("member");
+      //  user = auth.getCurrentUser();
 
-        profileName.setText(user.getDisplayName());
-        loginEmailID.setText(user.getEmail());
+       // profileName.setText(user.getDisplayName());
+       // loginEmailID.setText(user.getEmail());
     }
 
     @OnClick(R.id.loginafter_back_btn)
@@ -76,10 +77,25 @@ public class LoginAfterActivity extends AppCompatActivity {
         Toast.makeText(LoginAfterActivity.this, "로그아웃", Toast.LENGTH_SHORT).show();
     }
 
+    public static int REQ_CODE_SELECT_IMAGE = 100;
+
     //프로필 사진 변경
+    @Bind(R.id.profile_image)
+    ImageView img;
     @OnClick(R.id.profile_image)
     public void imageChange(View view){
+        Intent i = new Intent(Intent.ACTION_PICK);
+        i.setType(android.provider.MediaStore.Images.Media.CONTENT_TYPE);
+        i.setData(android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+        startActivityForResult(i, REQ_CODE_SELECT_IMAGE);
+    }
 
+    @Override protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == REQ_CODE_SELECT_IMAGE) {
+            if (resultCode == Activity.RESULT_OK) {
+                img.setImageURI(data.getData());
+            }
+        }
     }
 }
 
