@@ -3,13 +3,11 @@ package kr.co.tvtalk;
 
 import android.content.Context;
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
-import android.widget.Toast;
-
 
 import com.facebook.FacebookSdk;
 import com.facebook.login.LoginManager;
@@ -21,14 +19,13 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
-import kr.co.tvtalk.activitySupport.main.MainAdapter;
-import kr.co.tvtalk.activitySupport.main.MainData;
-
 import java.util.ArrayList;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import kr.co.tvtalk.activitySupport.main.MainAdapter;
+import kr.co.tvtalk.activitySupport.main.MainData;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -119,12 +116,13 @@ public class MainActivity extends AppCompatActivity {
 
         FirebaseUser user = auth.getCurrentUser();
         if(user != null){
-
+        /*
             auth.signOut();
             LoginManager.getInstance().logOut();
             Toast.makeText(MainActivity.this, "로그아웃",
                     Toast.LENGTH_SHORT).show();
-
+        */
+            startActivity(new Intent(getApplicationContext(),LoginAfterActivity.class));
         }else{
 
             startActivity(new Intent(getApplicationContext(), LoginActivity.class));
