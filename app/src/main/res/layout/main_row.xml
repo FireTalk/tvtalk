@@ -40,7 +40,7 @@
         android:layout_height="14dp"
         android:src="@drawable/sbs"
         android:layout_below="@id/broadcast_name"
-        android:layout_marginLeft="10dp"
+        android:layout_marginLeft="11dp"
         />
     <TextView
         android:id="@+id/broadcast_description"

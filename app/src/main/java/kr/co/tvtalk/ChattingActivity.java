@@ -364,14 +364,6 @@ public class ChattingActivity extends AppCompatActivity {
         }
 
 
-//        addChattingLine(
-//            "",//프로필 이미지
-//            "송블리",  // 사용자 이름
-//            typingMessage.getText().toString(), // 할말
-//            ChattingData.AskPersonInfo.ME
-//            //lastAskPerson.equals("송블리") ? ChattingData.AskPersonInfo.SAME : ChattingData.AskPersonInfo.ANOTHER // 같은 사용자인지 아닌지
-//        );
-
     }
 
     /*@Bind(R.id.indicator)
@@ -453,6 +445,7 @@ public class ChattingActivity extends AppCompatActivity {
         recyclerView.smoothScrollToPosition( adapter.getItemCount() ); //맨 아래로 ㄱㄱ!
         chattingPreview.setVisibility(View.GONE);
     }
+
     @OnClick(R.id.catting_back_btn)
     public void backButtonClick(View v) {
         finish();
@@ -460,6 +453,7 @@ public class ChattingActivity extends AppCompatActivity {
 
     @Bind(R.id.is_emotion_true)
     ImageView isEmotionTrue;
+
     @OnClick(R.id.is_emotion_true)
     public void isemotionTrue(View v) {
         isEmotionTrue.setVisibility(View.GONE);
@@ -476,6 +470,7 @@ public class ChattingActivity extends AppCompatActivity {
 
     @Bind(R.id.emotion_prview)
     ImageView emotionPreview;
+
     @Bind(R.id.emotion_preview_area)
     RelativeLayout emotionPreviewArea;
     
@@ -493,8 +488,7 @@ public class ChattingActivity extends AppCompatActivity {
                     "https://avatars2.githubusercontent.com/u/14024193?v=3&s=466", // 프로필 이미지
                     "기호", // 사용자 이름
                     "",  // 텍스트 메시지
-                    //lastAskPerson.equals("기호") ? ChattingData.AskPersonInfo.SAME : ChattingData.AskPersonInfo.ANOTHER // 같은사람이 말 했는지 아닌지
-                    Data.AskPersonInfo.ME_EMOTION
+                    Data.AskPersonInfo.ME_EMOTION // 내가 이모티콘으로 말함.
             );
             emotionPreviewArea.setVisibility(View.GONE);
         }

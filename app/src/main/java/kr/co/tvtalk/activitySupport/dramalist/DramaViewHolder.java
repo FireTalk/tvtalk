@@ -27,6 +27,8 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 public class DramaViewHolder extends CustomViewHolder<DramaData> {
 
+    /*350 : 130 = 100% : x
+    * x == 27%*/
     @Nullable
     @Bind(R.id.mdl_drama_image)
     ImageView dramaImage;

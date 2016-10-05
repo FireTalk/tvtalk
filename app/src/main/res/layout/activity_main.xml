@@ -43,8 +43,6 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@id/main_action_bar"
-        android:layout_marginRight="5dp"
-        android:layout_marginLeft="5dp"
         />
     <View
         android:layout_width="1dp"
@@ -53,4 +51,18 @@
         android:layout_below="@id/main_action_bar"
         android:background="#07000000"
         />
+    <View
+        android:layout_width="12dp"
+        android:layout_height="match_parent"
+        android:layout_below="@id/main_action_bar"
+        android:background="#fafafa"
+        />
+    <View
+        android:layout_width="12dp"
+        android:layout_height="match_parent"
+        android:layout_below="@id/main_action_bar"
+        android:background="#fafafa"
+        android:layout_alignParentRight="true"
+        />
+
 </RelativeLayout>
