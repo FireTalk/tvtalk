@@ -17,17 +17,17 @@
             android:value="GlideModule"
             />
         <activity
-            android:name=".MainActivity"
+            android:name=".LoginAfterActivity"
             android:windowSoftInputMode="adjustResize" >
 
         </activity>
         <activity android:name=".LoginActivity" >
         </activity>
-        <activity android:name=".ChangePWActivity">]
+        <activity android:name=".ChangePWActivity">
         </activity>
         <activity android:name="NicknameActivity">
         </activity>
-        <activity android:name=".LoginAfterActivity">
+        <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

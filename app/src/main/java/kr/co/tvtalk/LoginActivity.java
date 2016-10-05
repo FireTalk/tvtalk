@@ -203,10 +203,7 @@ public class LoginActivity extends AppCompatActivity {
                     }
                 });
     }
-
-
-
-
+    
     @OnClick(R.id.login_btn)
     public void loginBtn(View v) {
 
@@ -216,7 +213,7 @@ public class LoginActivity extends AppCompatActivity {
         boolean isEmailValid = EmailValidator.getInstance().isValid(email);
         boolean isPasswordValid = PasswordValidator.getInstance().tvtalkValidate(password);
 
-        if(!(isEmailValid && isPasswordValid)) {
+        if ( isEmailValid && isPasswordValid ) {
 
             auth.signInWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                 @Override

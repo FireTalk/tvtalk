@@ -61,11 +61,9 @@ import kr.co.tvtalk.activitySupport.catting.emotion.EmotionPagerAdapter;
 public class ChattingActivity extends AppCompatActivity {
     public static ChattingActivity instance;
     private static boolean isLiveActivity = false;
-
     private FirebaseAuth auth;
     private FirebaseDatabase db;
     private DatabaseReference ref, ref2, titleRef;
-
 
     private static Context context;
 
@@ -441,13 +439,13 @@ public class ChattingActivity extends AppCompatActivity {
             chattingPreview.setVisibility(View.GONE);
         }
         else {
-            //preview에 사용자 image 세팅ㄹ
-
+            //preview에 사용자 image 세팅
             Glide.with(context).load(profileImage).into(previewProfileImage);
             previewTextMessage.setText(textMessage);
             chattingPreview.setVisibility(View.VISIBLE);
         }
         lastAskPerson = speaker;
+
     }
 
     @OnClick(R.id.chatting_preview)
@@ -501,8 +499,5 @@ public class ChattingActivity extends AppCompatActivity {
             emotionPreviewArea.setVisibility(View.GONE);
         }
         emotionLastClick = System.currentTimeMillis();
-        
-
     }
-
 }
