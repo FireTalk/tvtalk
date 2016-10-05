@@ -2,6 +2,7 @@ package kr.co.tvtalk;
 
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
@@ -35,13 +36,12 @@ import kr.co.tvtalk.activitySupport.dramalist.DramaListAdapter;
  */
     public class DramaListActivity extends AppCompatActivity {
 
-
         @Bind(R.id.broadcast_link)
         TextView broadLink;
+
         FirebaseAuth auth;
         FirebaseDatabase db;
         DatabaseReference ref;
-
         @Bind(R.id.mdl_recycler)
         RecyclerView mdlRcycler;
         DramaListAdapter dramaListAdapter;
@@ -53,6 +53,7 @@ import kr.co.tvtalk.activitySupport.dramalist.DramaListAdapter;
         private static ArrayList<DramaData> datas = new ArrayList<DramaData>();
 
         public static Context context;
+        public static String broadcast = "SBS";
 
         @Override
         protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -85,9 +86,9 @@ import kr.co.tvtalk.activitySupport.dramalist.DramaListAdapter;
 //                                R.drawable.icon_clock
 //                        ));
 //            }
-            text_concept();                 //하이퍼링크
+            text_concept();                 //언더바
 
-            ref.addChildEventListener(new ChildEventListener() {
+           ref.addChildEventListener(new ChildEventListener() {
                 @Override
                 public void onChildAdded(DataSnapshot data, String s) {
                     dramaListAdapter.add(
@@ -99,8 +100,7 @@ import kr.co.tvtalk.activitySupport.dramalist.DramaListAdapter;
                                 R.drawable.icon_clock,
                                 key
                         ));
-            }
-
+                }
 
                 @Override
                 public void onChildChanged(DataSnapshot dataSnapshot, String s) {
@@ -122,27 +122,36 @@ import kr.co.tvtalk.activitySupport.dramalist.DramaListAdapter;
 
                 }
             });
+
+
         }
 
-    // 하이퍼링크
+
+    //언더바 및 방송사 받아오기
     private void text_concept() {
-        Spanned result;
-        SpannableString content1 = new SpannableString("MBC 다시보기");
+        SpannableString content1 = new SpannableString(broadcast);
         content1.setSpan(new UnderlineSpan(),0,content1.length(),0);
         broadLink.setText(content1);
-        if (android.os.Build.VERSION.SDK_INT <android.os.Build.VERSION_CODES.N) {     //sdk 24 일때
-            result = Html.fromHtml("<a href=\"http://www.imbc.com\">MBC</a>");
+    }
 
+    //하이퍼 링크 띄우기
+    @OnClick(R.id.broadcast_link)
+        public void boadcastBTN(View v){
+        if(broadcast == "SBS"){
+            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://www.sbs.co.kr"));
+            startActivity(intent);
         }
-        else {                                                                           //sdk 24 아닐때
-            result = Html.fromHtml("<a href=\"http://www.imbc.com\">MBC</a>", Html.FROM_HTML_MODE_LEGACY);
+        else if(broadcast == "KBS2"){
+            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://www.kbc.co.kr"));
+            startActivity(intent);
         }
-        broadLink.setText(result);
+        else if(broadcast =="MBC"){
+            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://www.imbc.com"));
+            startActivity(intent);
+        }
     }
     @OnClick(R.id.mdl_back_btn)
         public void mdlBackBtn(View v) {
             finish();
         }
-
-
 }
