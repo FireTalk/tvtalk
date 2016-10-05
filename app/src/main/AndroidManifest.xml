@@ -17,7 +17,7 @@
             android:value="GlideModule"
             />
         <activity
-            android:name=".MainActivity"
+            android:name=".LoginAfterActivity"
             android:windowSoftInputMode="adjustResize" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -27,12 +27,18 @@
         </activity>
         <activity android:name=".LoginActivity" >
         </activity>
-        <activity android:name=".ChangePWActivity">]
+        <activity android:name=".ChangePWActivity">
         </activity>
         <activity android:name="NicknameActivity">
         </activity>
-        <activity android:name=".LoginAfterActivity">
-         </activity>
+        <activity android:name=".MainActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
         <activity android:name=".DramaListActivity" >
         </activity>
         <activity android:name=".EmailAuthActivity"/>
