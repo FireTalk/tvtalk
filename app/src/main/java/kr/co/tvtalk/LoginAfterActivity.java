@@ -65,7 +65,7 @@ public class LoginAfterActivity extends AppCompatActivity {
         startActivity(new Intent(getApplicationContext(), ChangePWActivity.class));
     }
 
-    //로그아웃 //문제있음...
+    //로그아웃
     @Bind(R.id.logout_btn)
     Button logoutBtn;
     @OnClick(R.id.logout_btn)
@@ -74,6 +74,7 @@ public class LoginAfterActivity extends AppCompatActivity {
         auth.signOut();
         LoginManager.getInstance().logOut();
         Toast.makeText(LoginAfterActivity.this, "로그아웃", Toast.LENGTH_SHORT).show();
+        startActivity(new Intent(getApplicationContext(),MainActivity.class));
     }
 
     @Bind(R.id.name_repair)
