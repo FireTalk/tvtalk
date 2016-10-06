@@ -59,7 +59,7 @@
             android:id="@+id/changePW_currentText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="아이디"
+            android:text="현재비번"
             android:textColor="#252525"
             android:layout_alignBaseline="@id/changePW_current"
             android:layout_alignLeft="@id/changePW_current"
