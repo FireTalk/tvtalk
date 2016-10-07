@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -81,9 +82,16 @@ public class ChangePWActivity extends AppCompatActivity {
                         } else if(!PWnew.equals(PWnewMore)){
                             Toast.makeText(ChangePWActivity.this, "비밀번호 확인이 틀렸습니다.", Toast.LENGTH_LONG).show();
                         } else{
-
+                            user.updatePassword(PWnew).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                @Override
+                                public void onComplete(@NonNull Task<Void> task) {
+                                    if(task.isSuccessful()){
+                                        Toast.makeText(ChangePWActivity.this, "비밀번호가 변경되었습니다.", Toast.LENGTH_LONG).show();
+                                        startActivity(new Intent(getApplicationContext(), LoginAfterActivity.class));
+                                    }
+                                }
+                            });
                         }
-
                     } else {
                         Toast.makeText(ChangePWActivity.this, "현재 비밀번호가 틀렸습니다.", Toast.LENGTH_LONG).show();
                     }
