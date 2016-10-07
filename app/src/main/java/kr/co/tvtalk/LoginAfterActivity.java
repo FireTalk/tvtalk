@@ -3,6 +3,7 @@ package kr.co.tvtalk;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
@@ -11,8 +12,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.facebook.login.LoginManager;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
@@ -50,6 +54,9 @@ public class LoginAfterActivity extends AppCompatActivity {
 
         profileName.setText(user.getDisplayName());
         loginEmailID.setText(user.getEmail());
+
+        if(user.getPhotoUrl() != null)
+            img.setImageURI(user.getPhotoUrl());
     }
 
     @OnClick(R.id.loginafter_back_btn)
@@ -97,10 +104,19 @@ public class LoginAfterActivity extends AppCompatActivity {
         startActivityForResult(i, REQ_CODE_SELECT_IMAGE);
     }
 
-    @Override protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+    @Override protected void onActivityResult(int requestCode, int resultCode, final Intent data) {
         if (requestCode == REQ_CODE_SELECT_IMAGE) {
             if (resultCode == Activity.RESULT_OK) {
                 img.setImageURI(data.getData());
+                UserProfileChangeRequest photoupdate = new UserProfileChangeRequest.Builder() .setPhotoUri(data.getData()).build();
+                user.updateProfile(photoupdate).addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task){
+                        if(task.isSuccessful()){
+                            Ref.child(user.getUid()+"/profile").setValue(data.getData().toString());
+                        }
+                    }
+                });
             }
         }
     }
