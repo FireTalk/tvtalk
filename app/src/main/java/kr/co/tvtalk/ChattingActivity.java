@@ -256,8 +256,6 @@ public class ChattingActivity extends AppCompatActivity {
             public void onCancelled(DatabaseError databaseError) {}
         });
 
-
-
     }
 
 
@@ -344,7 +342,6 @@ public class ChattingActivity extends AppCompatActivity {
                     cnt = data.getChildrenCount()+1;
 
                     Map<String, Object> chatdb = new HashMap<String, Object>();
-
                     chatdb.put("uid", user.getUid());
                     chatdb.put("msg", typingMessage.getText().toString());
                     chatdb.put("type", 1);
@@ -375,13 +372,9 @@ public class ChattingActivity extends AppCompatActivity {
     RelativeLayout emotionArea;
     @OnClick(R.id.icon_btn)
     public void iconBtnClick(View v){
-
         hideKeybroad(v);
         emotionArea.setVisibility(View.VISIBLE);
         setInputFormLayoutParams(220);
-
-
-
 
     }
     private void setInputFormLayoutParams(int dpiValue) {
