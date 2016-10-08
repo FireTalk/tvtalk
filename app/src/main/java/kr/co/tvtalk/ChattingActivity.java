@@ -247,16 +247,18 @@ public class ChattingActivity extends AppCompatActivity {
 
                     MemberDTO dto = data2.getValue(MemberDTO.class);
                     if(dto != null){
+                        Log.d("사진", ""+dto.getProfile());
                         nickName = dto.getNickname();
                         photo = dto.getProfile();
-                        Log.d("사진", ""+photo);
+                        if(photo == null){
+                            photo = "https://firebasestorage.googleapis.com/v0/b/tvtalk-c4d50.appspot.com/o/profile%2Fuser.png?alt=media&token=85a3c04e-07da-4ec8-b10b-6717edc2eefe";
+                        }
+
                         Data chattingData =  new ChattingData( photo , nickName, msg , IsSamePerson );
 
 
                         adapter.getItems().set(Integer.parseInt(key)-1, chattingData);
                         recyclerView.setAdapter(adapter);
-
-
                 }
             }
             @Override
