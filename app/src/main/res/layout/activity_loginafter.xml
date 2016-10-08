@@ -31,23 +31,26 @@
             android:layout_centerVertical="true"
             android:text="계정정보 변경"
             android:textSize="17sp"
+            android:textStyle="bold"
             />
     </RelativeLayout>
     <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/profile_image"
-        android:layout_width="96dp"
-        android:layout_height="96dp"
-        android:layout_centerHorizontal="true"
-        android:src="@drawable/gong"
-        android:layout_marginTop="95dp"
-        />
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:src="@drawable/user"
+        android:layout_marginTop="65dp"
+        android:layout_below="@+id/loginafter_action_bar"
+        android:layout_centerHorizontal="true" />
+
     <LinearLayout
         android:id="@+id/profile_layout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/profile_image"
         android:orientation="horizontal"
-        android:layout_centerHorizontal="true">
+        android:layout_centerHorizontal="true"
+        android:weightSum="1">
 
         <TextView
             android:id="@+id/profile_name"
@@ -60,12 +63,12 @@
             />
         <ImageView
             android:id="@+id/name_repair"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
             android:background="@drawable/capa_1"
             android:layout_gravity="center_vertical"
             android:layout_marginLeft="5dp"
-            />
+             />
     </LinearLayout>
 
     <TextView
@@ -77,11 +80,11 @@
         android:backgroundTint="#252525"
         android:textColor="#252525"
         android:layout_below="@id/profile_layout"
-        android:layout_marginTop="30dp"
+        android:layout_marginTop="40dp"
         android:layout_marginRight="30dp"
         android:layout_marginLeft="30dp"
         android:paddingBottom="15dp"
-        android:textSize="14sp"
+        android:textSize="18sp"
         />
     <TextView
         android:id="@+id/login_id_description"
@@ -91,7 +94,7 @@
         android:layout_alignBaseline="@id/login_email_id"
         android:textColor="#252525"
         android:text="아이디"
-        android:textSize="14sp"
+        android:textSize="18sp"
         android:layout_marginLeft="2dp"
         />
 
@@ -106,7 +109,7 @@
         android:background="@drawable/registent_button"
         android:layout_marginRight="30dp"
         android:layout_marginLeft="30dp"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="30dp"
         />
     <Button
         android:id="@+id/logout_btn"
@@ -120,6 +123,8 @@
         android:layout_marginRight="30dp"
         android:layout_marginLeft="30dp"
         />
+
+
 
 
 </RelativeLayout>

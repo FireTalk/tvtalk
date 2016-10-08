@@ -25,6 +25,7 @@
             android:layout_centerVertical="true"
             android:text="비밀번호 찾기"
             android:textSize="17sp"
+            android:textStyle="bold"
             />
     </RelativeLayout>
     <RelativeLayout
