@@ -83,7 +83,7 @@
         android:layout_marginTop="40dp"
         android:layout_marginRight="30dp"
         android:layout_marginLeft="30dp"
-        android:paddingBottom="15dp"
+        android:paddingBottom="10dp"
         android:textSize="18sp"
         />
     <TextView
@@ -97,7 +97,13 @@
         android:textSize="18sp"
         android:layout_marginLeft="2dp"
         />
-
+    <View
+        android:layout_below = "@id/login_email_id"
+        android:layout_height="1dip"
+        android:layout_width="fill_parent"
+        android:layout_marginRight="30dp"
+        android:layout_marginLeft="30dp"
+        android:background="#252525" />
 
     <Button
         android:id="@+id/login_repair_btn"

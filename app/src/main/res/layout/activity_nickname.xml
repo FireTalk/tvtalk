@@ -45,7 +45,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:paddingLeft="63dp"
-            android:paddingBottom="15dp"
+            android:paddingBottom="10dp"
             android:text="테디아"
             android:textColor="#252525"
             android:backgroundTint="#252525"
@@ -54,6 +54,23 @@
             android:layout_marginLeft="30dp"
             android:textSize="14sp"
             />
+        <TextView
+            android:id="@+id/nickname_currentText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="현재별명"
+            android:textColor="#252525"
+            android:textSize="14sp"
+            android:layout_alignBaseline="@+id/nickname_current"
+            android:layout_alignLeft="@+id/nickname_current"
+            />
+        <View
+            android:layout_below = "@id/nickname_current"
+            android:layout_height="1dip"
+            android:layout_width="fill_parent"
+            android:layout_marginRight="30dp"
+            android:layout_marginLeft="30dp"
+            android:background="#252525" />
 
         <EditText
             android:id="@+id/nickname_new"
@@ -95,17 +112,7 @@
             android:layout_marginBottom="20dp"
             />
 
-        <TextView
-            android:id="@+id/nickname_currentText"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="현재별명"
-            android:textColor="#252525"
-            android:textSize="14sp"
-            android:layout_alignBaseline="@+id/nickname_current"
-            android:layout_alignBottom="@+id/nickname_current"
-            android:layout_alignLeft="@+id/nickname_current"
-            android:layout_alignStart="@+id/nickname_current" />
+
     </RelativeLayout>
 
 </RelativeLayout>
