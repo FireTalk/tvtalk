@@ -208,7 +208,7 @@ public class ChattingActivity extends AppCompatActivity {
                     }else{
                         dto.setIsSamePerson(ChattingData.AskPersonInfo.ANOTHER);
                     }
-                    getUserInfo(uid, dto.getKey());
+                    getUserInfo(uid, dto.getMsg(), dto.getEmoticon(), dto.getIsSamePerson(), data.getKey().toString());
                 }
 
                 addChattingLine(
@@ -236,19 +236,26 @@ public class ChattingActivity extends AppCompatActivity {
 
     }
 
-    public void getUserInfo(String uid, String key){
+    public void getUserInfo(String uid, final String msg, String emoticon, final ChattingData.AskPersonInfo IsSamePerson, final String key){
 
         ref2.child(uid).addListenerForSingleValueEvent(new ValueEventListener() {
             String nickName;
             String photo;
 
             @Override
-            public void onDataChange(DataSnapshot data2) {
+                public void onDataChange(DataSnapshot data2) {
 
-                ChatDTO dto = data2.getValue(ChatDTO.class);
-                if(dto != null){
-                    nickName = dto.getNickname();
-                    photo = dto.getPhoto();
+                    MemberDTO dto = data2.getValue(MemberDTO.class);
+                    if(dto != null){
+                        nickName = dto.getNickname();
+                        photo = dto.getProfile();
+                        Log.d("사진", ""+photo);
+                        Data chattingData =  new ChattingData( photo , nickName, msg , IsSamePerson );
+
+
+                        adapter.getItems().set(Integer.parseInt(key)-1, chattingData);
+                        recyclerView.setAdapter(adapter);
+
 
                 }
             }
