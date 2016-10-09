@@ -2,6 +2,8 @@ package kr.co.tvtalk;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
+import android.support.annotation.DrawableRes;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -33,9 +35,11 @@ import com.google.firebase.database.ValueEventListener;
 
 import com.matthewtamlin.sliding_intro_screen_library.indicators.DotIndicator;
 
+import butterknife.BindDrawable;
 import butterknife.OnPageChange;
 
 
+import butterknife.OnTouch;
 import kr.co.tvtalk.activitySupport.FontFactory;
 import kr.co.tvtalk.activitySupport.catting.ChattingAdapter;
 import kr.co.tvtalk.activitySupport.catting.ChattingData;
@@ -102,11 +106,16 @@ public class ChattingActivity extends AppCompatActivity {
     @Bind(R.id.viewpager)
     ViewPager viewPager;
 
+
+
     private static int status=0;
 
     private static final int STATUS_BASIC=0;
     private static final int STATUS_INPUT_MODE=1;
     private static final int STATUS_EMOTION=2;
+
+
+    private static final int RESULTCODE=1; // LOGIN화면 갔다올 경우.
 
     @Override
     public void onBackPressed() {
@@ -122,6 +131,7 @@ public class ChattingActivity extends AppCompatActivity {
 
     }
 
+    /*-----------------------------------------ON CREATE----------------------------------------------------*/
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -234,6 +244,10 @@ public class ChattingActivity extends AppCompatActivity {
         EmotionPagerAdapter emotionPagerAdapter = new EmotionPagerAdapter(getLayoutInflater() , getApplicationContext());
         viewPager.setAdapter(emotionPagerAdapter);
 
+
+
+
+
     }
 
     public void getUserInfo(String uid, final String msg, String emoticon, final ChattingData.AskPersonInfo IsSamePerson, final String key){
@@ -275,6 +289,10 @@ public class ChattingActivity extends AppCompatActivity {
         dotIndicator.setSelectedItem(viewPager.getCurrentItem()%2,true);
     }
 
+    @BindDrawable(R.drawable.icon_smile)
+    Drawable iconSmile;
+    @Bind(R.id.icon_btn)
+    ImageView iconBtn;
     @Override
     protected void onResume() {
         super.onResume();
@@ -285,9 +303,16 @@ public class ChattingActivity extends AppCompatActivity {
                 addChattingLine(saveChattingData.get(i));
                 saveChattingData.remove(i);
             }
+        }
 
+        if( ! isLogin() ) { // 로그인이 되지 않았을 경우.
+            typingMessage.setHint("로그인이 필요합니다. 사람아이콘을 눌러주세요.");
+        } else { // 로그인이 된 경우.
+            iconBtn.setImageDrawable(iconSmile);
+            typingMessage.setHint("");
 
         }
+
     }
 
     @Override
@@ -334,6 +359,26 @@ public class ChattingActivity extends AppCompatActivity {
             sendBtn.setVisibility(View.GONE);
         Log.e("changeActivity","start - "+start+"/ before - "+before+"/count-"+count);
     }
+
+    @OnTouch(R.id.typing_message)
+    public boolean typingMessageTouch(View v) {
+        if ( isLogin() ) {
+            setInputFormLayoutParams(0);
+            emotionArea.setVisibility(View.GONE);
+            return false;
+        }
+        return true;
+    }
+    /*@OnClick(R.id.typing_message)
+    public void typingMessageClick(View v) {
+        if(status == STATUS_EMOTION ) {
+            emotionArea.setVisibility(View.GONE);
+            Toast.makeText(getApplicationContext(),"g2",Toast.LENGTH_SHORT).show();
+        }
+        status = STATUS_INPUT_MODE;
+
+
+    }*/
     public static String lastAskPerson = "";
 
     long cnt;
@@ -341,7 +386,7 @@ public class ChattingActivity extends AppCompatActivity {
     public void sendBtnClick(View v) { // 전송 버튼 이벤트  => 이모티콘만 눌렀을때도 활성화 돼야함!
         final FirebaseUser user = auth.getCurrentUser();
 
-        if(user != null){//로그인 한 경우
+        if( isLogin() ){//로그인 한 경우
 
 
             ref.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -381,10 +426,16 @@ public class ChattingActivity extends AppCompatActivity {
     RelativeLayout emotionArea;
     @OnClick(R.id.icon_btn)
     public void iconBtnClick(View v){
+
+        if( ! isLogin() ) { // 로그인 되지 않은 경우.
+            Intent intent = new Intent(this,LoginActivity.class);
+            intent.putExtra("isBeforeActivity",StaticInfo.CHATTING_ACTIVITY);
+            startActivity(intent);
+            return ;
+        }
         hideKeybroad(v);
         emotionArea.setVisibility(View.VISIBLE);
         setInputFormLayoutParams(220);
-
     }
     private void setInputFormLayoutParams(int dpiValue) {
         RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams)inputForm.getLayoutParams();
@@ -479,6 +530,11 @@ public class ChattingActivity extends AppCompatActivity {
     private long emotionLastClick;
     static int clickEmotionNo ;
     public void emotionClick(int emotion) {
+        if( ! isLogin() ) { //로그인이 안되어 있는경우.
+            startActivity(new Intent(this,LoginActivity.class)); // 로그인화면으로 이동해준다.
+            return ;
+        }
+        final FirebaseUser user = auth.getCurrentUser();
         status = STATUS_EMOTION;
         if( emotion != clickEmotionNo ) {//이모티콘 누를 시 영역띄우기
             clickEmotionNo = emotion;
@@ -495,5 +551,16 @@ public class ChattingActivity extends AppCompatActivity {
             emotionPreviewArea.setVisibility(View.GONE);
         }
         emotionLastClick = System.currentTimeMillis();
+    }
+
+    /**
+     * 로그인이 되어있는지 체크하는 메소드.
+     * @return 로그인 시 true , 아닐시 false
+     */
+    public boolean isLogin(){
+        final FirebaseUser user = auth.getCurrentUser();
+        if(user == null)
+            return false;
+        return true;
     }
 }

@@ -10,6 +10,8 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
+
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.animation.ViewPropertyAnimation;
@@ -136,6 +138,7 @@ public class MainDataViewHolder extends CustomViewHolder<MainData> {
     }
     @OnClick(R.id.main_row_relativelayout)
     public void mainRowRelativelayoutClick(View v) {
+        MainActivity.selectedDramaNo = getAdapterPosition() ; // 선택한 드라마의 index 번호를 저장.
 
         Intent intent = new Intent();
         intent.putExtra("key", key);
