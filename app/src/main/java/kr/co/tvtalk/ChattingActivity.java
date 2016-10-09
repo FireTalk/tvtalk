@@ -125,9 +125,11 @@ public class ChattingActivity extends AppCompatActivity {
                 setInputFormLayoutParams(0);
                 status=STATUS_BASIC;
                 break;
+            default :
+                finish();
         }
 
-        Toast.makeText(getApplicationContext(),"backbtnclick",Toast.LENGTH_SHORT).show();
+
 
     }
 
