@@ -93,6 +93,8 @@ public class LoginActivity extends AppCompatActivity {
 
     @Bind(R.id.password)
     EditText inputPw;
+
+    private Intent intent;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -105,6 +107,8 @@ public class LoginActivity extends AppCompatActivity {
         auth = FirebaseAuth.getInstance();
         db = FirebaseDatabase.getInstance();
         Ref = db.getReference("member");
+
+        intent = getIntent();
 
 
 
@@ -195,8 +199,16 @@ public class LoginActivity extends AppCompatActivity {
                                 memberdb.put("facebook", true);
                                 Ref.child(user.getUid()).setValue(memberdb);
 
+                                switch (getIntent().getIntExtra("isBeforeActivity",StaticInfo.DEFALUT)) {
+                                    case 0 :
+                                        startActivity(new Intent().setClass(getApplicationContext(),MainActivity.class));
+                                        break;
+                                    case StaticInfo.CHATTING_ACTIVITY :
+                                        finish();
+                                        break;
+                                }
 
-                                startActivity(new Intent().setClass(getApplicationContext(),MainActivity.class));
+
 
                             }
                         }

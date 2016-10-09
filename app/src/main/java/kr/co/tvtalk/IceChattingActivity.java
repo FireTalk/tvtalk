@@ -11,8 +11,11 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -50,7 +53,7 @@ public class IceChattingActivity extends AppCompatActivity {
     private String lastAskPerson ="";
 
 
-
+    // 그냥addvaluelistener
     @OnClick(R.id.chatting_back_ice_btn)
     public void iceActivityBackBtn(View v) {
         finish();
@@ -61,6 +64,11 @@ public class IceChattingActivity extends AppCompatActivity {
         setContentView(R.layout.activity_chatting);
         ButterKnife.bind(this);
         instacne = this;
+
+        initAnother();
+
+
+
     }
     private synchronized void loadChattingLine(Data data) {
         loadChattingLine(data.anotherProfileImage , data.anotherName , data.getAnotherTextMessage() , data.personInfo);
@@ -79,7 +87,7 @@ public class IceChattingActivity extends AppCompatActivity {
     public void initAnother(){
         /*
          recyclerView.setHasFixedSize(isFixed boolean)
-        ->use this setting to improve performance if you know that changes
+        use this setting to improve performance if you know that changes
          in content do not change the layout size of the recyclerview 라고 api문서에 나와있음
         */
         recyclerView.setHasFixedSize(true);
@@ -90,7 +98,7 @@ public class IceChattingActivity extends AppCompatActivity {
         // layou manager set
         recyclerView.setLayoutManager(layoutManager);
 
-        //specify an adapter ( see also next example) ????
+        //specify an adapter ( see also next example)
         adapter = new ChattingAdapter( getApplicationContext() ,  datas);
         recyclerView.setAdapter(adapter);
     }
