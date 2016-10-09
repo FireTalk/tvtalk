@@ -14,7 +14,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/back_btn"
-            android:padding="10dp"
+            android:padding="13dp"
             android:layout_centerVertical="true"
             android:layout_marginLeft="5dp"
             />
@@ -24,7 +24,7 @@
             android:layout_centerHorizontal="true"
             android:layout_centerVertical="true"
             android:text="비밀번호 찾기"
-            android:textSize="17sp"
+            android:textSize="15sp"
             android:textStyle="bold"
             />
     </RelativeLayout>
