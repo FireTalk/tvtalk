@@ -4,6 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:background="#ffffff"
     >
     <RelativeLayout
         android:id="@+id/auth_email_action_bar"
@@ -17,11 +18,7 @@
         android:layout_height="wrap_content"
         android:src="@drawable/back_btn"
         android:layout_centerVertical="true"
-        android:layout_marginLeft="5dp"
         android:padding="13dp"
-        android:paddingTop="10dp"
-        android:paddingBottom="10dp"
-        android:paddingRight="10dp"
         />
         <TextView
             android:layout_width="wrap_content"
