@@ -14,7 +14,7 @@ import kr.co.tvtalk.activitySupport.CustomViewHolder;
  * Created by kwongyo on 2016-10-10.
  */
 
-public class IceChattingMeEmotionViewHolder extends CustomViewHolder<Integer> {
+public class IceChattingMeEmotionViewHolder extends CustomViewHolder<IceChattingData> {
     public ImageView iceChattingMeEmotion;
     public ImageView iceChattingMeEmotionLike;
     public TextView iceChattingMeEmotionLikeNo;
@@ -26,12 +26,16 @@ public class IceChattingMeEmotionViewHolder extends CustomViewHolder<Integer> {
         iceChattingMeEmotionLikeNo = (TextView) v.findViewById(R.id.ice_chatting_another_continue_emotion_like_no);
     }
     @Override
-    public void onBindView(Integer emotion) {
+    public void onBindView(IceChattingData data) {
         return ;
     }
-    public void onBindView(Integer emotion,Context context) {
+    public void onBindView(IceChattingData data,Context context) {
         Glide.with(context).load("http://211.249.50.198:5000/images/emoticon_test.png").into(iceChattingMeEmotion);
-        iceChattingMeEmotionLike.setImageResource(R.drawable.bookmark_false);
+        if(data.isLike())
+            Glide.with(context).load(R.drawable.bookmark_true).into(iceChattingMeEmotionLike);
+        else
+            Glide.with(context).load(R.drawable.bookmark_false).into(iceChattingMeEmotionLike);
+        iceChattingMeEmotionLikeNo.setText(data.getLikeNo());
     }
 
 }

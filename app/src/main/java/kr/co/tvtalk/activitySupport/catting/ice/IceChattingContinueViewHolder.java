@@ -9,12 +9,13 @@ import com.bumptech.glide.Glide;
 
 import kr.co.tvtalk.R;
 import kr.co.tvtalk.activitySupport.CustomViewHolder;
+import kr.co.tvtalk.activitySupport.catting.Data;
 
 /**
  * Created by kwongyo on 2016-10-10.
  */
 
-public class IceChattingContinueViewHolder extends CustomViewHolder<String> {
+public class IceChattingContinueViewHolder extends CustomViewHolder<IceChattingData> {
     public TextView iceAnotherTextMessageContinue;
     public ImageView iceChattingAnotherContinueLike;
     public TextView iceChattingAnotherContinueLikeNo;
@@ -24,11 +25,16 @@ public class IceChattingContinueViewHolder extends CustomViewHolder<String> {
         iceChattingAnotherContinueLike = (ImageView) v.findViewById(R.id.ice_chatting_another_continue_like);
         iceChattingAnotherContinueLikeNo = (TextView) v.findViewById(R.id.ice_chatting_another_continue_emotion_like_no);
     }
-    public void onBindView(String anotherTextMessageContinue) {
-        iceAnotherTextMessageContinue.setText(anotherTextMessageContinue);
+    public void onBindView(IceChattingData data) {
+        iceAnotherTextMessageContinue.setText(data.getAnotherTextMessage());
     }
-    public void onBindView(String anotherTextMessageContinue,Context context) {
-        Glide.with(context).load(R.drawable.icon_emptyheart).into(iceChattingAnotherContinueLike);
-        onBindView(anotherTextMessageContinue);
+    public void onBindView(IceChattingData data, Context context) {
+
+        if(data.isLike())
+            Glide.with(context).load(R.drawable.bookmark_true).into(iceChattingAnotherContinueLike);
+        else
+            Glide.with(context).load(R.drawable.bookmark_false).into(iceChattingAnotherContinueLike);
+        iceChattingAnotherContinueLikeNo.setText(data.getLikeNo());
+        onBindView(data);
     }
 }

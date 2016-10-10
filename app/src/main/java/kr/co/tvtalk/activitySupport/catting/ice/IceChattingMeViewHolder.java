@@ -11,7 +11,7 @@ import kr.co.tvtalk.activitySupport.CustomViewHolder;
  * Created by kwongyo on 2016-10-10.
  */
 
-public class IceChattingMeViewHolder extends CustomViewHolder<String> {
+public class IceChattingMeViewHolder extends CustomViewHolder<IceChattingData> {
     TextView iceChattingMe;
     ImageView iceChattingMeLike;
     TextView iceChattingMeLikeNo;
@@ -22,9 +22,13 @@ public class IceChattingMeViewHolder extends CustomViewHolder<String> {
         iceChattingMeLikeNo = (TextView) itemView.findViewById(R.id.ice_chatting_another_continue_emotion_like_no);
     }
     @Override
-    public void onBindView(String item) {
+    public void onBindView(IceChattingData item) {
+        this.iceChattingMe.setText(item.getAnotherTextMessage());
+        if(item.isLike())
+            iceChattingMeLike.setImageResource(R.drawable.bookmark_true);
+        else
+            iceChattingMeLike.setImageResource(R.drawable.bookmark_false);
+        iceChattingMeLikeNo.setText(item.getLikeNo());
 
-        this.iceChattingMe.setText(item);
-        iceChattingMeLike.setImageResource(R.drawable.bookmark_false);
     }
 }

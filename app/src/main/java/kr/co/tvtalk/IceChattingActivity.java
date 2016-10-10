@@ -27,6 +27,8 @@ import butterknife.OnClick;
 import kr.co.tvtalk.activitySupport.catting.ChattingAdapter;
 import kr.co.tvtalk.activitySupport.catting.ChattingData;
 import kr.co.tvtalk.activitySupport.catting.Data;
+import kr.co.tvtalk.activitySupport.catting.ice.IceChattingAdapter;
+import kr.co.tvtalk.activitySupport.catting.ice.IceChattingData;
 
 /**
  * Created by kwongyo on 2016-10-08.
@@ -42,12 +44,12 @@ public class IceChattingActivity extends AppCompatActivity {
     private static Context context;
 
 
-    ArrayList<Data> datas = new ArrayList<Data>();
+    ArrayList<IceChattingData> datas = new ArrayList<IceChattingData>();
 
     List<Data> syncList = Collections.synchronizedList(new ArrayList<Data>());
     @Bind(R.id.ice_chat_recyclerview)
     RecyclerView recyclerView;
-    ChattingAdapter adapter;
+    IceChattingAdapter adapter;
     RecyclerView.LayoutManager layoutManager;
 
     private String lastAskPerson ="";
@@ -70,11 +72,11 @@ public class IceChattingActivity extends AppCompatActivity {
 
 
     }
-    private synchronized void loadChattingLine(Data data) {
-        loadChattingLine(data.anotherProfileImage , data.anotherName , data.getAnotherTextMessage() , data.personInfo);
+    private synchronized void loadChattingLine(IceChattingData data) {
+        loadChattingLine(data.anotherProfileImage , data.anotherName , data.getAnotherTextMessage() , data.personInfo , data.isLike() , data.getLikeNo());
     }
-    private synchronized  void loadChattingLine(String profileImage , String speaker , String textMessage , ChattingData.AskPersonInfo isSamePerson) {
-        Data chattingData =  new ChattingData( profileImage,speaker, textMessage , isSamePerson );
+    private synchronized  void loadChattingLine(String profileImage , String speaker , String textMessage , ChattingData.AskPersonInfo isSamePerson , boolean isLike , int likeNo) {
+        IceChattingData chattingData =  new IceChattingData( profileImage,speaker, textMessage , isSamePerson ,isLike, likeNo);
 
         adapter.add(chattingData);
         //Log.e("count-----","getChildCount - "+recyclerView.getChildCount()+"/getItemCount - "+adapter.getItemCount()+"/ activienode - "+adapter.activeNode);
@@ -99,7 +101,7 @@ public class IceChattingActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(layoutManager);
 
         //specify an adapter ( see also next example)
-        adapter = new ChattingAdapter( getApplicationContext() ,  datas);
+        adapter = new IceChattingAdapter( getApplicationContext() ,  datas);
         recyclerView.setAdapter(adapter);
     }
 }

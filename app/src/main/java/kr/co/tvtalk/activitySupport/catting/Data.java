@@ -22,6 +22,12 @@ public abstract class Data {
     public String getAnotherTextMessage(){
         return "";
     }
+    public boolean isLike(){
+        return true;
+    }
+    public int getLikeNo(){
+        return 0;
+    }
 
     public enum AskPersonInfo{
         SAME ,

@@ -16,7 +16,7 @@ import kr.co.tvtalk.activitySupport.catting.Data;
  * Created by kwongyo on 2016-10-10.
  */
 
-public class IceChattingEmotionViewHolder extends CustomViewHolder<Data> {
+public class IceChattingEmotionViewHolder extends CustomViewHolder<IceChattingData> {
     public CircleImageView iceAnotherProfileImageEmotion;
     public TextView iceAnotherNameEmotion;
     public ImageView iceAnotherEmotion;
@@ -31,13 +31,18 @@ public class IceChattingEmotionViewHolder extends CustomViewHolder<Data> {
         iceChattingAnotherEmotionLike = (ImageView) v.findViewById(R.id.ice_chatting_another_emotion_like);
         iceChattingAnotherEmotionLikeNo = (TextView) v.findViewById(R.id.ice_chatting_another_continue_emotion_like_no);
     }
-    public void onBindView(Data data) {
+    public void onBindView(IceChattingData data) {
         this.iceAnotherNameEmotion.setText(data.anotherName);
     }
-    public void onBindView(Data data,Context context) {
+    public void onBindView(IceChattingData data,Context context) {
         onBindView(data);
         Glide.with(context).load(data.anotherProfileImage).into(this.iceAnotherProfileImageEmotion);
         Glide.with(context).load(data.getEmotion()).into(this.iceAnotherEmotion);
-        Glide.with(context).load(R.drawable.icon_emptyheart).into(iceChattingAnotherEmotionLike);
+        if(data.isLike())
+            Glide.with(context).load(R.drawable.bookmark_true).into(iceChattingAnotherEmotionLike);
+        else
+            Glide.with(context).load(R.drawable.bookmark_false).into(iceChattingAnotherEmotionLike);
+
+        iceChattingAnotherEmotionLikeNo.setText(data.getLikeNo());
     }
 }

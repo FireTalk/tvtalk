@@ -26,11 +26,11 @@ import kr.co.tvtalk.activitySupport.catting.Data;
 /**
  * Not use yet.
  */
-public class IceChattingAdapter extends CustomAdapter<Data , CustomViewHolder> {
+public class IceChattingAdapter extends CustomAdapter<IceChattingData , CustomViewHolder> {
 
     public static int activeNode = 0;
     //provide a suitable cons ( depends on the kind of dataset)
-    public IceChattingAdapter(Context context, List<Data> lists) {
+    public IceChattingAdapter(Context context, List<IceChattingData> lists) {
         super( context , lists );
     }
     /* create new views ( invoked by the layout manager)
@@ -82,7 +82,7 @@ public class IceChattingAdapter extends CustomAdapter<Data , CustomViewHolder> {
         switch (list.get(position).personInfo) {
             case SAME :
                 IceChattingContinueViewHolder iceChattingContinueViewHolder = (IceChattingContinueViewHolder)holder;
-                iceChattingContinueViewHolder.onBindView( list . get(position) . getAnotherTextMessage() );
+                iceChattingContinueViewHolder.onBindView( list . get(position)  );
                 break;
             case ANOTHER :
                 IceChattingViewHolder iceChattingViewHolder = ( IceChattingViewHolder )holder;
@@ -90,15 +90,15 @@ public class IceChattingAdapter extends CustomAdapter<Data , CustomViewHolder> {
                 break;
             case ME:
                 IceChattingMeViewHolder iceChattingMeViewHolder = (IceChattingMeViewHolder) holder;
-                iceChattingMeViewHolder.onBindView( list . get(position) . getAnotherTextMessage() );
+                iceChattingMeViewHolder.onBindView( list . get(position)  );
                 break;
             case ME_EMOTION:
                 IceChattingMeEmotionViewHolder iceChattingMeEmotionViewHolder = (IceChattingMeEmotionViewHolder)holder;
-                iceChattingMeEmotionViewHolder.onBindView( list . get(position) . getEmotion() , context );
+                iceChattingMeEmotionViewHolder.onBindView( list . get(position)  , context );
                 break;
             case SAME_EMOTION :
                 IceChattingContinueEmotionViewHolder iceChattingContinueEmotionViewHolder = (IceChattingContinueEmotionViewHolder)holder;
-                iceChattingContinueEmotionViewHolder . onBindView( list . get(position) . getEmotion() , context );
+                iceChattingContinueEmotionViewHolder . onBindView( list . get(position)  , context );
                 break;
             case ANOTHER_EMOTION:
                 IceChattingEmotionViewHolder iceChattingEmotionViewHolder = (IceChattingEmotionViewHolder)holder;

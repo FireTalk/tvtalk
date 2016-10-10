@@ -16,7 +16,7 @@ import kr.co.tvtalk.activitySupport.catting.Data;
  * Created by kwongyo on 2016-10-10.
  */
 
-public class IceChattingViewHolder extends CustomViewHolder<Data> {
+public class IceChattingViewHolder extends CustomViewHolder<IceChattingData> {
     public CircleImageView iceAnotherProfileImage;
     public TextView iceAnotherName;
     public TextView iceAnotherTextMessage;
@@ -30,13 +30,16 @@ public class IceChattingViewHolder extends CustomViewHolder<Data> {
         iceAnotherChattingLike = (ImageView)v.findViewById(R.id.ice_chatting_another_like);
         iceAnotherChattingLikeNo = (TextView) v.findViewById(R.id.ice_chatting_another_continue_emotion_like_no);
     }
-    public void onBindView(Data data) {
+    public void onBindView(IceChattingData data) {
         this.iceAnotherName.setText(data.anotherName);
         this.iceAnotherTextMessage.setText(data.getAnotherTextMessage());
     }
-    public void onBindView(Data data,Context context) {
+    public void onBindView(IceChattingData data,Context context) {
         onBindView(data);
         Glide.with(context).load(data.anotherProfileImage).into(this.iceAnotherProfileImage);
-        iceAnotherChattingLike.setImageResource(R.drawable.bookmark_false);
+        if(data.isLike())
+            iceAnotherChattingLike.setImageResource(R.drawable.bookmark_true);
+        else
+            iceAnotherChattingLike.setImageResource(R.drawable.bookmark_false);
     }
 }
