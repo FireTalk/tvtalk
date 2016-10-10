@@ -2,6 +2,7 @@ package kr.co.tvtalk;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
@@ -41,6 +42,8 @@ public class LoginAfterActivity extends AppCompatActivity {
     @Bind(R.id.login_email_id)
     TextView loginEmailID;
 
+    Uri defaultImage;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -55,8 +58,13 @@ public class LoginAfterActivity extends AppCompatActivity {
         profileName.setText(user.getDisplayName());
         loginEmailID.setText(user.getEmail());
 
+        //defaultImage = Uri.parse("https://firebasestorage.googleapis.com/v0/b/tvtalk-c4d50.appspot.com/o/profile%2Fuser.png?alt=media&token=85a3c04e-07da-4ec8-b10b-6717edc2eefe");
+
+       // img.setImageURI(defaultImage);
+
         if(user.getPhotoUrl() != null)
             img.setImageURI(user.getPhotoUrl());
+
     }
 
     @OnClick(R.id.loginafter_back_btn)

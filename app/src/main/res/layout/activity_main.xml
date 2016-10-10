@@ -15,10 +15,9 @@
             android:id="@+id/is_login"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:padding="9dp"
+            android:padding="13dp"
             android:src="@drawable/icon_login_on"
             android:layout_centerVertical="true"
-            android:layout_marginLeft="8dp"
             />
         <ImageView
             android:layout_width="wrap_content"

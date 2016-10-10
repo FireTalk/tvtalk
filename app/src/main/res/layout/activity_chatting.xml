@@ -9,7 +9,7 @@
     <RelativeLayout
         android:id="@+id/catting_action_bar"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="46dp"
         android:background="@drawable/underline_bar"
         >
         <ImageView
@@ -17,9 +17,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/back_btn"
-            android:padding="10dp"
+            android:padding="13dp"
             android:layout_centerVertical="true"
-            android:layout_marginLeft="7dp"
             />
         <TextView
             android:id="@+id/talking_room_title"
@@ -161,6 +160,7 @@
             android:focusableInTouchMode="true"
             android:layout_marginLeft="34dp"
             android:paddingRight="34dp"
+            android:textSize="13sp"
             />
         <TextView
             android:id="@+id/send_btn"

@@ -90,6 +90,7 @@ public class DramaViewHolder extends CustomViewHolder<DramaData> {
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         intent.setClass(DramaListActivity.context,ChattingActivity.class);
         DramaListActivity.context.startActivity(intent);
+
     }
 
 }
