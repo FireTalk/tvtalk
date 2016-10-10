@@ -3,6 +3,7 @@ package kr.co.tvtalk.activitySupport.catting.ice;
 import android.content.Context;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 
@@ -16,10 +17,13 @@ import kr.co.tvtalk.activitySupport.CustomViewHolder;
 public class IceChattingMeEmotionViewHolder extends CustomViewHolder<Integer> {
     public ImageView iceChattingMeEmotion;
     public ImageView iceChattingMeEmotionLike;
+    public TextView iceChattingMeEmotionLikeNo;
+
     public IceChattingMeEmotionViewHolder(View v) {
         super(v);
         iceChattingMeEmotion = (ImageView) v.findViewById(R.id.ice_chatting_me_emotion);
         iceChattingMeEmotionLike = (ImageView) v.findViewById(R.id.ice_chatting_me_emotion_like);
+        iceChattingMeEmotionLikeNo = (TextView) v.findViewById(R.id.ice_chatting_another_continue_emotion_like_no);
     }
     @Override
     public void onBindView(Integer emotion) {

@@ -14,10 +14,12 @@ import kr.co.tvtalk.activitySupport.CustomViewHolder;
 public class IceChattingMeViewHolder extends CustomViewHolder<String> {
     TextView iceChattingMe;
     ImageView iceChattingMeLike;
+    TextView iceChattingMeLikeNo;
     public IceChattingMeViewHolder(View itemView) {
         super(itemView);
         iceChattingMe = (TextView) itemView.findViewById(R.id.ice_chatting_me);
         iceChattingMeLike = (ImageView) itemView.findViewById(R.id.ice_chatting_me_like);
+        iceChattingMeLikeNo = (TextView) itemView.findViewById(R.id.ice_chatting_another_continue_emotion_like_no);
     }
     @Override
     public void onBindView(String item) {

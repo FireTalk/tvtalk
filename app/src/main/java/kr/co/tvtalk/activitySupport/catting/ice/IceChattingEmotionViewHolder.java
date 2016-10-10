@@ -21,6 +21,7 @@ public class IceChattingEmotionViewHolder extends CustomViewHolder<Data> {
     public TextView iceAnotherNameEmotion;
     public ImageView iceAnotherEmotion;
     public ImageView iceChattingAnotherEmotionLike;
+    public TextView iceChattingAnotherEmotionLikeNo;
     //public ImageView
     public IceChattingEmotionViewHolder(View v) {
         super(v);
@@ -28,6 +29,7 @@ public class IceChattingEmotionViewHolder extends CustomViewHolder<Data> {
         iceAnotherNameEmotion = (TextView) v.findViewById(R.id.ice_another_name_emotion);
         iceAnotherEmotion = (ImageView) v.findViewById(R.id.ice_another_text_message_emotion);
         iceChattingAnotherEmotionLike = (ImageView) v.findViewById(R.id.ice_chatting_another_emotion_like);
+        iceChattingAnotherEmotionLikeNo = (TextView) v.findViewById(R.id.ice_chatting_another_continue_emotion_like_no);
     }
     public void onBindView(Data data) {
         this.iceAnotherNameEmotion.setText(data.anotherName);

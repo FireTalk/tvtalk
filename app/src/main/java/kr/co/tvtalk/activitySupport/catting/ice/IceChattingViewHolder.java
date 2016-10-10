@@ -21,12 +21,14 @@ public class IceChattingViewHolder extends CustomViewHolder<Data> {
     public TextView iceAnotherName;
     public TextView iceAnotherTextMessage;
     public ImageView iceAnotherChattingLike;
+    public TextView iceAnotherChattingLikeNo;
     public IceChattingViewHolder(View v) {
         super(v);
         iceAnotherProfileImage = (CircleImageView) v.findViewById(R.id.ice_another_profile_image);
         iceAnotherName = (TextView) v.findViewById(R.id.ice_another_name);
         iceAnotherTextMessage = (TextView) v.findViewById(R.id.ice_another_text_message);
         iceAnotherChattingLike = (ImageView)v.findViewById(R.id.ice_chatting_another_like);
+        iceAnotherChattingLikeNo = (TextView) v.findViewById(R.id.ice_chatting_another_continue_emotion_like_no);
     }
     public void onBindView(Data data) {
         this.iceAnotherName.setText(data.anotherName);

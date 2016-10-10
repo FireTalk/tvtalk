@@ -17,10 +17,12 @@ import kr.co.tvtalk.activitySupport.CustomViewHolder;
 public class IceChattingContinueViewHolder extends CustomViewHolder<String> {
     public TextView iceAnotherTextMessageContinue;
     public ImageView iceChattingAnotherContinueLike;
+    public TextView iceChattingAnotherContinueLikeNo;
     public IceChattingContinueViewHolder(View v) {
         super(v);
         iceAnotherTextMessageContinue = (TextView) v.findViewById(R.id.ice_another_text_message_continue);
         iceChattingAnotherContinueLike = (ImageView) v.findViewById(R.id.ice_chatting_another_continue_like);
+        iceChattingAnotherContinueLikeNo = (TextView) v.findViewById(R.id.ice_chatting_another_continue_emotion_like_no);
     }
     public void onBindView(String anotherTextMessageContinue) {
         iceAnotherTextMessageContinue.setText(anotherTextMessageContinue);
