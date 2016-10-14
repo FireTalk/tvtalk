@@ -55,6 +55,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.OnTextChanged;
 
+import kr.co.tvtalk.activitySupport.catting.ChattingObserver;
 import kr.co.tvtalk.model.ChatDTO;
 import kr.co.tvtalk.model.MemberDTO;
 
@@ -63,6 +64,8 @@ import kr.co.tvtalk.activitySupport.catting.emotion.EmotionPagerAdapter;
 
 
 public class ChattingActivity extends AppCompatActivity {
+    private static final ChattingObserver observer = ChattingObserver.getInstance();
+
     public static ChattingActivity instance;
     private static boolean isLiveActivity = false;
     private FirebaseAuth auth;
@@ -124,6 +127,7 @@ public class ChattingActivity extends AppCompatActivity {
                 emotionArea.setVisibility(View.GONE);
                 setInputFormLayoutParams(0);
                 status=STATUS_BASIC;
+                emotionPreviewArea.setVisibility(View.GONE);
                 break;
             default :
                 finish();
@@ -389,6 +393,8 @@ public class ChattingActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         isLiveActivity = true;
+        emoticonImg=0;
+        emotionMutax=true;
         //화면이 다시 살아나는경우.
         if(saveChattingData.size() > 0) {
             for(int i=0;i<saveChattingData.size();i++) {
@@ -411,6 +417,8 @@ public class ChattingActivity extends AppCompatActivity {
     protected void onPause() {
         super.onPause();
         isLiveActivity = false;
+        emoticonImg=0;
+        emotionMutax=false;
     }
 
     public void initAnother(){
@@ -484,6 +492,17 @@ public class ChattingActivity extends AppCompatActivity {
             ref.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot data) {
+                    if(emoticonImg!=0) {
+                        addChattingLine(
+                                "https://avatars2.githubusercontent.com/u/14024193?v=3&s=466", // 프로필 이미지
+                                "기호", // 사용자 이름
+                                "",  // 텍스트 메시지
+                                Data.AskPersonInfo.ME_EMOTION, // 내가 이모티콘으로 말함.
+                                emoticonImg
+                        );
+                        emotionPreviewArea.setVisibility(View.GONE);
+                        emoticonImg=0;
+                    }
                     if(data == null) cnt = 0;
                     cnt = data.getChildrenCount()+1;
 
@@ -599,8 +618,23 @@ public class ChattingActivity extends AppCompatActivity {
     @Bind(R.id.is_emotion_true)
     ImageView isEmotionTrue;
 
+    private void reverseEmotion(final boolean isVisible) {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        observer.notiyObserver(isVisible);
+                    }
+
+                });
+            }
+        }).start();
+    }
     @OnClick(R.id.is_emotion_true)
     public void isemotionTrue(View v) {
+        reverseEmotion(false);
         isEmotionTrue.setVisibility(View.GONE);
         isEmotionFalse.setVisibility(View.VISIBLE);
     }
@@ -609,6 +643,7 @@ public class ChattingActivity extends AppCompatActivity {
     ImageView isEmotionFalse;
     @OnClick(R.id.is_emotion_false)
     public void isemotionFalse(View v) {
+        reverseEmotion(true);
         isEmotionFalse.setVisibility(View.GONE);
         isEmotionTrue.setVisibility(View.VISIBLE);
     }
@@ -621,16 +656,23 @@ public class ChattingActivity extends AppCompatActivity {
     
     private long emotionLastClick;
     static int clickEmotionNo ;
+    int emoticonImg = 0;
+    public static boolean emotionMutax = true;
     public void emotionClick(int emotion) {
+        Log.e("Chat_emotion",emotion+"");
         final FirebaseUser user = auth.getCurrentUser();
 
         if( user == null ) { //로그인이 안되어 있는경우.
             startActivity(new Intent(this,LoginActivity.class)); // 로그인화면으로 이동해준다.
             return ;
         }
+        if(emotionMutax) {
+            clickEmotionNo = emotion;
+            emotion=0;
+            emotionMutax=false ;
+        }
 
         status = STATUS_EMOTION;
-        int emoticonImg = 0;
         switch(clickEmotionNo){
             case 1 :
                 emoticonImg = R.drawable.a;
@@ -673,6 +715,7 @@ public class ChattingActivity extends AppCompatActivity {
                     emoticonImg
             );
             emotionPreviewArea.setVisibility(View.GONE);
+            emoticonImg=0;
         }
         emotionLastClick = System.currentTimeMillis();
     }

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/chatting_another_continue_emotion_relativelayout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginBottom="5dp"
@@ -17,4 +18,4 @@
         android:layout_marginRight="70dp"
         android:textColor="#FFFFFF"
         />
-</LinearLayout>
+</RelativeLayout>
