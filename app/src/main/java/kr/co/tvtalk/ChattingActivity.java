@@ -211,15 +211,15 @@ public class ChattingActivity extends AppCompatActivity {
                         dto.setMsg(data.child("msg").getValue().toString());
                         emoticon =  getEmoticonNum(data.child("emo").getValue().toString());
                         dto.setIsSamePerson(ChattingData.AskPersonInfo.ME_EMOTION);
-                        addChattingLine(
-                                "",//프로필 이미지
-                                "",  // 사용자 이름
-                                "", // 할말
-                                dto.getIsSamePerson(),
-                                emoticon
-                        );
-                        emoticon = 0;
-                        dto.setIsSamePerson(ChattingData.AskPersonInfo.ME);
+//                        addChattingLine(
+//                                "",//프로필 이미지
+//                                "",  // 사용자 이름
+//                                "", // 할말
+//                                dto.getIsSamePerson(),
+//                                emoticon
+//                        );
+//                        emoticon = 0;
+//                        dto.setIsSamePerson(ChattingData.AskPersonInfo.ME);
                     }
 
 

@@ -45,16 +45,6 @@ public class MainActivity extends AppCompatActivity {
 
     public static int selectedDramaNo = 0 ;
 
-    /*public static String tempDramaName="달의 연인 - 보보경심려,몬스터,W (더블유),함부로 애틋하게,질투의 화신,구르미 그린 달빛";
-    public static String tempDramaTime="월·화 오후 2:00,월·화 오후 11:00,월·화 오후 11:00,수·목 오후 10:00,월·화 오후 2:00,월·화 오후 11:00";
-    public static String []tempLink =  {
-            "https://tv.pstatic.net/thm?size=120x172&quality=8&q=http://sstatic.naver.net/keypage/image/dss/57/09/67/90/57_3096790_poster_image_1471409776507.jpg",
-            "https://tv.pstatic.net/thm?size=120x172&quality=8&q=http://sstatic.naver.net/keypage/image/dss/57/24/71/22/57_3247122_poster_image_1458532341750.jpg",
-            "https://tv.pstatic.net/thm?size=120x172&quality=8&q=http://sstatic.naver.net/keypage/image/dss/57/47/17/25/57_3471725_poster_image_1469008328304.jpg",
-            "https://tv.pstatic.net/thm?size=120x172&quality=8&q=http://sstatic.naver.net/keypage/image/dss/57/90/83/05/57_2908305_poster_image_1464857206814.jpg",
-            "https://tv.pstatic.net/thm?size=120x172&quality=8&q=http://sstatic.naver.net/keypage/image/dss/57/28/69/83/57_3286983_poster_image_1471574939131.jpg",
-            "https://tv.pstatic.net/thm?size=120x172&quality=8&q=http://sstatic.naver.net/keypage/image/dss/57/37/30/26/57_3373026_poster_image_1471395715777.jpg"
-    };*/
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -83,19 +73,13 @@ public class MainActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-
-            }
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {}
 
             @Override
-            public void onChildRemoved(DataSnapshot dataSnapshot) {
-
-            }
+            public void onChildRemoved(DataSnapshot dataSnapshot) {}
 
             @Override
-            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-
-            }
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {}
 
             @Override
             public void onCancelled(DatabaseError databaseError) {}
