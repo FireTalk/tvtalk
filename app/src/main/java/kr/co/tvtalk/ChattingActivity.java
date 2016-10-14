@@ -488,20 +488,19 @@ public class ChattingActivity extends AppCompatActivity {
 
         if( isLogin() ){//로그인 한 경우
 
-
             ref.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot data) {
                     if(emoticonImg!=0) {
-                        addChattingLine(
-                                "https://avatars2.githubusercontent.com/u/14024193?v=3&s=466", // 프로필 이미지
-                                "기호", // 사용자 이름
-                                "",  // 텍스트 메시지
-                                Data.AskPersonInfo.ME_EMOTION, // 내가 이모티콘으로 말함.
-                                emoticonImg
-                        );
+//                        addChattingLine(
+//                                "https://avatars2.githubusercontent.com/u/14024193?v=3&s=466", // 프로필 이미지
+//                                "기호", // 사용자 이름
+//                                "",  // 텍스트 메시지
+//                                Data.AskPersonInfo.ME_EMOTION, // 내가 이모티콘으로 말함.
+//                                emoticonImg
+//                        );
                         emotionPreviewArea.setVisibility(View.GONE);
-                        emoticonImg=0;
+                        emoticonImg = 0;
                     }
                     if(data == null) cnt = 0;
                     cnt = data.getChildrenCount()+1;
@@ -707,13 +706,26 @@ public class ChattingActivity extends AppCompatActivity {
             emotionPreviewArea.setVisibility(View.VISIBLE);
         }
         else if( System.currentTimeMillis() < emotionLastClick+1000) { // 1초 이내로 2번 클릭 시
-            addChattingLine(
-                    "https://avatars2.githubusercontent.com/u/14024193?v=3&s=466", // 프로필 이미지
-                    "기호", // 사용자 이름
-                    "",  // 텍스트 메시지
-                    Data.AskPersonInfo.ME_EMOTION, // 내가 이모티콘으로 말함.
-                    emoticonImg
-            );
+
+            ref.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot data) {
+                    if(data == null) cnt = 0;
+                    cnt = data.getChildrenCount()+1;
+
+                    Map<String, Object> chatdb = new HashMap<String, Object>();
+                    chatdb.put("uid", user.getUid());
+//                    chatdb.put("msg", typingMessage.getText().toString());
+                    chatdb.put("type", 2);
+                    chatdb.put("emo", clickEmotionNo);
+                    ref.child(""+cnt).setValue(chatdb); // db에 저장하면 추가된 메세지는 알아서 불러와짐 - 위에 childadded 이벤트에서..
+
+                }
+                @Override
+                public void onCancelled(DatabaseError databaseError) {}
+            });
+
+
             emotionPreviewArea.setVisibility(View.GONE);
             emoticonImg=0;
         }

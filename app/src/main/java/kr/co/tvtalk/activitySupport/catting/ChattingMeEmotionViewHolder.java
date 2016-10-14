@@ -32,7 +32,7 @@ public class ChattingMeEmotionViewHolder extends CustomViewHolder<Integer> {
     }
     public void onBindView(Integer emotion,Context context) {
         Log.d("번호",""+emotion);
-        Glide.with(context).load("").into(chattingMeEmotion);
+        Glide.with(context).load(emotion).into(chattingMeEmotion);
     }
 
 }

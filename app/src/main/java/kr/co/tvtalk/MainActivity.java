@@ -131,31 +131,31 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        bookmarkRef.addChildEventListener(new ChildEventListener() {
-            @Override
-            public void onChildAdded(DataSnapshot data, String s) {
-//                Toast.makeText(MainActivity.this, ""+mainAdapter.getItemCount(), Toast.LENGTH_SHORT).show();
-                int key = Integer.parseInt(data.getKey());
-
-//                String aa = mainAdapter.getItems().get(Integer.parseInt(data.getKey())).broadcastDescription;
-//                Toast.makeText(MainActivity.this, aa, Toast.LENGTH_SHORT).show();
-
-            }
-
-            @Override
-            public void onChildChanged(DataSnapshot dataSnapshot, String s) {}
-
-            @Override
-            public void onChildRemoved(DataSnapshot data) {
-//                mainAdapter.getItems().get(Integer.parseInt(data.getKey())).isBookmark = R.drawable.bookmark_false;
-            }
-
-            @Override
-            public void onChildMoved(DataSnapshot dataSnapshot, String s) {}
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {}
-        });
+//        bookmarkRef.addChildEventListener(new ChildEventListener() {
+//            @Override
+//            public void onChildAdded(DataSnapshot data, String s) {
+////                Toast.makeText(MainActivity.this, ""+mainAdapter.getItemCount(), Toast.LENGTH_SHORT).show();
+//                int key = Integer.parseInt(data.getKey());
+//
+////                String aa = mainAdapter.getItems().get(Integer.parseInt(data.getKey())).broadcastDescription;
+////                Toast.makeText(MainActivity.this, aa, Toast.LENGTH_SHORT).show();
+//
+//            }
+//
+//            @Override
+//            public void onChildChanged(DataSnapshot dataSnapshot, String s) {}
+//
+//            @Override
+//            public void onChildRemoved(DataSnapshot data) {
+////                mainAdapter.getItems().get(Integer.parseInt(data.getKey())).isBookmark = R.drawable.bookmark_false;
+//            }
+//
+//            @Override
+//            public void onChildMoved(DataSnapshot dataSnapshot, String s) {}
+//
+//            @Override
+//            public void onCancelled(DatabaseError databaseError) {}
+//        });
         mainActivityRecyler.smoothScrollToPosition(selectedDramaNo);
     }
 
