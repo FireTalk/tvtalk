@@ -32,7 +32,7 @@
             android:layout_width="26dp"
             android:layout_height="26dp"
             android:layout_centerVertical="true"
-            android:src="@drawable/bookmark_false"
+            android:src="@drawable/icon_emptyheart"
             android:layout_alignParentRight="true"
             android:layout_marginRight="10dp"
             android:padding="5dp"
@@ -58,14 +58,14 @@
             android:layout_height="wrap_content"
             android:text="회차별 섬네일 이미지 출처 페이지 링크 - "
             android:layout_gravity="center_vertical"
-            android:textSize="10sp"
+            android:textSize="11sp"
             />
         <TextView
             android:id="@+id/broadcast_link"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="10sp"
-            android:text="MBC 다시보기"
+            android:textSize="11sp"
+            android:text=""
             android:background="@drawable/underline_bar"
             android:layout_gravity="center_vertical"
             />

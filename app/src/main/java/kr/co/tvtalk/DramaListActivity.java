@@ -2,6 +2,7 @@ package kr.co.tvtalk;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.drawable.ClipDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
@@ -13,18 +14,25 @@ import android.text.Html;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.style.UnderlineSpan;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 import butterknife.Bind;
 import butterknife.BindDrawable;
@@ -33,6 +41,7 @@ import butterknife.OnClick;
 import kr.co.tvtalk.activitySupport.FontFactory;
 import kr.co.tvtalk.activitySupport.dramalist.DramaData;
 import kr.co.tvtalk.activitySupport.dramalist.DramaListAdapter;
+import kr.co.tvtalk.activitySupport.main.MainAdapter;
 import kr.co.tvtalk.model.CustomPreference;
 
 /**
@@ -45,7 +54,7 @@ public class DramaListActivity extends AppCompatActivity {
 
     FirebaseAuth auth;
     FirebaseDatabase db;
-    DatabaseReference ref;
+    DatabaseReference ref, bookmarkRef;
     @Bind(R.id.mdl_recycler)
     RecyclerView mdlRcycler;
     DramaListAdapter dramaListAdapter;
@@ -57,17 +66,15 @@ public class DramaListActivity extends AppCompatActivity {
     private static ArrayList<DramaData> datas = new ArrayList<DramaData>();
 
     public static Context context;
-    public static String broadcast = "SBS";
-
-    CustomPreference customPreference;
+    public static String broadcast = "";
 
     @Bind(R.id.is_heart)
     ImageView isBookmark;
 
-    @BindDrawable(R.drawable.bookmark_false)
+    @BindDrawable(R.drawable.icon_emptyheart)
     Drawable bookmarkFalse;
 
-    @BindDrawable(R.drawable.bookmark_true)
+    @BindDrawable(R.drawable.icon_fillheart)
     Drawable bookmarkTrue;
 
 
@@ -90,56 +97,95 @@ public class DramaListActivity extends AppCompatActivity {
         Intent intent = getIntent();
         final String key = intent.getStringExtra("key");
         title = intent.getStringExtra("broadcastName");
+        broadcast = intent.getStringExtra("channel");
         dramaTitle.setText(title);
+
+        auth = FirebaseAuth.getInstance();
+        FirebaseUser user = auth.getCurrentUser();
         db = FirebaseDatabase.getInstance();
         ref = db.getReference().child("drama/"+key+"/list");
+        if(user != null){
+            bookmarkRef = db.getReference().child("bookmark/"+user.getUid());
+            bookmarkRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot data) {
+                    if(data.child(key).exists()){
+                        Glide.with(context).load(R.drawable.icon_fillheart).into(isBookmark);
+                    }else{
+                        Glide.with(context).load(R.drawable.icon_emptyheart).into(isBookmark);
+                    }
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {}
+            });
+        }
         dramaListAdapter.clear();
 
         text_concept();                 //언더바
 
        ref.addChildEventListener(new ChildEventListener() {
+           ArrayList<DramaData> tmp = new ArrayList<DramaData>();
             @Override
-            public void onChildAdded(DataSnapshot data, String s) {
-                dramaListAdapter.add(
-                    new DramaData(
+            public void onChildAdded(final DataSnapshot data, String s) {
+
+                boolean hide = false;
+                if(data.child("state").getValue().toString().equals("locked")){
+                    hide = true;
+                }
+
+                if(hide == false){
+                    tmp.add(
+                        new DramaData(
                             data.child("img").getValue().toString(),
                             data.getKey().toString()+"화",
                             data.child("date").getValue().toString(),
-                            data.child("state").getValue().toString(),
+                                data.child("state").getValue().toString(),
                             R.drawable.icon_clock,
                             key
-                    ));
+                        )
+                    );
+                }else{
+                    tmp.add(null);
+                }
+                ref.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        if(dataSnapshot.getChildrenCount() == tmp.size()){
+                            for(int i = tmp.size()-1; i >= 0; i--){
+                                if(tmp.get(i) != null)
+                                    dramaListAdapter.add(
+                                        new DramaData(
+                                                tmp.get(i).dramaImage,
+                                                tmp.get(i).dramaCountInfomation,
+                                                tmp.get(i).dramaBroadcastDay,
+                                                tmp.get(i).infomationEnterChattingRoom,
+                                                tmp.get(i).iconEnterChattingRoom,
+                                                tmp.get(i).key
+                                        )
+                                    );
+                            }
+                            tmp.clear();
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {}
+                });
             }
 
             @Override
-            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-
-            }
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {}
 
             @Override
-            public void onChildRemoved(DataSnapshot dataSnapshot) {
-
-            }
+            public void onChildRemoved(DataSnapshot dataSnapshot) {}
 
             @Override
-            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-
-            }
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {}
 
             @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
+            public void onCancelled(DatabaseError databaseError) {}
         });
-        customPreference = CustomPreference.getInstance(getApplicationContext());
-        /*북마크 체크.*/
-        if( !customPreference.getValue(title , false)  ) {
-            isBookmark.setImageDrawable(bookmarkFalse);
-        }
-        else {
-            isBookmark.setImageDrawable(bookmarkTrue);
-        }
-
 
 
     }
@@ -150,16 +196,27 @@ public class DramaListActivity extends AppCompatActivity {
         * 북마크 프로세스
         * 1. 해당 프로그램명으로 북마크가 되어있는지 검사한다.
         * */
-        customPreference = CustomPreference.getInstance(getApplicationContext());
-        // 만약 북마크가 되어있지 않거나 , 처음 클릭한 방송이라면(default : false)
-        if( !customPreference.getValue(title,false) ) {
-            /* 여기에 진입했으면, 북마크 하려는 이벤트임. */
-            customPreference.put(title,true);
-            isBookmark.setImageDrawable(bookmarkTrue);
+        final FirebaseUser user = auth.getCurrentUser();
+        if(user != null){
+            bookmarkRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot data) {
+                    Intent i = getIntent();
+                    String key = i.getStringExtra("key");
+                    if(data.child(key).exists()){
+                        Glide.with(context).load(R.drawable.icon_emptyheart).into(isBookmark);
+                        bookmarkRef.child(key).setValue(null);
+                    }else{
+                        Glide.with(context).load(R.drawable.icon_fillheart).into(isBookmark);
+                        bookmarkRef.child(key).setValue("bookmark");
+                    }
+                }
 
-        } else { // 북마크가 되어있다면 북마크를 취소해줘야 함.
-            customPreference.put(title,false);
-            isBookmark.setImageDrawable(bookmarkFalse);
+                @Override
+                public void onCancelled(DatabaseError databaseError) {}
+            });
+        }else{
+            Toast.makeText(context, "로그인이 필요합니다.", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -173,16 +230,24 @@ public class DramaListActivity extends AppCompatActivity {
     //하이퍼 링크 띄우기
     @OnClick(R.id.broadcast_link)
         public void boadcastBTN(View v){
-        if(broadcast == "SBS"){
+        if(broadcast == "SBS" || broadcast.equals("SBS")){
             Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://www.sbs.co.kr"));
             startActivity(intent);
         }
-        else if(broadcast == "KBS2"){
-            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://www.kbc.co.kr"));
+        else if(broadcast == "KBS2" || broadcast.equals("KBS2")){
+            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://www.kbs.co.kr"));
             startActivity(intent);
         }
-        else if(broadcast =="MBC"){
+        else if(broadcast =="MBC" || broadcast.equals("MBC")){
             Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://www.imbc.com"));
+            startActivity(intent);
+        }
+        else if(broadcast =="tvN" || broadcast.equals("tvN")){
+            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://ch.interest.me/tvn"));
+            startActivity(intent);
+        }
+        else if(broadcast =="JTBC" || broadcast.equals("JTBC")){
+            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://jtbc.joins.com/"));
             startActivity(intent);
         }
     }

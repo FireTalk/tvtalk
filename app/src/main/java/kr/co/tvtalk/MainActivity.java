@@ -8,6 +8,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.widget.Toast;
 
 import com.facebook.FacebookSdk;
 import com.facebook.login.LoginManager;
@@ -18,6 +19,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 
@@ -32,7 +34,7 @@ public class MainActivity extends AppCompatActivity {
 
     private FirebaseAuth auth;
     private FirebaseDatabase db;
-    private DatabaseReference ref;
+    private DatabaseReference ref, bookmarkRef;
 
 
     @Bind(R.id.main_activity_recycler)
@@ -53,8 +55,10 @@ public class MainActivity extends AppCompatActivity {
         ButterKnife.bind(this);
 
         auth = FirebaseAuth.getInstance();
+        FirebaseUser user = auth.getCurrentUser();
         db = FirebaseDatabase.getInstance();
         ref = db.getReference().child("drama");
+        if(user != null)    bookmarkRef = db.getReference().child("bookmark/"+user.getUid());
 
         context = getApplicationContext();
         datas = new ArrayList<MainData>();
@@ -66,10 +70,46 @@ public class MainActivity extends AppCompatActivity {
 
 
         ref.addChildEventListener(new ChildEventListener() {
+            FirebaseUser user = auth.getCurrentUser();
             @Override
-            public void onChildAdded(DataSnapshot db, String s) {
-                MainData mainData = new MainData(db.child("img").getValue().toString(), db.child("title").getValue().toString(), R.drawable.bookmark_false, R.drawable.sbs, db.child("time").getValue().toString(), db.getKey());
-                mainAdapter.add(mainData);
+            public void onChildAdded(final DataSnapshot db, String s) {
+                if(user == null){
+                    MainData mainData = new MainData(
+                            db.child("img").getValue().toString(),
+                            db.child("title").getValue().toString(),
+                            R.drawable.bookmark_false,
+                            db.child("channel").getValue().toString(),
+                            db.child("time").getValue().toString(),
+                            db.getKey());
+                    mainAdapter.add(mainData);
+                }else{
+                    bookmarkRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot data) {
+                            if(data.child(db.getKey()).exists()){
+                                MainData mainData = new MainData(
+                                        db.child("img").getValue().toString(),
+                                        db.child("title").getValue().toString(),
+                                        R.drawable.bookmark_true,
+                                        db.child("channel").getValue().toString(),
+                                        db.child("time").getValue().toString(),
+                                        db.getKey());
+                                mainAdapter.add(mainData);
+                            }else{
+                                MainData mainData = new MainData(
+                                        db.child("img").getValue().toString(),
+                                        db.child("title").getValue().toString(),
+                                        R.drawable.bookmark_false,
+                                        db.child("channel").getValue().toString(),
+                                        db.child("time").getValue().toString(),
+                                        db.getKey());
+                                mainAdapter.add(mainData);
+                            }
+                        }
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {}
+                    });
+                }
             }
 
             @Override
@@ -91,7 +131,31 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        bookmarkRef.addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(DataSnapshot data, String s) {
+//                Toast.makeText(MainActivity.this, ""+mainAdapter.getItemCount(), Toast.LENGTH_SHORT).show();
+                int key = Integer.parseInt(data.getKey());
 
+//                String aa = mainAdapter.getItems().get(Integer.parseInt(data.getKey())).broadcastDescription;
+//                Toast.makeText(MainActivity.this, aa, Toast.LENGTH_SHORT).show();
+
+            }
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {}
+
+            @Override
+            public void onChildRemoved(DataSnapshot data) {
+//                mainAdapter.getItems().get(Integer.parseInt(data.getKey())).isBookmark = R.drawable.bookmark_false;
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {}
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {}
+        });
         mainActivityRecyler.smoothScrollToPosition(selectedDramaNo);
     }
 

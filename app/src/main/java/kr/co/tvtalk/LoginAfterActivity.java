@@ -22,8 +22,11 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserProfileChangeRequest;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
@@ -86,7 +89,19 @@ public class LoginAfterActivity extends AppCompatActivity {
     Button loginRepairBtn;
     @OnClick(R.id.login_repair_btn)
     public void loginRepairClick(View v) {
-        startActivity(new Intent(getApplicationContext(), ChangePWActivity.class));
+        FirebaseUser user = auth.getCurrentUser();
+        Ref.child(user.getUid()+"/facebook").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot data) {
+                if(data.getValue().toString().equals("true")){
+                    Toast.makeText(LoginAfterActivity.this, "페이스북 사용자는 변경할 수 없습니다.", Toast.LENGTH_SHORT).show();
+                }else{
+                    startActivity(new Intent(getApplicationContext(), ChangePWActivity.class));
+                }
+            }
+            @Override
+            public void onCancelled(DatabaseError databaseError) {}
+        });
     }
 
     //로그아웃
