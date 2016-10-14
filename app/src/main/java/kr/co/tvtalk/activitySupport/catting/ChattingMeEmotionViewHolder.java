@@ -1,6 +1,7 @@
 package kr.co.tvtalk.activitySupport.catting;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -25,7 +26,8 @@ public class ChattingMeEmotionViewHolder extends CustomViewHolder<Integer> {
         return ;
     }
     public void onBindView(Integer emotion,Context context) {
-        Glide.with(context).load("http://211.249.50.198:5000/images/emoticon_test.png").into(chattingMeEmotion);
+        Log.d("번호",""+emotion);
+        Glide.with(context).load("").into(chattingMeEmotion);
     }
 
 }

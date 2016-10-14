@@ -138,14 +138,14 @@ public class EmotionPagerAdapter extends android.support.v4.view.PagerAdapter {
 
 
 
-        Glide.with(context).load("http://211.249.50.198:5000/images/emoticon_test.png").into(iconEmotion1);
-        Glide.with(context).load("http://211.249.50.198:5000/images/emoticon_test.png").into(iconEmotion2);
-        Glide.with(context).load("http://211.249.50.198:5000/images/emoticon_test.png").into(iconEmotion3);
-        Glide.with(context).load("http://211.249.50.198:5000/images/emoticon_test.png").into(iconEmotion4);
-        Glide.with(context).load("http://211.249.50.198:5000/images/emoticon_test.png").into(iconEmotion5);
-        Glide.with(context).load("http://211.249.50.198:5000/images/emoticon_test.png").into(iconEmotion6);
-        Glide.with(context).load("http://211.249.50.198:5000/images/emoticon_test.png").into(iconEmotion7);
-        Glide.with(context).load("http://211.249.50.198:5000/images/emoticon_test.png").into(iconEmotion8);
+        Glide.with(context).load(R.drawable.a).into(iconEmotion1);
+        Glide.with(context).load(R.drawable.b).into(iconEmotion2);
+        Glide.with(context).load(R.drawable.c).into(iconEmotion3);
+        Glide.with(context).load(R.drawable.d).into(iconEmotion4);
+        Glide.with(context).load(R.drawable.e).into(iconEmotion5);
+        Glide.with(context).load(R.drawable.f).into(iconEmotion6);
+        Glide.with(context).load(R.drawable.g).into(iconEmotion7);
+        Glide.with(context).load(R.drawable.h).into(iconEmotion8);
 
 
 

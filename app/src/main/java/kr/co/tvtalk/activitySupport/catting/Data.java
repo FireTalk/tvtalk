@@ -7,13 +7,14 @@ package kr.co.tvtalk.activitySupport.catting;
 public abstract class Data {
     public String anotherProfileImage;
     public String anotherName;
-
     public AskPersonInfo personInfo;
+//    public String emoticon;
 
     public Data(String anotherProfileImage, String anotherName, AskPersonInfo personInfo) {
         this.anotherProfileImage = anotherProfileImage;
         this.anotherName = anotherName;
         this.personInfo = personInfo;
+//        this.emoticon = emoticon;
     }
 
     public int getEmotion(){
