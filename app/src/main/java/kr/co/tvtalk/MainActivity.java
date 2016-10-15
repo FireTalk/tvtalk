@@ -131,31 +131,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-//        bookmarkRef.addChildEventListener(new ChildEventListener() {
-//            @Override
-//            public void onChildAdded(DataSnapshot data, String s) {
-////                Toast.makeText(MainActivity.this, ""+mainAdapter.getItemCount(), Toast.LENGTH_SHORT).show();
-//                int key = Integer.parseInt(data.getKey());
-//
-////                String aa = mainAdapter.getItems().get(Integer.parseInt(data.getKey())).broadcastDescription;
-////                Toast.makeText(MainActivity.this, aa, Toast.LENGTH_SHORT).show();
-//
-//            }
-//
-//            @Override
-//            public void onChildChanged(DataSnapshot dataSnapshot, String s) {}
-//
-//            @Override
-//            public void onChildRemoved(DataSnapshot data) {
-////                mainAdapter.getItems().get(Integer.parseInt(data.getKey())).isBookmark = R.drawable.bookmark_false;
-//            }
-//
-//            @Override
-//            public void onChildMoved(DataSnapshot dataSnapshot, String s) {}
-//
-//            @Override
-//            public void onCancelled(DatabaseError databaseError) {}
-//        });
+        updateBookmark();
         mainActivityRecyler.smoothScrollToPosition(selectedDramaNo);
     }
 
@@ -186,7 +162,41 @@ public class MainActivity extends AppCompatActivity {
             startActivity(new Intent(getApplicationContext(), LoginActivity.class));
             LoginManager.getInstance().logOut();
         }
+    }
 
+    public void updateBookmark(){
+        FirebaseUser user = auth.getCurrentUser();
+        if(user != null){
+            bookmarkRef.addChildEventListener(new ChildEventListener() {
+                @Override
+                public void onChildAdded(DataSnapshot data, String s) {
+                    int key = Integer.parseInt(data.getKey()) - 1;
+                    if(mainAdapter.getItemCount() != 0){
 
+                        mainAdapter.getItems().get(key).isBookmark = R.drawable.bookmark_true;
+                        mainActivityRecyler.setAdapter(mainAdapter);
+                    }
+                }
+
+                @Override
+                public void onChildChanged(DataSnapshot dataSnapshot, String s) {}
+
+                @Override
+                public void onChildRemoved(DataSnapshot data) {
+                    int key = Integer.parseInt(data.getKey()) - 1;
+                    if(mainAdapter.getItemCount() != 0){
+
+                        mainAdapter.getItems().get(key).isBookmark = R.drawable.bookmark_false;
+                        mainActivityRecyler.setAdapter(mainAdapter);
+                    }
+                }
+
+                @Override
+                public void onChildMoved(DataSnapshot dataSnapshot, String s) {}
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {}
+            });
+        }
     }
 }
