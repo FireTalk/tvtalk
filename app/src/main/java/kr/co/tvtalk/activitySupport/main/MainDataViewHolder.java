@@ -42,7 +42,7 @@ import butterknife.OnClick;
 public class MainDataViewHolder extends CustomViewHolder<MainData> {
 
     private FirebaseDatabase db;
-    private DatabaseReference bookmarkRef;
+    private DatabaseReference bookmarkRef, dramaRef;
 
 
     @Nullable
@@ -86,8 +86,8 @@ public class MainDataViewHolder extends CustomViewHolder<MainData> {
 
         broadcastName.setTypeface(FontFactory.getFont(MainActivity.context, FontFactory.Font.NOTOSANS_BOLD));
         broadcastDescription.setTypeface(FontFactory.getFont(MainActivity.context,FontFactory.Font.NOTOSANS_REGULAR));
-        if ( customPreference == null )
-            customPreference = CustomPreference.getInstance(v.getContext());
+//        if ( customPreference == null )
+//            customPreference = CustomPreference.getInstance(v.getContext());
     }
 
     @Override
@@ -171,14 +171,30 @@ public class MainDataViewHolder extends CustomViewHolder<MainData> {
     @OnClick(R.id.main_row_relativelayout)
     public void mainRowRelativelayoutClick(View v) {
         MainActivity.selectedDramaNo = getAdapterPosition() ; // 선택한 드라마의 index 번호를 저장.
+        db = FirebaseDatabase.getInstance();
+        dramaRef = db.getReference().child("drama/"+key+"/list");
+        dramaRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot data) {
+                if(data.getChildrenCount() != 0){
 
-        Intent intent = new Intent();
-        intent.putExtra("key", key);
-        intent.putExtra("broadcastName", broadcastName.getText().toString());
-        intent.putExtra("broadcastDescription",broadcastDescription.getText().toString());
-        intent.putExtra("channel", channel);
-        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        intent.setClass(MainActivity.context,DramaListActivity.class);
-        MainActivity.context.startActivity(intent);
+                    Intent intent = new Intent();
+                    intent.putExtra("key", key);
+                    intent.putExtra("broadcastName", broadcastName.getText().toString());
+                    intent.putExtra("broadcastDescription",broadcastDescription.getText().toString());
+                    intent.putExtra("channel", channel);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    intent.setClass(MainActivity.context,DramaListActivity.class);
+                    MainActivity.context.startActivity(intent);
+                }else{
+                    Toast.makeText(MainActivity.context, "드라마 방영 전입니다.", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {}
+        });
+
+
     }
 }
