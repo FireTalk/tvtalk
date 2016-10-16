@@ -124,14 +124,14 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onCancelled(DatabaseError databaseError) {}
         });
-
+        updateBookmark();
 
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        updateBookmark();
+
         mainActivityRecyler.smoothScrollToPosition(selectedDramaNo);
     }
 
@@ -174,7 +174,8 @@ public class MainActivity extends AppCompatActivity {
                     if(mainAdapter.getItemCount() != 0){
 
                         mainAdapter.getItems().get(key).isBookmark = R.drawable.bookmark_true;
-                        mainActivityRecyler.setAdapter(mainAdapter);
+//                        mainActivityRecyler.setAdapter(mainAdapter);
+                        mainAdapter.notifyDataSetChanged();
                     }
                 }
 
@@ -187,7 +188,7 @@ public class MainActivity extends AppCompatActivity {
                     if(mainAdapter.getItemCount() != 0){
 
                         mainAdapter.getItems().get(key).isBookmark = R.drawable.bookmark_false;
-                        mainActivityRecyler.setAdapter(mainAdapter);
+                        mainAdapter.notifyDataSetChanged();
                     }
                 }
 
