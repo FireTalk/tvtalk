@@ -9,11 +9,11 @@ public class MainData {
     public String broadcastImage;
     public String broadcastName;
     public int isBookmark;
-    public int broadcastKindOf;
+    public String broadcastKindOf;
     public String broadcastDescription;
     public String key;
 
-    public MainData(String broadcastImage, String broadcastName, int isBookmark, int broadcastKindOf, String broadcastDescription, String key) {
+    public MainData(String broadcastImage, String broadcastName, int isBookmark, String broadcastKindOf, String broadcastDescription, String key) {
         this.broadcastImage = broadcastImage;
         this.broadcastName = broadcastName;
         this.isBookmark = isBookmark;
@@ -29,7 +29,7 @@ public class MainData {
                 "broadcastImage='" + broadcastImage + '\'' +
                 ", broadcastName='" + broadcastName + '\'' +
                 ", isBookmark=" + isBookmark +
-                ", broadcastKindOf=" + broadcastKindOf +
+                ", broadcastKindOf='" + broadcastKindOf + '\'' +
                 ", broadcastDescription='" + broadcastDescription + '\'' +
                 ", key='" + key + '\'' +
                 '}';

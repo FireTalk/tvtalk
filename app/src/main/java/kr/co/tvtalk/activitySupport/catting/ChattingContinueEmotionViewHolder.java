@@ -3,6 +3,7 @@ package kr.co.tvtalk.activitySupport.catting;
 import android.content.Context;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 
 import com.bumptech.glide.Glide;
 
@@ -14,10 +15,16 @@ import kr.co.tvtalk.activitySupport.CustomViewHolder;
  */
 
 public class ChattingContinueEmotionViewHolder extends CustomViewHolder<Integer> {
+    public static final ChattingObserver observer = ChattingObserver.getInstance();
+    public RelativeLayout selfRelativeLayout;
     public ImageView anotherEmotion ;
     public ChattingContinueEmotionViewHolder( View v ) {
         super(v);
+
+        selfRelativeLayout = (RelativeLayout)v.findViewById(R.id.chatting_another_continue_emotion_relativelayout);
         anotherEmotion = (ImageView)v.findViewById(R.id.another_continue_emotion);
+
+        observer.register(selfRelativeLayout);
     }
     public void onBindView(Integer integer) {
         return ;

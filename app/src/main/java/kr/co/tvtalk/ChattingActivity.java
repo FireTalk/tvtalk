@@ -55,6 +55,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.OnTextChanged;
 
+import kr.co.tvtalk.activitySupport.catting.ChattingObserver;
 import kr.co.tvtalk.model.ChatDTO;
 import kr.co.tvtalk.model.MemberDTO;
 
@@ -63,6 +64,8 @@ import kr.co.tvtalk.activitySupport.catting.emotion.EmotionPagerAdapter;
 
 
 public class ChattingActivity extends AppCompatActivity {
+    private static final ChattingObserver observer = ChattingObserver.getInstance();
+
     public static ChattingActivity instance;
     private static boolean isLiveActivity = false;
     private FirebaseAuth auth;
@@ -124,6 +127,7 @@ public class ChattingActivity extends AppCompatActivity {
                 emotionArea.setVisibility(View.GONE);
                 setInputFormLayoutParams(0);
                 status=STATUS_BASIC;
+                emotionPreviewArea.setVisibility(View.GONE);
                 break;
             default :
                 finish();
@@ -180,7 +184,7 @@ public class ChattingActivity extends AppCompatActivity {
             String before_uid;
             String msg;
             String type; // 1 이면 only 텍스트, 2면 only 이모티콘, 3은 둘다
-            String emoticon;
+            int emoticon = 0;
             int cnt;
 
             ChattingData.AskPersonInfo isSamePerson;
@@ -189,45 +193,103 @@ public class ChattingActivity extends AppCompatActivity {
 
             @Override
             public void onChildAdded(DataSnapshot data, String s) {
-
                 if(!data.getKey().toString().equals("1")){
                     before_uid = uid;
                 }
                 uid = data.child("uid").getValue().toString();
 
-
-                type = data.child("type").getValue().toString();
-                if (type.equals("1")) {
-                    dto.setMsg(data.child("msg").getValue().toString());
-                    dto.setEmoticon("");
-                } else if (type.equals("2")) {
-                    dto.setMsg("");
-                    dto.setEmoticon(data.child("emo").getValue().toString());
-
-                } else if (type.equals("3")) {
-                    dto.setMsg(data.child("msg").getValue().toString());
-                    dto.setEmoticon(data.child("emo").getValue().toString());
-                }
-
                 final FirebaseUser user = auth.getCurrentUser();
                 if(user != null && user.getUid().toString().equals(uid)){//내가 했던말
-                    dto.setIsSamePerson(ChattingData.AskPersonInfo.ME);
+
+                    type = data.child("type").getValue().toString();
+                    if (type.equals("1")) {
+                        dto.setMsg(data.child("msg").getValue().toString());
+                        dto.setIsSamePerson(ChattingData.AskPersonInfo.ME);
+
+                    } else if (type.equals("2")) {
+                        dto.setMsg("");
+                        emoticon =  getEmoticonNum(data.child("emo").getValue().toString());
+                        dto.setIsSamePerson(ChattingData.AskPersonInfo.ME_EMOTION);
+
+                    } else if (type.equals("3")) {
+                        dto.setMsg(data.child("msg").getValue().toString());
+                        emoticon =  getEmoticonNum(data.child("emo").getValue().toString());
+                        dto.setIsSamePerson(ChattingData.AskPersonInfo.ME_EMOTION);
+//                        addChattingLine(
+//                                "",//프로필 이미지
+//                                "",  // 사용자 이름
+//                                "", // 할말
+//                                dto.getIsSamePerson(),
+//                                emoticon
+//                        );
+//                        emoticon = 0;
+//                        dto.setIsSamePerson(ChattingData.AskPersonInfo.ME);
+                    }
+
 
 
                 }else{//남이 했던말
+
                     if(uid.equals(before_uid)){
-                        dto.setIsSamePerson(ChattingData.AskPersonInfo.SAME);
+                        type = data.child("type").getValue().toString();
+                        if (type.equals("1")) {
+                            dto.setMsg(data.child("msg").getValue().toString());
+                            dto.setIsSamePerson(ChattingData.AskPersonInfo.SAME);
+
+                        } else if (type.equals("2")) {
+                            dto.setMsg("");
+                            emoticon =  getEmoticonNum(data.child("emo").getValue().toString());
+                            dto.setIsSamePerson(ChattingData.AskPersonInfo.SAME_EMOTION);
+
+                        } else if (type.equals("3")) {
+                            dto.setMsg(data.child("msg").getValue().toString());
+                            emoticon =  getEmoticonNum(data.child("emo").getValue().toString());
+                            dto.setIsSamePerson(ChattingData.AskPersonInfo.SAME_EMOTION);
+//                            addChattingLine(
+//                                    "",//프로필 이미지
+//                                    "",  // 사용자 이름
+//                                    "", // 할말
+//                                    dto.getIsSamePerson(),
+//                                    emoticon
+//                            );
+//                            emoticon = 0;
+//                            dto.setIsSamePerson(ChattingData.AskPersonInfo.SAME);
+                        }
                     }else{
-                        dto.setIsSamePerson(ChattingData.AskPersonInfo.ANOTHER);
+                        type = data.child("type").getValue().toString();
+                        if (type.equals("1")) {
+                            dto.setMsg(data.child("msg").getValue().toString());
+                            dto.setIsSamePerson(ChattingData.AskPersonInfo.ANOTHER);
+
+                        } else if (type.equals("2")) {
+                            dto.setMsg("");
+                            emoticon =  getEmoticonNum(data.child("emo").getValue().toString());
+                            dto.setIsSamePerson(ChattingData.AskPersonInfo.ANOTHER_EMOTION);
+
+                        } else if (type.equals("3")) {
+                            dto.setMsg(data.child("msg").getValue().toString());
+                            emoticon =  getEmoticonNum(data.child("emo").getValue().toString());
+                            dto.setIsSamePerson(ChattingData.AskPersonInfo.ANOTHER_EMOTION);
+//                            addChattingLine(
+//                                    "",//프로필 이미지
+//                                    "",  // 사용자 이름
+//                                    "", // 할말
+//                                    dto.getIsSamePerson(),
+//                                    emoticon
+//                            );
+//                            emoticon = 0;
+//                            dto.setIsSamePerson(ChattingData.AskPersonInfo.ANOTHER);
+                        }
                     }
-                    getUserInfo(uid, dto.getMsg(), dto.getEmoticon(), dto.getIsSamePerson(), data.getKey().toString());
+                    getUserInfo(uid, dto.getMsg(), emoticon, dto.getIsSamePerson(), data.getKey().toString());
                 }
 
                 addChattingLine(
                     "",//프로필 이미지
                     "",  // 사용자 이름
                     dto.getMsg(), // 할말
-                    dto.getIsSamePerson()
+                    dto.getIsSamePerson(),
+                    emoticon
                 );
             }
 
@@ -252,7 +314,7 @@ public class ChattingActivity extends AppCompatActivity {
 
     }
 
-    public void getUserInfo(String uid, final String msg, String emoticon, final ChattingData.AskPersonInfo IsSamePerson, final String key){
+    public void getUserInfo(String uid, final String msg, final int emoticon, final ChattingData.AskPersonInfo IsSamePerson, final String key){
 
         ref2.child(uid).addListenerForSingleValueEvent(new ValueEventListener() {
             String nickName;
@@ -270,7 +332,7 @@ public class ChattingActivity extends AppCompatActivity {
                             photo = "https://firebasestorage.googleapis.com/v0/b/tvtalk-c4d50.appspot.com/o/profile%2Fuser.png?alt=media&token=85a3c04e-07da-4ec8-b10b-6717edc2eefe";
                         }
 
-                        Data chattingData =  new ChattingData( photo , nickName, msg , IsSamePerson );
+                        Data chattingData =  new ChattingData( photo , nickName, msg , IsSamePerson , emoticon);
 
 
                         adapter.getItems().set(Integer.parseInt(key)-1, chattingData);
@@ -281,6 +343,38 @@ public class ChattingActivity extends AppCompatActivity {
             public void onCancelled(DatabaseError databaseError) {}
         });
 
+    }
+
+    public int getEmoticonNum(String emo){
+        int emoticon = 0;
+        switch (emo){
+            case "1" :
+                emoticon = R.drawable.a;
+                break;
+            case "2" :
+                emoticon = R.drawable.b;
+                break;
+            case "3" :
+                emoticon = R.drawable.c;
+                break;
+            case "4" :
+                emoticon = R.drawable.d;
+                break;
+            case "5" :
+                emoticon = R.drawable.e;
+                break;
+            case "6" :
+                emoticon = R.drawable.f;
+                break;
+            case "7" :
+                emoticon = R.drawable.g;
+                break;
+            case "8" :
+                emoticon = R.drawable.h;
+                break;
+            default: break;
+        }
+        return emoticon;
     }
 
 
@@ -299,6 +393,8 @@ public class ChattingActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         isLiveActivity = true;
+        emoticonImg=0;
+        emotionMutax=true;
         //화면이 다시 살아나는경우.
         if(saveChattingData.size() > 0) {
             for(int i=0;i<saveChattingData.size();i++) {
@@ -321,6 +417,8 @@ public class ChattingActivity extends AppCompatActivity {
     protected void onPause() {
         super.onPause();
         isLiveActivity = false;
+        emoticonImg=0;
+        emotionMutax=false;
     }
 
     public void initAnother(){
@@ -390,10 +488,20 @@ public class ChattingActivity extends AppCompatActivity {
 
         if( isLogin() ){//로그인 한 경우
 
-
             ref.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot data) {
+                    if(emoticonImg!=0) {
+//                        addChattingLine(
+//                                "https://avatars2.githubusercontent.com/u/14024193?v=3&s=466", // 프로필 이미지
+//                                "기호", // 사용자 이름
+//                                "",  // 텍스트 메시지
+//                                Data.AskPersonInfo.ME_EMOTION, // 내가 이모티콘으로 말함.
+//                                emoticonImg
+//                        );
+                        emotionPreviewArea.setVisibility(View.GONE);
+                        emoticonImg = 0;
+                    }
                     if(data == null) cnt = 0;
                     cnt = data.getChildrenCount()+1;
 
@@ -461,7 +569,7 @@ public class ChattingActivity extends AppCompatActivity {
 
 
     private synchronized void addChattingLine(Data data) {
-        addChattingLine(data.anotherProfileImage , data.anotherName , data.getAnotherTextMessage() , data.personInfo);
+        addChattingLine(data.anotherProfileImage , data.anotherName , data.getAnotherTextMessage() , data.personInfo, data.getEmotion());
     }
     /**
      * 채팅메시지 하나하나를 띄워주는 메소드.
@@ -470,8 +578,8 @@ public class ChattingActivity extends AppCompatActivity {
      * @param textMessage 말한사람의 텍스트 메시지
      * @param isSamePerson 방금전에 말한 사람과 같은 사람이 말했는지 체크하는 boolean.
      */
-    private synchronized void addChattingLine(String profileImage, String speaker , String textMessage , ChattingData.AskPersonInfo isSamePerson)  {
-        Data chattingData =  new ChattingData( profileImage,speaker, textMessage , isSamePerson );
+    private synchronized void addChattingLine(String profileImage, String speaker , String textMessage , ChattingData.AskPersonInfo isSamePerson, int emoticon)  {
+        Data chattingData =  new ChattingData( profileImage, speaker, textMessage , isSamePerson, emoticon);
         if(!isLiveActivity) {  // 액티비티가 죽은경우.
             saveChattingData.add(chattingData);
             return ;
@@ -509,8 +617,23 @@ public class ChattingActivity extends AppCompatActivity {
     @Bind(R.id.is_emotion_true)
     ImageView isEmotionTrue;
 
+    private void reverseEmotion(final boolean isVisible) {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        observer.notiyObserver(isVisible);
+                    }
+
+                });
+            }
+        }).start();
+    }
     @OnClick(R.id.is_emotion_true)
     public void isemotionTrue(View v) {
+        reverseEmotion(false);
         isEmotionTrue.setVisibility(View.GONE);
         isEmotionFalse.setVisibility(View.VISIBLE);
     }
@@ -519,6 +642,7 @@ public class ChattingActivity extends AppCompatActivity {
     ImageView isEmotionFalse;
     @OnClick(R.id.is_emotion_false)
     public void isemotionFalse(View v) {
+        reverseEmotion(true);
         isEmotionFalse.setVisibility(View.GONE);
         isEmotionTrue.setVisibility(View.VISIBLE);
     }
@@ -531,26 +655,79 @@ public class ChattingActivity extends AppCompatActivity {
     
     private long emotionLastClick;
     static int clickEmotionNo ;
+    int emoticonImg = 0;
+    public static boolean emotionMutax = true;
     public void emotionClick(int emotion) {
-        if( ! isLogin() ) { //로그인이 안되어 있는경우.
+        Log.e("Chat_emotion",emotion+"");
+        final FirebaseUser user = auth.getCurrentUser();
+
+        if( user == null ) { //로그인이 안되어 있는경우.
             startActivity(new Intent(this,LoginActivity.class)); // 로그인화면으로 이동해준다.
             return ;
         }
-        final FirebaseUser user = auth.getCurrentUser();
+        if(emotionMutax) {
+            clickEmotionNo = emotion;
+            emotion=0;
+            emotionMutax=false ;
+        }
+
         status = STATUS_EMOTION;
+        switch(clickEmotionNo){
+            case 1 :
+                emoticonImg = R.drawable.a;
+                break;
+            case 2 :
+                emoticonImg = R.drawable.b;
+                break;
+            case 3 :
+                emoticonImg = R.drawable.c;
+                break;
+            case 4 :
+                emoticonImg = R.drawable.d;
+                break;
+            case 5 :
+                emoticonImg = R.drawable.e;
+                break;
+            case 6 :
+                emoticonImg = R.drawable.f;
+                break;
+            case 7 :
+                emoticonImg = R.drawable.g;
+                break;
+            case 8 :
+                emoticonImg = R.drawable.f;
+                break;
+            default: break;
+        }
         if( emotion != clickEmotionNo ) {//이모티콘 누를 시 영역띄우기
             clickEmotionNo = emotion;
-            Glide.with(this).load("http://211.249.50.198:5000/images/emoticon_test.png").into(emotionPreview);
+
+            Glide.with(this).load(emoticonImg).into(emotionPreview);
             emotionPreviewArea.setVisibility(View.VISIBLE);
         }
         else if( System.currentTimeMillis() < emotionLastClick+1000) { // 1초 이내로 2번 클릭 시
-            addChattingLine(
-                    "https://avatars2.githubusercontent.com/u/14024193?v=3&s=466", // 프로필 이미지
-                    "기호", // 사용자 이름
-                    "",  // 텍스트 메시지
-                    Data.AskPersonInfo.ME_EMOTION // 내가 이모티콘으로 말함.
-            );
+
+            ref.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot data) {
+                    if(data == null) cnt = 0;
+                    cnt = data.getChildrenCount()+1;
+
+                    Map<String, Object> chatdb = new HashMap<String, Object>();
+                    chatdb.put("uid", user.getUid());
+//                    chatdb.put("msg", typingMessage.getText().toString());
+                    chatdb.put("type", 2);
+                    chatdb.put("emo", clickEmotionNo);
+                    ref.child(""+cnt).setValue(chatdb); // db에 저장하면 추가된 메세지는 알아서 불러와짐 - 위에 childadded 이벤트에서..
+
+                }
+                @Override
+                public void onCancelled(DatabaseError databaseError) {}
+            });
+
+
             emotionPreviewArea.setVisibility(View.GONE);
+            emoticonImg=0;
         }
         emotionLastClick = System.currentTimeMillis();
     }

@@ -11,9 +11,13 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
-import org.w3c.dom.Text;
-
+import jp.wasabeef.glide.transformations.GrayscaleTransformation;
 import kr.co.tvtalk.ChattingActivity;
 import kr.co.tvtalk.DramaListActivity;
 import kr.co.tvtalk.R;
@@ -26,6 +30,9 @@ import butterknife.BindDrawable;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 public class DramaViewHolder extends CustomViewHolder<DramaData> {
+
+    private FirebaseDatabase db;
+    private DatabaseReference ref;
 
     /*350 : 130 = 100% : x
     * x == 27%*/
@@ -55,6 +62,7 @@ public class DramaViewHolder extends CustomViewHolder<DramaData> {
 
     String key;//드라마 고유키값
     String order;
+    String state;
 
     public DramaViewHolder(View itemView) {
         super(itemView);
@@ -69,13 +77,23 @@ public class DramaViewHolder extends CustomViewHolder<DramaData> {
     public void onBindView(DramaData item) {
         dramaCountInfomation.setText( item.dramaCountInfomation );
         dramaBroadcastDay.setText( item.dramaBroadcastDay );
-        infomationEnterChattingRoom.setText( item.infomationEnterChattingRoom );
+        state = item.infomationEnterChattingRoom;
+        if(state.equals("open"))
+            infomationEnterChattingRoom.setText( "Live" );
+        else if(state.equals("closed")){
+            infomationEnterChattingRoom.setText( "읽고 공감 가능" );
+        }
         key = item.key;//드라마 고유키값
         order = item.dramaCountInfomation.split("화")[0]; // 회차
     }
+
     public void onBindView(DramaData item , Context context) {
         onBindView(item);
-        Glide.with(context).load(item.dramaImage).into(dramaImage);
+        if(item.infomationEnterChattingRoom.equals("closed")){
+            Glide.with(context).load(item.dramaImage).bitmapTransform(new GrayscaleTransformation(context)).into(dramaImage);
+        }else if(item.infomationEnterChattingRoom.equals("open")){
+            Glide.with(context).load(item.dramaImage).into(dramaImage);
+        }
         iconEnterChattingRoom.setImageDrawable(iconClock);
 
     }
@@ -83,14 +101,38 @@ public class DramaViewHolder extends CustomViewHolder<DramaData> {
     RelativeLayout mainDramaListRow;
     @OnClick(R.id.main_drama_list_row)
     public void mainDramaListRowClick(View v) {
+        if(state.equals("open")){
+            Intent intent = new Intent();
+            intent.putExtra("key", key);
+            intent.putExtra("order", order);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            intent.setClass(DramaListActivity.context,ChattingActivity.class);
+            DramaListActivity.context.startActivity(intent);
+        }else if(state.equals("closed")){
+            db = FirebaseDatabase.getInstance();
+            ref = db.getReference().child("chat/"+key+"_"+order);
+            ref.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot data) {
+                    if(data.getChildrenCount() == 0){
+                        Toast.makeText(DramaListActivity.context, "채팅내역이 없습니다.", Toast.LENGTH_SHORT).show();
+                    }else{//얼린 채팅방
+                        Intent intent = new Intent();
+                        intent.putExtra("key", key);
+                        intent.putExtra("order", order);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        intent.setClass(DramaListActivity.context,ChattingActivity.class);
+                        DramaListActivity.context.startActivity(intent);
+                    }
+                }
+                @Override
+                public void onCancelled(DatabaseError databaseError) {}
+            });
 
-        Intent intent = new Intent();
-        intent.putExtra("key", key);
-        intent.putExtra("order", order);
-        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        intent.setClass(DramaListActivity.context,ChattingActivity.class);
-        DramaListActivity.context.startActivity(intent);
 
+        }else if(state.equals("locked")){
+            Toast.makeText(DramaListActivity.context, "비활성 채팅방입니다.", Toast.LENGTH_SHORT).show();
+        }
     }
 
 }

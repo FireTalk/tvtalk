@@ -8,6 +8,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.widget.Toast;
 
 import com.facebook.FacebookSdk;
 import com.facebook.login.LoginManager;
@@ -18,6 +19,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 
@@ -32,7 +34,7 @@ public class MainActivity extends AppCompatActivity {
 
     private FirebaseAuth auth;
     private FirebaseDatabase db;
-    private DatabaseReference ref;
+    private DatabaseReference ref, bookmarkRef;
 
 
     @Bind(R.id.main_activity_recycler)
@@ -45,16 +47,6 @@ public class MainActivity extends AppCompatActivity {
 
     public static int selectedDramaNo = 0 ;
 
-    /*public static String tempDramaName="달의 연인 - 보보경심려,몬스터,W (더블유),함부로 애틋하게,질투의 화신,구르미 그린 달빛";
-    public static String tempDramaTime="월·화 오후 2:00,월·화 오후 11:00,월·화 오후 11:00,수·목 오후 10:00,월·화 오후 2:00,월·화 오후 11:00";
-    public static String []tempLink =  {
-            "https://tv.pstatic.net/thm?size=120x172&quality=8&q=http://sstatic.naver.net/keypage/image/dss/57/09/67/90/57_3096790_poster_image_1471409776507.jpg",
-            "https://tv.pstatic.net/thm?size=120x172&quality=8&q=http://sstatic.naver.net/keypage/image/dss/57/24/71/22/57_3247122_poster_image_1458532341750.jpg",
-            "https://tv.pstatic.net/thm?size=120x172&quality=8&q=http://sstatic.naver.net/keypage/image/dss/57/47/17/25/57_3471725_poster_image_1469008328304.jpg",
-            "https://tv.pstatic.net/thm?size=120x172&quality=8&q=http://sstatic.naver.net/keypage/image/dss/57/90/83/05/57_2908305_poster_image_1464857206814.jpg",
-            "https://tv.pstatic.net/thm?size=120x172&quality=8&q=http://sstatic.naver.net/keypage/image/dss/57/28/69/83/57_3286983_poster_image_1471574939131.jpg",
-            "https://tv.pstatic.net/thm?size=120x172&quality=8&q=http://sstatic.naver.net/keypage/image/dss/57/37/30/26/57_3373026_poster_image_1471395715777.jpg"
-    };*/
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -63,8 +55,10 @@ public class MainActivity extends AppCompatActivity {
         ButterKnife.bind(this);
 
         auth = FirebaseAuth.getInstance();
+        FirebaseUser user = auth.getCurrentUser();
         db = FirebaseDatabase.getInstance();
         ref = db.getReference().child("drama");
+        if(user != null)    bookmarkRef = db.getReference().child("bookmark/"+user.getUid());
 
         context = getApplicationContext();
         datas = new ArrayList<MainData>();
@@ -76,26 +70,56 @@ public class MainActivity extends AppCompatActivity {
 
 
         ref.addChildEventListener(new ChildEventListener() {
+            FirebaseUser user = auth.getCurrentUser();
             @Override
-            public void onChildAdded(DataSnapshot db, String s) {
-                MainData mainData = new MainData(db.child("img").getValue().toString(), db.child("title").getValue().toString(), R.drawable.bookmark_false, R.drawable.sbs, db.child("time").getValue().toString(), db.getKey());
-                mainAdapter.add(mainData);
+            public void onChildAdded(final DataSnapshot db, String s) {
+                if(user == null){
+                    MainData mainData = new MainData(
+                            db.child("img").getValue().toString(),
+                            db.child("title").getValue().toString(),
+                            R.drawable.bookmark_false,
+                            db.child("channel").getValue().toString(),
+                            db.child("time").getValue().toString(),
+                            db.getKey());
+                    mainAdapter.add(mainData);
+                }else{
+                    bookmarkRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot data) {
+                            if(data.child(db.getKey()).exists()){
+                                MainData mainData = new MainData(
+                                        db.child("img").getValue().toString(),
+                                        db.child("title").getValue().toString(),
+                                        R.drawable.bookmark_true,
+                                        db.child("channel").getValue().toString(),
+                                        db.child("time").getValue().toString(),
+                                        db.getKey());
+                                mainAdapter.add(mainData);
+                            }else{
+                                MainData mainData = new MainData(
+                                        db.child("img").getValue().toString(),
+                                        db.child("title").getValue().toString(),
+                                        R.drawable.bookmark_false,
+                                        db.child("channel").getValue().toString(),
+                                        db.child("time").getValue().toString(),
+                                        db.getKey());
+                                mainAdapter.add(mainData);
+                            }
+                        }
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {}
+                    });
+                }
             }
 
             @Override
-            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-
-            }
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {}
 
             @Override
-            public void onChildRemoved(DataSnapshot dataSnapshot) {
-
-            }
+            public void onChildRemoved(DataSnapshot dataSnapshot) {}
 
             @Override
-            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-
-            }
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {}
 
             @Override
             public void onCancelled(DatabaseError databaseError) {}
@@ -107,7 +131,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-
+        updateBookmark();
         mainActivityRecyler.smoothScrollToPosition(selectedDramaNo);
     }
 
@@ -138,7 +162,41 @@ public class MainActivity extends AppCompatActivity {
             startActivity(new Intent(getApplicationContext(), LoginActivity.class));
             LoginManager.getInstance().logOut();
         }
+    }
 
+    public void updateBookmark(){
+        FirebaseUser user = auth.getCurrentUser();
+        if(user != null){
+            bookmarkRef.addChildEventListener(new ChildEventListener() {
+                @Override
+                public void onChildAdded(DataSnapshot data, String s) {
+                    int key = Integer.parseInt(data.getKey()) - 1;
+                    if(mainAdapter.getItemCount() != 0){
 
+                        mainAdapter.getItems().get(key).isBookmark = R.drawable.bookmark_true;
+                        mainActivityRecyler.setAdapter(mainAdapter);
+                    }
+                }
+
+                @Override
+                public void onChildChanged(DataSnapshot dataSnapshot, String s) {}
+
+                @Override
+                public void onChildRemoved(DataSnapshot data) {
+                    int key = Integer.parseInt(data.getKey()) - 1;
+                    if(mainAdapter.getItemCount() != 0){
+
+                        mainAdapter.getItems().get(key).isBookmark = R.drawable.bookmark_false;
+                        mainActivityRecyler.setAdapter(mainAdapter);
+                    }
+                }
+
+                @Override
+                public void onChildMoved(DataSnapshot dataSnapshot, String s) {}
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {}
+            });
+        }
     }
 }

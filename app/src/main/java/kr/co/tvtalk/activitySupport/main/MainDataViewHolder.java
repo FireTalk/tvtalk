@@ -15,6 +15,13 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.animation.ViewPropertyAnimation;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import kr.co.tvtalk.DramaListActivity;
 import kr.co.tvtalk.MainActivity;
@@ -33,6 +40,11 @@ import butterknife.OnClick;
  * @Nullable 이코드 있어도 되고 없어도 됌
  */
 public class MainDataViewHolder extends CustomViewHolder<MainData> {
+
+    private FirebaseDatabase db;
+    private DatabaseReference bookmarkRef, dramaRef;
+
+
     @Nullable
     @Bind(R.id.main_row_relativelayout)
     RelativeLayout mainRowRelativelayout;
@@ -64,6 +76,7 @@ public class MainDataViewHolder extends CustomViewHolder<MainData> {
     Drawable bookmarkTrue;
 
     String key;
+    String channel;
 
     public static CustomPreference customPreference;
 
@@ -73,15 +86,17 @@ public class MainDataViewHolder extends CustomViewHolder<MainData> {
 
         broadcastName.setTypeface(FontFactory.getFont(MainActivity.context, FontFactory.Font.NOTOSANS_BOLD));
         broadcastDescription.setTypeface(FontFactory.getFont(MainActivity.context,FontFactory.Font.NOTOSANS_REGULAR));
-        if ( customPreference == null )
-            customPreference = CustomPreference.getInstance(v.getContext());
+//        if ( customPreference == null )
+//            customPreference = CustomPreference.getInstance(v.getContext());
     }
 
     @Override
     public void onBindView(MainData item) {
+
         broadcastName.setText(item.broadcastName);
         broadcastDescription.setText(item.broadcastDescription);
         key = item.key;
+        channel = item.broadcastKindOf;
 
     }
 
@@ -103,14 +118,14 @@ public class MainDataViewHolder extends CustomViewHolder<MainData> {
                 //.animate(animator)
                 .into(broadcastImage);
 
-        if( !customPreference.getValue(broadcastName.getText().toString() , false)  ) {
+        if(item.isBookmark == R.drawable.bookmark_false) {
             isBookmark.setImageDrawable(bookmarkFalse);
         }
         else {
             isBookmark.setImageDrawable(bookmarkTrue);
         }
-        //Glide.with(context).load(item.isBookmark).into(isBookmark);
-        Glide.with(context).load(item.broadcastKindOf).into(broadcastKindOf);
+
+        Glide.with(context).load(R.drawable.sbs).into(broadcastKindOf);
     }
 
     @OnClick(R.id.broadcast_description)
@@ -120,32 +135,66 @@ public class MainDataViewHolder extends CustomViewHolder<MainData> {
 
     @OnClick(R.id.isbookmark)
     public void isBookmarkClick(View v) {
-        /*
+        FirebaseAuth auth = FirebaseAuth.getInstance();
+        FirebaseUser user = auth.getCurrentUser();
+        if(user == null){
+            Toast.makeText(MainActivity.context, "로그인이 필요합니다.", Toast.LENGTH_SHORT).show();
+        }else{
+             /*
         * 북마크 프로세스
         * 1. 해당 프로그램명으로 북마크가 되어있는지 검사한다.
         * */
-        // 만약 북마크가 되어있지 않거나 , 처음 클릭한 방송이라면(default : false)
-        if( !customPreference.getValue(broadcastName.getText().toString(),false) ) {
-            /* 여기에 진입했으면, 북마크 하려는 이벤트임. */
-            customPreference.put(broadcastName.getText().toString(),true);
-            isBookmark.setImageDrawable(bookmarkTrue);
+            db = FirebaseDatabase.getInstance();
+            bookmarkRef = db.getReference().child("bookmark/"+user.getUid());
+            bookmarkRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot data) {
 
-        } else { // 북마크가 되어있다면 북마크를 취소해줘야 함.
-            customPreference.put(broadcastName.getText().toString(),false);
-            isBookmark.setImageDrawable(bookmarkFalse);
+                    if(data.child(key).exists()){
+                        isBookmark.setImageDrawable(bookmarkFalse);
+                        bookmarkRef.child(key).setValue(null);
+                    }else{
+                        isBookmark.setImageDrawable(bookmarkTrue);
+                        bookmarkRef.child(key).setValue("bookmark");
+                    }
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {}
+            });
+
         }
 
+
     }
+
     @OnClick(R.id.main_row_relativelayout)
     public void mainRowRelativelayoutClick(View v) {
         MainActivity.selectedDramaNo = getAdapterPosition() ; // 선택한 드라마의 index 번호를 저장.
+        db = FirebaseDatabase.getInstance();
+        dramaRef = db.getReference().child("drama/"+key+"/list");
+        dramaRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot data) {
+                if(data.getChildrenCount() != 0){
 
-        Intent intent = new Intent();
-        intent.putExtra("key", key);
-        intent.putExtra("broadcastName", broadcastName.getText().toString());
-        intent.putExtra("broadcastDescription",broadcastDescription.getText().toString());
-        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        intent.setClass(MainActivity.context,DramaListActivity.class);
-        MainActivity.context.startActivity(intent);
+                    Intent intent = new Intent();
+                    intent.putExtra("key", key);
+                    intent.putExtra("broadcastName", broadcastName.getText().toString());
+                    intent.putExtra("broadcastDescription",broadcastDescription.getText().toString());
+                    intent.putExtra("channel", channel);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    intent.setClass(MainActivity.context,DramaListActivity.class);
+                    MainActivity.context.startActivity(intent);
+                }else{
+                    Toast.makeText(MainActivity.context, "드라마 방영 전입니다.", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {}
+        });
+
+
     }
 }
