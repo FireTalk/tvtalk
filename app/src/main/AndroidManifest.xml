@@ -32,11 +32,6 @@
         <activity android:name="NicknameActivity">
         </activity>
         <activity android:name=".LoginAfterActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
 
         <activity android:name=".DramaListActivity" >
@@ -51,11 +46,7 @@
 
         <activity android:name=".ChattingActivity" >
         </activity>
-        <!--<activity android:name="com.facebook.FacebookActivity"
-            android:configChanges=
-                "keyboard|keyboardHidden|screenLayout|screenSize|orientation"
-            android:theme="@android:style/Theme.Translucent.NoTitleBar"
-            android:label="@string/app_name" />-->
+
 
         <activity
             android:name="com.facebook.CustomTabActivity"

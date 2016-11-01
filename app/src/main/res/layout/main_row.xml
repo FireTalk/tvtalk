@@ -9,49 +9,76 @@
     android:background="@drawable/underline_bar"
     >
     <ImageView
+        android:src="#d7d7d7"
+        android:layout_marginLeft="12dp"
+        android:layout_marginRight="12dp"
+        android:layout_centerHorizontal="true"
+        android:scaleType="fitXY"
         android:id="@+id/broadcast_image"
         android:layout_width="match_parent"
-        android:layout_height="214dp"
+        android:layout_height="wrap_content"
         android:layout_marginBottom="10dp"
         />
-    <TextView
-        android:id="@+id/broadcast_name"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="temp"
-        android:layout_below="@id/broadcast_image"
+
+    <RelativeLayout
         android:layout_marginBottom="6dp"
+        android:id="@+id/main_row_under_img"
+        android:layout_below="@+id/broadcast_image"
         android:layout_marginLeft="12dp"
-        android:textColor="#252525"
-        />
-    <ImageView
-        android:id="@+id/isbookmark"
-        android:layout_width="23dp"
-        android:layout_height="22dp"
-        android:padding="5dp"
-        android:src="@drawable/bookmark_false"
-        android:layout_alignRight="@id/broadcast_image"
-        android:layout_below="@id/broadcast_image"
-        android:layout_marginRight="9dp"
-        />
-    <ImageView
-        android:id="@+id/broadcast_kind_of"
-        android:layout_width="34dp"
-        android:layout_height="14dp"
-        android:src="@drawable/sbs"
-        android:layout_below="@id/broadcast_name"
-        android:layout_marginLeft="11dp"
-        />
-    <TextView
-        android:id="@+id/broadcast_description"
-        android:layout_width="wrap_content"
+        android:layout_marginRight="12dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <TextView
+            android:layout_marginRight="20dp"
+            android:ellipsize="marquee"
+            android:singleLine="true"
+            android:textSize="13sp"
+            android:id="@+id/broadcast_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="temp"
+
+            android:textColor="#252525"
+            />
+        <ImageView
+            android:layout_centerVertical="true"
+            android:layout_alignParentRight="true"
+            android:id="@+id/isbookmark"
+            android:layout_width="13dp"
+            android:layout_height="12dp"
+            android:src="@drawable/bookmark_false"
+            />
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_below="@+id/main_row_under_img"
+        android:layout_marginLeft="12dp"
+        android:layout_marginRight="12dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="temp"
-        android:layout_toRightOf="@id/broadcast_kind_of"
-        android:layout_below="@id/broadcast_name"
-        android:textSize="12dp"
-        android:layout_marginLeft="4dp"
-        android:textColor="#777777"
-        />
+        >
+        <ImageView
+            android:layout_centerVertical="true"
+            android:id="@+id/broadcast_kind_of"
+            android:layout_width="34dp"
+            android:layout_height="14dp"
+            android:src="@drawable/sbs"
+            />
+        <TextView
+            android:layout_alignParentTop="true"
+            android:layout_toRightOf="@+id/broadcast_kind_of"
+            android:id="@+id/broadcast_description"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="temp"
+            android:textSize="12sp"
+            android:layout_marginLeft="4dp"
+            android:textColor="#777777"
+            />
+
+    </RelativeLayout>
+
+
 
 </RelativeLayout>

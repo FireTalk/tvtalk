@@ -137,10 +137,10 @@ public class DramaListActivity extends AppCompatActivity {
                 if(hide == false){
                     tmp.add(
                         new DramaData(
-                            data.child("img").getValue().toString(),
+                            ""+data.child("img").getValue(),
                             data.getKey().toString()+"화",
-                            data.child("date").getValue().toString(),
-                                data.child("state").getValue().toString(),
+                            ""+data.child("date").getValue(),
+                                ""+data.child("state").getValue(),
                             R.drawable.icon_clock,
                             key
                         )

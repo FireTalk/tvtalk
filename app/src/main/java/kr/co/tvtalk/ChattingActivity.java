@@ -215,13 +215,13 @@ public class ChattingActivity extends AppCompatActivity {
                         dto.setMsg(data.child("msg").getValue().toString());
                         emoticon =  getEmoticonNum(data.child("emo").getValue().toString());
                         dto.setIsSamePerson(ChattingData.AskPersonInfo.ME_EMOTION);
-//                        addChattingLine(
-//                                "",//프로필 이미지
-//                                "",  // 사용자 이름
-//                                "", // 할말
-//                                dto.getIsSamePerson(),
-//                                emoticon
-//                        );
+                        addChattingLine(
+                                "",//프로필 이미지
+                                "",  // 사용자 이름
+                                "", // 할말
+                                dto.getIsSamePerson(),
+                                emoticon
+                        );
 //                        emoticon = 0;
 //                        dto.setIsSamePerson(ChattingData.AskPersonInfo.ME);
                     }
@@ -310,8 +310,6 @@ public class ChattingActivity extends AppCompatActivity {
 
 
 
-
-
     }
 
     public void getUserInfo(String uid, final String msg, final int emoticon, final ChattingData.AskPersonInfo IsSamePerson, final String key){
@@ -325,7 +323,6 @@ public class ChattingActivity extends AppCompatActivity {
 
                     MemberDTO dto = data2.getValue(MemberDTO.class);
                     if(dto != null){
-                        Log.d("사진", ""+dto.getProfile());
                         nickName = dto.getNickname();
                         photo = dto.getProfile();
                         if(photo == null){
@@ -333,7 +330,6 @@ public class ChattingActivity extends AppCompatActivity {
                         }
 
                         Data chattingData =  new ChattingData( photo , nickName, msg , IsSamePerson , emoticon);
-
 
                         adapter.getItems().set(Integer.parseInt(key)-1, chattingData);
                         recyclerView.setAdapter(adapter);

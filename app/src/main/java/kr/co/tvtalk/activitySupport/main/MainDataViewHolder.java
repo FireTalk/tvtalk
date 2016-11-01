@@ -111,8 +111,13 @@ public class MainDataViewHolder extends CustomViewHolder<MainData> {
                 fadeAnim.start();
           }
         };*/
+
+//        broadcastImage.getLayoutParams().height = (int)(broadcastImage.getWidth()*1.39);
+        broadcastImage.getLayoutParams().height = 214*4;
         Glide.with(context).load(item.broadcastImage)
+//                .override(154, 216)
                 .thumbnail(0.8f)
+                .fitCenter()
                 .crossFade()
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
                 //.animate(animator)
