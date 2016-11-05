@@ -33,10 +33,11 @@ public class ChattingEmotionViewHolder extends CustomViewHolder<Data> {
         observer.register(anotherEmotion);
     }
     public void onBindView(Data data) {
-        this.anotherNameEmotion.setText(data.anotherName);
+
     }
+
     public void onBindView(Data data,Context context) {
-        onBindView(data);
+        this.anotherNameEmotion.setText(data.anotherName);
         Glide.with(context).load(data.anotherProfileImage).into(this.anotherProfileImageEmotion);
         Glide.with(context).load(data.getEmotion()).into(this.anotherEmotion);
     }

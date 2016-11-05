@@ -18,6 +18,7 @@ public class ChattingViewHolder extends CustomViewHolder<Data> {
     public CircleImageView anotherProfileImage;
     public TextView anotherName;
     public TextView anotherTextMessage;
+
     public ChattingViewHolder(View v) {
         super(v);
         anotherProfileImage = (CircleImageView) v.findViewById(R.id.another_profile_image);

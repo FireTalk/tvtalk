@@ -87,7 +87,7 @@ public class ChattingActivity extends AppCompatActivity {
 
     ArrayList<Data> datas = new ArrayList<Data>();
 
-    ArrayList<ChatDTO> syncList = new ArrayList<ChatDTO>();
+    ArrayList<Data> syncList = new ArrayList<Data>();
 
     @Bind(R.id.talking_room_title)
     TextView talkingRoomTitle;
@@ -182,12 +182,10 @@ public class ChattingActivity extends AppCompatActivity {
         ref.addChildEventListener(new ChildEventListener() {
             String uid; // 회원 고유값
             String before_uid;
-            String msg;
+            String key;
+            String before_key = "1";
             String type; // 1 이면 only 텍스트, 2면 only 이모티콘, 3은 둘다
             int emoticon = 0;
-            int cnt;
-
-            ChattingData.AskPersonInfo isSamePerson;
 
             ChatDTO dto = new ChatDTO();
 
@@ -195,7 +193,9 @@ public class ChattingActivity extends AppCompatActivity {
             public void onChildAdded(DataSnapshot data, String s) {
                 if(!data.getKey().toString().equals("1")){
                     before_uid = uid;
+                    before_key = key;
                 }
+
                 uid = data.child("uid").getValue().toString();
 
                 final FirebaseUser user = auth.getCurrentUser();
@@ -214,18 +214,8 @@ public class ChattingActivity extends AppCompatActivity {
                     } else if (type.equals("3")) {
                         dto.setMsg(data.child("msg").getValue().toString());
                         emoticon =  getEmoticonNum(data.child("emo").getValue().toString());
-                        dto.setIsSamePerson(ChattingData.AskPersonInfo.ME_EMOTION);
-                        addChattingLine(
-                                "",//프로필 이미지
-                                "",  // 사용자 이름
-                                "", // 할말
-                                dto.getIsSamePerson(),
-                                emoticon
-                        );
-//                        emoticon = 0;
-//                        dto.setIsSamePerson(ChattingData.AskPersonInfo.ME);
+                        dto.setIsSamePerson(ChattingData.AskPersonInfo.ME_TEXT_WHIT_EMOTION);
                     }
-
 
 
                 }else{//남이 했던말
@@ -238,22 +228,14 @@ public class ChattingActivity extends AppCompatActivity {
 
                         } else if (type.equals("2")) {
                             dto.setMsg("");
-                            emoticon =  getEmoticonNum(data.child("emo").getValue().toString());
+                            emoticon =  getEmoticonNum(""+data.child("emo").getValue());
                             dto.setIsSamePerson(ChattingData.AskPersonInfo.SAME_EMOTION);
 
                         } else if (type.equals("3")) {
                             dto.setMsg(data.child("msg").getValue().toString());
                             emoticon =  getEmoticonNum(data.child("emo").getValue().toString());
-                            dto.setIsSamePerson(ChattingData.AskPersonInfo.SAME_EMOTION);
-//                            addChattingLine(
-//                                    "",//프로필 이미지
-//                                    "",  // 사용자 이름
-//                                    "", // 할말
-//                                    dto.getIsSamePerson(),
-//                                    emoticon
-//                            );
-//                            emoticon = 0;
-//                            dto.setIsSamePerson(ChattingData.AskPersonInfo.SAME);
+                            dto.setIsSamePerson(ChattingData.AskPersonInfo.ANOTHER_TEXT_WHIT_EMOTION_CONTINUE);
+
                         }
                     }else{
                         type = data.child("type").getValue().toString();
@@ -269,19 +251,10 @@ public class ChattingActivity extends AppCompatActivity {
                         } else if (type.equals("3")) {
                             dto.setMsg(data.child("msg").getValue().toString());
                             emoticon =  getEmoticonNum(data.child("emo").getValue().toString());
-                            dto.setIsSamePerson(ChattingData.AskPersonInfo.ANOTHER_EMOTION);
-//                            addChattingLine(
-//                                    "",//프로필 이미지
-//                                    "",  // 사용자 이름
-//                                    "", // 할말
-//                                    dto.getIsSamePerson(),
-//                                    emoticon
-//                            );
-//                            emoticon = 0;
-//                            dto.setIsSamePerson(ChattingData.AskPersonInfo.ANOTHER);
+                            dto.setIsSamePerson(ChattingData.AskPersonInfo.ANOTHER_TEXT_WHIT_EMOTION);
                         }
                     }
-                    getUserInfo(uid, dto.getMsg(), emoticon, dto.getIsSamePerson(), data.getKey().toString());
+                    getUserInfo(uid, dto.getMsg(), emoticon, dto.getIsSamePerson(), ""+data.getKey());
                 }
 
                 addChattingLine(
@@ -331,8 +304,11 @@ public class ChattingActivity extends AppCompatActivity {
 
                         Data chattingData =  new ChattingData( photo , nickName, msg , IsSamePerson , emoticon);
 
-                        adapter.getItems().set(Integer.parseInt(key)-1, chattingData);
-                        recyclerView.setAdapter(adapter);
+                        datas.set(Integer.parseInt(key)-1, chattingData);
+                        emoticonModeSync();
+
+//                        recyclerView.setAdapter(adapter);
+                        adapter.notifyDataSetChanged();
                 }
             }
             @Override
@@ -578,9 +554,12 @@ public class ChattingActivity extends AppCompatActivity {
         Data chattingData =  new ChattingData( profileImage, speaker, textMessage , isSamePerson, emoticon);
         if(!isLiveActivity) {  // 액티비티가 죽은경우.
             saveChattingData.add(chattingData);
-            return ;
         }
-        adapter.add(chattingData);
+        datas.add(chattingData);
+
+        adapter.notifyDataSetChanged();
+
+
         //Log.e("count-----","getChildCount - "+recyclerView.getChildCount()+"/getItemCount - "+adapter.getItemCount()+"/ activienode - "+adapter.activeNode);
         /* adapter에 item이 몇 개 있는지 조건문에서 사용하기 위하여 값을 받아옴. */
         int itemCount = adapter.getItemCount();
@@ -629,7 +608,11 @@ public class ChattingActivity extends AppCompatActivity {
     }
     @OnClick(R.id.is_emotion_true)
     public void isemotionTrue(View v) {
-        reverseEmotion(false);
+        emoticonModeSync();
+
+
+
+//        reverseEmotion(false);
         isEmotionTrue.setVisibility(View.GONE);
         isEmotionFalse.setVisibility(View.VISIBLE);
     }
@@ -638,9 +621,53 @@ public class ChattingActivity extends AppCompatActivity {
     ImageView isEmotionFalse;
     @OnClick(R.id.is_emotion_false)
     public void isemotionFalse(View v) {
-        reverseEmotion(true);
+        Toast.makeText(instance, "이모티콘 켜기", Toast.LENGTH_SHORT).show();
+//        reverseEmotion(true);
+        adapter = new ChattingAdapter( getApplicationContext() ,  datas);
+        recyclerView.setAdapter(adapter);
         isEmotionFalse.setVisibility(View.GONE);
         isEmotionTrue.setVisibility(View.VISIBLE);
+    }
+
+    public void emoticonModeSync(){
+        syncList.clear();
+        for(int i = 0; i < datas.size(); i++){
+            int before = i-1;
+
+            if(datas.get(i).personInfo == ChattingData.AskPersonInfo.ME_EMOTION
+                    || datas.get(i).personInfo == ChattingData.AskPersonInfo.ME_TEXT_WHIT_EMOTION
+                    || datas.get(i).personInfo == ChattingData.AskPersonInfo.ANOTHER_EMOTION
+                    || datas.get(i).personInfo == ChattingData.AskPersonInfo.ANOTHER_TEXT_WHIT_EMOTION
+                    || datas.get(i).personInfo == ChattingData.AskPersonInfo.ANOTHER_TEXT_WHIT_EMOTION_CONTINUE
+                    || datas.get(i).personInfo == ChattingData.AskPersonInfo.SAME_EMOTION){
+                if(datas.get(i).personInfo == ChattingData.AskPersonInfo.ME_TEXT_WHIT_EMOTION){
+
+                    syncList.add(new ChattingData("","",datas.get(i).getAnotherTextMessage(), ChattingData.AskPersonInfo.ME, 0));
+                }else if(datas.get(i).personInfo == ChattingData.AskPersonInfo.ANOTHER_TEXT_WHIT_EMOTION){
+
+                    syncList.add(new ChattingData(datas.get(i).anotherProfileImage, datas.get(i).anotherName, datas.get(i).getAnotherTextMessage(), ChattingData.AskPersonInfo.ANOTHER, 0));
+                }else if(datas.get(i).personInfo == ChattingData.AskPersonInfo.ANOTHER_TEXT_WHIT_EMOTION_CONTINUE){
+                    if(datas.get(before).personInfo == ChattingData.AskPersonInfo.ANOTHER_EMOTION){
+                        syncList.add(new ChattingData(datas.get(before).anotherProfileImage, datas.get(before).anotherName, datas.get(i).getAnotherTextMessage(), ChattingData.AskPersonInfo.ANOTHER, 0));
+                    }
+                    else{
+                        syncList.add(new ChattingData("", "", datas.get(i).getAnotherTextMessage(), ChattingData.AskPersonInfo.SAME, 0));
+                    }
+                }
+            }else{
+                if(datas.get(i).personInfo == ChattingData.AskPersonInfo.SAME){
+                    if(datas.get(before).personInfo == ChattingData.AskPersonInfo.ANOTHER_EMOTION){
+                        syncList.add(new ChattingData(datas.get(before).anotherProfileImage, datas.get(before).anotherName, datas.get(i).getAnotherTextMessage(), ChattingData.AskPersonInfo.ANOTHER, 0));
+                    }else{
+                        syncList.add(datas.get(i));
+                    }
+                }else{
+                    syncList.add(datas.get(i));
+                }
+            }
+        }
+        adapter = new ChattingAdapter( getApplicationContext() ,  syncList);
+        recyclerView.setAdapter(adapter);
     }
 
     @Bind(R.id.emotion_prview)

@@ -69,7 +69,7 @@
         android:scrollbars="vertical"
         android:paddingRight="14dp"
         android:paddingLeft="14dp"
-        />
+    />
     <RelativeLayout
         android:id="@+id/chatting_preview"
         android:layout_width="match_parent"

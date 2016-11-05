@@ -36,6 +36,10 @@ public abstract class Data {
         ANOTHER,
         ANOTHER_EMOTION,
         ME,
-        ME_EMOTION
+        ME_EMOTION,
+        ME_TEXT_WHIT_EMOTION,
+        ANOTHER_TEXT_WHIT_EMOTION,
+        ANOTHER_TEXT_WHIT_EMOTION_CONTINUE
+
     }
 }
