@@ -1,12 +1,10 @@
-package kr.co.tvtalk.activitySupport.catting;
+package kr.co.tvtalk.activitySupport.chatting;
 
 import android.view.View;
-import android.widget.RelativeLayout;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import kr.co.tvtalk.activitySupport.CustomViewHolder;
 import kr.co.tvtalk.model.Observer;
 
 /**

@@ -1,13 +1,11 @@
-package kr.co.tvtalk.activitySupport.catting;
+package kr.co.tvtalk.activitySupport.chatting;
 
 import android.content.Context;
 
 import android.view.View;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 import kr.co.tvtalk.R;

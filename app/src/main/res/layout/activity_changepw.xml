@@ -52,6 +52,7 @@
             android:layout_marginRight="30dp"
             android:layout_marginLeft="30dp"
             android:textSize="14sp"
+            android:inputType="textPassword"
             />
         <TextView
             android:id="@+id/changePW_currentText"
@@ -78,6 +79,7 @@
             android:layout_marginRight="30dp"
             android:layout_marginLeft="30dp"
             android:textSize="14sp"
+            android:inputType="textPassword"
             />
         <TextView
             android:id="@+id/changePW_newText"
@@ -103,6 +105,7 @@
             android:layout_marginRight="30dp"
             android:layout_marginLeft="30dp"
             android:textSize="14sp"
+            android:inputType="textPassword"
             />
         <TextView
             android:id="@+id/changePW_moreText"

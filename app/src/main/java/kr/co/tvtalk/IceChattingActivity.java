@@ -7,15 +7,10 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
-import android.widget.Toast;
 
-import com.bumptech.glide.Glide;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -24,11 +19,10 @@ import java.util.List;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import kr.co.tvtalk.activitySupport.catting.ChattingAdapter;
-import kr.co.tvtalk.activitySupport.catting.ChattingData;
-import kr.co.tvtalk.activitySupport.catting.Data;
-import kr.co.tvtalk.activitySupport.catting.ice.IceChattingAdapter;
-import kr.co.tvtalk.activitySupport.catting.ice.IceChattingData;
+import kr.co.tvtalk.activitySupport.chatting.ChattingData;
+import kr.co.tvtalk.activitySupport.chatting.Data;
+import kr.co.tvtalk.activitySupport.chatting.ice.IceChattingAdapter;
+import kr.co.tvtalk.activitySupport.chatting.ice.IceChattingData;
 
 /**
  * Created by kwongyo on 2016-10-08.

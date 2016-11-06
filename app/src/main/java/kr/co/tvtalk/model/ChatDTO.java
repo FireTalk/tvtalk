@@ -1,7 +1,6 @@
 package kr.co.tvtalk.model;
 
-import kr.co.tvtalk.activitySupport.catting.ChattingData;
-import kr.co.tvtalk.activitySupport.catting.Data;
+import kr.co.tvtalk.activitySupport.chatting.ChattingData;
 
 /**
  * Created by 병윤 on 2016-10-04.

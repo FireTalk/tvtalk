@@ -1,4 +1,4 @@
-package kr.co.tvtalk.activitySupport.catting.emotion;
+package kr.co.tvtalk.activitySupport.chatting.emotion;
 
 import android.content.Context;
 import android.graphics.drawable.Drawable;

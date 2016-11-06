@@ -1,4 +1,4 @@
-package kr.co.tvtalk.activitySupport.catting;
+package kr.co.tvtalk.activitySupport.chatting;
 
 import android.content.Context;
 
@@ -32,13 +32,13 @@ public class ChattingAdapter extends CustomAdapter<Data , CustomViewHolder> {
             case SAME :
                 View continueView = LayoutInflater.from(parent.getContext()).inflate(R.layout.chatting_another_continue, parent , false);
                 ChattingContinueViewHolder continueViewHolder = new ChattingContinueViewHolder(continueView);
-                continueView.findFocus(); // 의미없음 ??
+//                continueView.findFocus(); // 의미없음 ??
                 return continueViewHolder;//break;
 
             case ANOTHER:
                 View anotherView = LayoutInflater.from(parent.getContext()).inflate(R.layout.chatting_another, parent, false);
                 ChattingViewHolder anotherViewHolder = new ChattingViewHolder(anotherView);
-                anotherView.findFocus();
+//                anotherView.findFocus();
                 return anotherViewHolder;//break;
 
             case ME:

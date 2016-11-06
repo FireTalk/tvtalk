@@ -1,4 +1,4 @@
-package kr.co.tvtalk.activitySupport.catting;
+package kr.co.tvtalk.activitySupport.chatting;
 
 /**
  * Created by kwongyo on 2016-10-03.

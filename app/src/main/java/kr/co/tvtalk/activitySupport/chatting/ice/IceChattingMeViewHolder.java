@@ -1,4 +1,4 @@
-package kr.co.tvtalk.activitySupport.catting.ice;
+package kr.co.tvtalk.activitySupport.chatting.ice;
 
 import android.view.View;
 import android.widget.ImageView;

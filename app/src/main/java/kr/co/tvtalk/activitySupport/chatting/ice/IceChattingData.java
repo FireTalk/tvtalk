@@ -1,6 +1,6 @@
-package kr.co.tvtalk.activitySupport.catting.ice;
+package kr.co.tvtalk.activitySupport.chatting.ice;
 
-import kr.co.tvtalk.activitySupport.catting.Data;
+import kr.co.tvtalk.activitySupport.chatting.Data;
 
 /**
  * Created by kwongiho on 2016. 10. 10..

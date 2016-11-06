@@ -1,4 +1,4 @@
-package kr.co.tvtalk.activitySupport.catting.ice;
+package kr.co.tvtalk.activitySupport.chatting.ice;
 
 /**
  * Created by kwongyo on 2016-10-08.
@@ -15,13 +15,12 @@ import java.util.List;
 import kr.co.tvtalk.R;
 import kr.co.tvtalk.activitySupport.CustomAdapter;
 import kr.co.tvtalk.activitySupport.CustomViewHolder;
-import kr.co.tvtalk.activitySupport.catting.ChattingContinueEmotionViewHolder;
-import kr.co.tvtalk.activitySupport.catting.ChattingContinueViewHolder;
-import kr.co.tvtalk.activitySupport.catting.ChattingEmotionViewHolder;
-import kr.co.tvtalk.activitySupport.catting.ChattingMeEmotionViewHolder;
-import kr.co.tvtalk.activitySupport.catting.ChattingMeViewHolder;
-import kr.co.tvtalk.activitySupport.catting.ChattingViewHolder;
-import kr.co.tvtalk.activitySupport.catting.Data;
+import kr.co.tvtalk.activitySupport.chatting.ChattingContinueEmotionViewHolder;
+import kr.co.tvtalk.activitySupport.chatting.ChattingContinueViewHolder;
+import kr.co.tvtalk.activitySupport.chatting.ChattingEmotionViewHolder;
+import kr.co.tvtalk.activitySupport.chatting.ChattingMeEmotionViewHolder;
+import kr.co.tvtalk.activitySupport.chatting.ChattingMeViewHolder;
+import kr.co.tvtalk.activitySupport.chatting.ChattingViewHolder;
 
 /**
  * Not use yet.

@@ -1,4 +1,4 @@
-package kr.co.tvtalk.activitySupport.catting.ice;
+package kr.co.tvtalk.activitySupport.chatting.ice;
 
 import android.content.Context;
 import android.view.View;
@@ -10,7 +10,7 @@ import com.bumptech.glide.Glide;
 
 import kr.co.tvtalk.R;
 import kr.co.tvtalk.activitySupport.CustomViewHolder;
-import kr.co.tvtalk.activitySupport.catting.ChattingObserver;
+import kr.co.tvtalk.activitySupport.chatting.ChattingObserver;
 
 /**
  * Created by kwongyo on 2016-10-10.

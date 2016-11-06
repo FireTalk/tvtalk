@@ -3,7 +3,6 @@ package kr.co.tvtalk;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
-import android.support.annotation.DrawableRes;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -12,7 +11,6 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -29,7 +27,6 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 
@@ -41,12 +38,10 @@ import butterknife.OnPageChange;
 
 import butterknife.OnTouch;
 import kr.co.tvtalk.activitySupport.FontFactory;
-import kr.co.tvtalk.activitySupport.catting.ChattingAdapter;
-import kr.co.tvtalk.activitySupport.catting.ChattingData;
+import kr.co.tvtalk.activitySupport.chatting.ChattingAdapter;
+import kr.co.tvtalk.activitySupport.chatting.ChattingData;
 
-import java.lang.reflect.Member;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -55,12 +50,12 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.OnTextChanged;
 
-import kr.co.tvtalk.activitySupport.catting.ChattingObserver;
+import kr.co.tvtalk.activitySupport.chatting.ChattingObserver;
 import kr.co.tvtalk.model.ChatDTO;
 import kr.co.tvtalk.model.MemberDTO;
 
-import kr.co.tvtalk.activitySupport.catting.Data;
-import kr.co.tvtalk.activitySupport.catting.emotion.EmotionPagerAdapter;
+import kr.co.tvtalk.activitySupport.chatting.Data;
+import kr.co.tvtalk.activitySupport.chatting.emotion.EmotionPagerAdapter;
 
 
 public class ChattingActivity extends AppCompatActivity {
@@ -71,6 +66,9 @@ public class ChattingActivity extends AppCompatActivity {
     private FirebaseAuth auth;
     private FirebaseDatabase db;
     private DatabaseReference ref, ref2, titleRef;
+
+    private boolean loadMore = false;
+    private boolean emoticonMode = false;
 
     private static Context context;
 
@@ -150,6 +148,7 @@ public class ChattingActivity extends AppCompatActivity {
         previewTextMessage.setTypeface(FontFactory.getFont(getApplicationContext() , FontFactory.Font.NOTOSANS_REGULAR));
 
         initAnother();
+
         inputMethodManager = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
         lastAskPerson="";
         saveChattingData = new ArrayList<Data>();
@@ -179,7 +178,7 @@ public class ChattingActivity extends AppCompatActivity {
         ref2= db.getReference().child("member");// 회원 db reference
 
 
-        ref.addChildEventListener(new ChildEventListener() {
+        ref.limitToLast(100).addChildEventListener(new ChildEventListener() {
             String uid; // 회원 고유값
             String before_uid;
             String key;
@@ -235,7 +234,6 @@ public class ChattingActivity extends AppCompatActivity {
                             dto.setMsg(data.child("msg").getValue().toString());
                             emoticon =  getEmoticonNum(data.child("emo").getValue().toString());
                             dto.setIsSamePerson(ChattingData.AskPersonInfo.ANOTHER_TEXT_WHIT_EMOTION_CONTINUE);
-
                         }
                     }else{
                         type = data.child("type").getValue().toString();
@@ -253,8 +251,8 @@ public class ChattingActivity extends AppCompatActivity {
                             emoticon =  getEmoticonNum(data.child("emo").getValue().toString());
                             dto.setIsSamePerson(ChattingData.AskPersonInfo.ANOTHER_TEXT_WHIT_EMOTION);
                         }
+                        getUserInfo(uid, dto.getMsg(), emoticon, dto.getIsSamePerson(), ""+data.getKey());
                     }
-                    getUserInfo(uid, dto.getMsg(), emoticon, dto.getIsSamePerson(), ""+data.getKey());
                 }
 
                 addChattingLine(
@@ -305,9 +303,19 @@ public class ChattingActivity extends AppCompatActivity {
                         Data chattingData =  new ChattingData( photo , nickName, msg , IsSamePerson , emoticon);
 
                         datas.set(Integer.parseInt(key)-1, chattingData);
-                        emoticonModeSync();
 
-//                        recyclerView.setAdapter(adapter);
+                        if(emoticonMode){
+                            for(int i = 0 ; i<syncList.size(); i++){
+                                if(syncList.get(i).personInfo == ChattingData.AskPersonInfo.ANOTHER
+                                        && syncList.get(i).anotherName.equals(""))
+                                {
+                                    syncList.set(i, new ChattingData( photo , nickName, syncList.get(i).getAnotherTextMessage() , syncList.get(i).personInfo , 0));
+                                    break;
+                                }
+
+                            }
+                        }
+
                         adapter.notifyDataSetChanged();
                 }
             }
@@ -410,7 +418,31 @@ public class ChattingActivity extends AppCompatActivity {
         //specify an adapter ( see also next example) ????
         adapter = new ChattingAdapter( getApplicationContext() ,  datas);
         recyclerView.setAdapter(adapter);
+
+        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener(){
+
+            @Override
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+                int size = layoutManager.getItemCount();
+                LinearLayoutManager linearLayoutManager = (LinearLayoutManager)recyclerView.getLayoutManager();
+                if(linearLayoutManager.findLastVisibleItemPosition() == size -1){
+                    chattingPreview.setVisibility(View.GONE);
+                    loadMore = true;
+                }else if(linearLayoutManager.findFirstCompletelyVisibleItemPosition() == 0 && loadMore){
+                    Toast.makeText(ChattingActivity.this, "처음이보인다.", Toast.LENGTH_SHORT).show();
+                }else{
+//                    chattingPreview.setVisibility(View.VISIBLE);
+//                    Toast.makeText(ChattingActivity.this, "스크롤 업됨", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+
+        });
     }
+
+
+
     @Bind(R.id.send_btn)
     TextView sendBtn;
     @Bind(R.id.typing_message)
@@ -451,6 +483,95 @@ public class ChattingActivity extends AppCompatActivity {
 
 
     }*/
+
+    @Bind(R.id.emotion_prview)
+    ImageView emotionPreview;
+
+    @Bind(R.id.emotion_preview_area)
+    RelativeLayout emotionPreviewArea;
+
+    private long emotionLastClick;
+    static int clickEmotionNo ;
+    int emoticonImg = 0;
+    public static boolean emotionMutax = true;
+    public void emotionClick(int emotion) {//이모티콘 전송
+        Log.e("Chat_emotion",emotion+"");
+        final FirebaseUser user = auth.getCurrentUser();
+
+        if( user == null ) { //로그인이 안되어 있는경우.
+            startActivity(new Intent(this,LoginActivity.class)); // 로그인화면으로 이동해준다.
+            return ;
+        }
+        if(emotionMutax) {
+            clickEmotionNo = emotion;
+            emotion=0;
+            emotionMutax=false ;
+        }
+
+        status = STATUS_EMOTION;
+        switch(clickEmotionNo){
+            case 1 :
+                emoticonImg = R.drawable.a;
+                break;
+            case 2 :
+                emoticonImg = R.drawable.b;
+                break;
+            case 3 :
+                emoticonImg = R.drawable.c;
+                break;
+            case 4 :
+                emoticonImg = R.drawable.d;
+                break;
+            case 5 :
+                emoticonImg = R.drawable.e;
+                break;
+            case 6 :
+                emoticonImg = R.drawable.f;
+                break;
+            case 7 :
+                emoticonImg = R.drawable.g;
+                break;
+            case 8 :
+                emoticonImg = R.drawable.f;
+                break;
+            default: break;
+        }
+        if( emotion != clickEmotionNo ) {//이모티콘 누를 시 영역띄우기
+            clickEmotionNo = emotion;
+
+            Glide.with(this).load(emoticonImg).into(emotionPreview);
+            emotionPreviewArea.setVisibility(View.VISIBLE);
+        }
+        else if( System.currentTimeMillis() < emotionLastClick+1000) { // 1초 이내로 2번 클릭 시
+
+            ref.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot data) {
+                    if(data == null) cnt = 0;
+                    cnt = data.getChildrenCount()+1;
+
+                    Map<String, Object> chatdb = new HashMap<String, Object>();
+                    chatdb.put("uid", user.getUid());
+//                    chatdb.put("msg", typingMessage.getText().toString());
+                    chatdb.put("type", 2);
+                    chatdb.put("emo", clickEmotionNo);
+                    ref.child(""+cnt).setValue(chatdb); // db에 저장하면 추가된 메세지는 알아서 불러와짐 - 위에 childadded 이벤트에서..
+
+                }
+                @Override
+                public void onCancelled(DatabaseError databaseError) {}
+            });
+
+
+            emotionPreviewArea.setVisibility(View.GONE);
+            emoticonImg=0;
+        }
+        emotionLastClick = System.currentTimeMillis();
+    }
+
+
+
+
     public static String lastAskPerson = "";
 
     long cnt;
@@ -555,31 +676,67 @@ public class ChattingActivity extends AppCompatActivity {
         if(!isLiveActivity) {  // 액티비티가 죽은경우.
             saveChattingData.add(chattingData);
         }
-        datas.add(chattingData);
+
+        datas.add(chattingData);//이모티콘 ON 일경우 List
+
+
+        /*이모티콘 OFF일경우 LIST*/
+        if(emoticonMode){
+            int before = datas.size()-2;
+
+            if(chattingData.personInfo == ChattingData.AskPersonInfo.ME_EMOTION
+                    || chattingData.personInfo == ChattingData.AskPersonInfo.ME_TEXT_WHIT_EMOTION
+                    || chattingData.personInfo == ChattingData.AskPersonInfo.ANOTHER_EMOTION
+                    || chattingData.personInfo == ChattingData.AskPersonInfo.ANOTHER_TEXT_WHIT_EMOTION
+                    || chattingData.personInfo == ChattingData.AskPersonInfo.ANOTHER_TEXT_WHIT_EMOTION_CONTINUE
+                    || chattingData.personInfo == ChattingData.AskPersonInfo.SAME_EMOTION){
+                if(chattingData.personInfo == ChattingData.AskPersonInfo.ME_TEXT_WHIT_EMOTION){
+
+                    syncList.add(new ChattingData("","",chattingData.getAnotherTextMessage(), ChattingData.AskPersonInfo.ME, 0));
+                }else if(chattingData.personInfo == ChattingData.AskPersonInfo.ANOTHER_TEXT_WHIT_EMOTION){
+
+                    syncList.add(new ChattingData(chattingData.anotherProfileImage, chattingData.anotherName, chattingData.getAnotherTextMessage(), ChattingData.AskPersonInfo.ANOTHER, 0));
+                }else if(chattingData.personInfo == ChattingData.AskPersonInfo.ANOTHER_TEXT_WHIT_EMOTION_CONTINUE){
+                    if(datas.get(before).personInfo == ChattingData.AskPersonInfo.ANOTHER_EMOTION){
+                        syncList.add(new ChattingData("", "", chattingData.getAnotherTextMessage(), ChattingData.AskPersonInfo.ANOTHER, 0));
+                    }
+                    else{
+                        syncList.add(new ChattingData("", "", chattingData.getAnotherTextMessage(), ChattingData.AskPersonInfo.SAME, 0));
+                    }
+                }
+            }else{
+                if(chattingData.personInfo == ChattingData.AskPersonInfo.SAME){
+                    if(datas.get(before).personInfo == ChattingData.AskPersonInfo.ANOTHER_EMOTION){
+                        syncList.add(new ChattingData("", "", chattingData.getAnotherTextMessage(), ChattingData.AskPersonInfo.ANOTHER, 0));
+                    }else{
+                        syncList.add(chattingData);
+                    }
+                }else{
+                    syncList.add(chattingData);
+                }
+            }
+        }
 
         adapter.notifyDataSetChanged();
 
+        recyclerView.smoothScrollToPosition(adapter.getItemCount()-1);
 
-        //Log.e("count-----","getChildCount - "+recyclerView.getChildCount()+"/getItemCount - "+adapter.getItemCount()+"/ activienode - "+adapter.activeNode);
         /* adapter에 item이 몇 개 있는지 조건문에서 사용하기 위하여 값을 받아옴. */
         int itemCount = adapter.getItemCount();
         /* 이 아래는 preview 해주는 부분임.*/
-        if( itemCount < adapter.activeNode+10 ) {
-            recyclerView.smoothScrollToPosition(itemCount); //새로운 글 작성 시 자동 스크롤 해주는 코드.
-            chattingPreview.setVisibility(View.GONE);
-        }
-        else {
-            //preview에 사용자 image 세팅
+        LinearLayoutManager linearLayoutManager = (LinearLayoutManager)recyclerView.getLayoutManager();
+        if(linearLayoutManager.findLastVisibleItemPosition() >= adapter.getItemCount()-2){
+            recyclerView.smoothScrollToPosition(itemCount-1); //새로운 글 작성 시 자동 스크롤 해주는 코드.
+        }else if(linearLayoutManager.findLastVisibleItemPosition() <= adapter.getItemCount()-4){
             Glide.with(context).load(profileImage).into(previewProfileImage);
             previewTextMessage.setText(textMessage);
             chattingPreview.setVisibility(View.VISIBLE);
         }
-        lastAskPerson = speaker;
 
     }
 
     @OnClick(R.id.chatting_preview)
-    public void chattingPreview(View v) {
+    public void chattingPreview(View v) {//preview 화살표 누를경우
         recyclerView.smoothScrollToPosition( adapter.getItemCount() ); //맨 아래로 ㄱㄱ!
         chattingPreview.setVisibility(View.GONE);
     }
@@ -592,44 +749,42 @@ public class ChattingActivity extends AppCompatActivity {
     @Bind(R.id.is_emotion_true)
     ImageView isEmotionTrue;
 
-    private void reverseEmotion(final boolean isVisible) {
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        observer.notiyObserver(isVisible);
-                    }
 
-                });
-            }
-        }).start();
-    }
     @OnClick(R.id.is_emotion_true)
-    public void isemotionTrue(View v) {
+    public void isemotionTrue(View v) {//이모티콘 끄기
+        emoticonMode = true;
         emoticonModeSync();
-
-
 
 //        reverseEmotion(false);
         isEmotionTrue.setVisibility(View.GONE);
         isEmotionFalse.setVisibility(View.VISIBLE);
+
     }
 
     @Bind(R.id.is_emotion_false)
     ImageView isEmotionFalse;
     @OnClick(R.id.is_emotion_false)
-    public void isemotionFalse(View v) {
-        Toast.makeText(instance, "이모티콘 켜기", Toast.LENGTH_SHORT).show();
+    public void isemotionFalse(View v) {//이모티콘 켜기
+        emoticonMode = false;
+        loadMore = false;
 //        reverseEmotion(true);
+
         adapter = new ChattingAdapter( getApplicationContext() ,  datas);
         recyclerView.setAdapter(adapter);
         isEmotionFalse.setVisibility(View.GONE);
         isEmotionTrue.setVisibility(View.VISIBLE);
+
+        new android.os.Handler().postDelayed(
+            new Runnable() {
+                public void run() {
+                    recyclerView.smoothScrollToPosition(adapter.getItemCount()-1);
+                }
+            },
+        100);
     }
 
-    public void emoticonModeSync(){
+    public void emoticonModeSync(){//이모티콘 OFF할경우 이모티콘만 빼고 다시 List에 담기
+        loadMore = false;
         syncList.clear();
         for(int i = 0; i < datas.size(); i++){
             int before = i-1;
@@ -666,93 +821,17 @@ public class ChattingActivity extends AppCompatActivity {
                 }
             }
         }
+
         adapter = new ChattingAdapter( getApplicationContext() ,  syncList);
         recyclerView.setAdapter(adapter);
-    }
-
-    @Bind(R.id.emotion_prview)
-    ImageView emotionPreview;
-
-    @Bind(R.id.emotion_preview_area)
-    RelativeLayout emotionPreviewArea;
-    
-    private long emotionLastClick;
-    static int clickEmotionNo ;
-    int emoticonImg = 0;
-    public static boolean emotionMutax = true;
-    public void emotionClick(int emotion) {
-        Log.e("Chat_emotion",emotion+"");
-        final FirebaseUser user = auth.getCurrentUser();
-
-        if( user == null ) { //로그인이 안되어 있는경우.
-            startActivity(new Intent(this,LoginActivity.class)); // 로그인화면으로 이동해준다.
-            return ;
-        }
-        if(emotionMutax) {
-            clickEmotionNo = emotion;
-            emotion=0;
-            emotionMutax=false ;
-        }
-
-        status = STATUS_EMOTION;
-        switch(clickEmotionNo){
-            case 1 :
-                emoticonImg = R.drawable.a;
-                break;
-            case 2 :
-                emoticonImg = R.drawable.b;
-                break;
-            case 3 :
-                emoticonImg = R.drawable.c;
-                break;
-            case 4 :
-                emoticonImg = R.drawable.d;
-                break;
-            case 5 :
-                emoticonImg = R.drawable.e;
-                break;
-            case 6 :
-                emoticonImg = R.drawable.f;
-                break;
-            case 7 :
-                emoticonImg = R.drawable.g;
-                break;
-            case 8 :
-                emoticonImg = R.drawable.f;
-                break;
-            default: break;
-        }
-        if( emotion != clickEmotionNo ) {//이모티콘 누를 시 영역띄우기
-            clickEmotionNo = emotion;
-
-            Glide.with(this).load(emoticonImg).into(emotionPreview);
-            emotionPreviewArea.setVisibility(View.VISIBLE);
-        }
-        else if( System.currentTimeMillis() < emotionLastClick+1000) { // 1초 이내로 2번 클릭 시
-
-            ref.addListenerForSingleValueEvent(new ValueEventListener() {
-                @Override
-                public void onDataChange(DataSnapshot data) {
-                    if(data == null) cnt = 0;
-                    cnt = data.getChildrenCount()+1;
-
-                    Map<String, Object> chatdb = new HashMap<String, Object>();
-                    chatdb.put("uid", user.getUid());
-//                    chatdb.put("msg", typingMessage.getText().toString());
-                    chatdb.put("type", 2);
-                    chatdb.put("emo", clickEmotionNo);
-                    ref.child(""+cnt).setValue(chatdb); // db에 저장하면 추가된 메세지는 알아서 불러와짐 - 위에 childadded 이벤트에서..
-
+        new android.os.Handler().postDelayed(
+            new Runnable() {
+                public void run() {
+                    recyclerView.scrollToPosition(adapter.getItemCount()-1);
                 }
-                @Override
-                public void onCancelled(DatabaseError databaseError) {}
-            });
+            },
+        100);
 
-
-            emotionPreviewArea.setVisibility(View.GONE);
-            emoticonImg=0;
-        }
-        emotionLastClick = System.currentTimeMillis();
     }
 
     /**
