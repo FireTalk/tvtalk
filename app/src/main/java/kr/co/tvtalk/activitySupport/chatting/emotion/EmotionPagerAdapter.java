@@ -107,7 +107,7 @@ public class EmotionPagerAdapter extends android.support.v4.view.PagerAdapter {
     }
     @Override
     public int getCount(){
-        return 2;
+        return 1;
     }
     //ViewPager가 현재 보여질 Item(View객체)를 생성할 필요가 있는 때 자동으로 호출
     //쉽게 말해, 스크롤을 통해 현재 보여져야 하는 View를 만들어냄.

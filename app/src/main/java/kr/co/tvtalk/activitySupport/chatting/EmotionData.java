@@ -7,12 +7,13 @@ package kr.co.tvtalk.activitySupport.chatting;
 public class EmotionData extends Data{
 
     int emotion;
-    public EmotionData(String anotherProfileImage, String anotherName, AskPersonInfo personInfo,int emotion) {
-        super(anotherProfileImage,anotherName,personInfo);
+    public EmotionData(String anotherProfileImage, String anotherName, AskPersonInfo personInfo,int emotion, String key) {
+        super(anotherProfileImage,anotherName,personInfo,key);
         this.anotherProfileImage = anotherProfileImage;
         this.anotherName = anotherName;
         this.personInfo = personInfo;
         this.emotion = emotion;
+        this.key = key;
     }
     @Override
     public int getEmotion(){

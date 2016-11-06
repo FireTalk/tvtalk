@@ -67,10 +67,10 @@ public class IceChattingActivity extends AppCompatActivity {
 
     }
     private synchronized void loadChattingLine(IceChattingData data) {
-        loadChattingLine(data.anotherProfileImage , data.anotherName , data.getAnotherTextMessage() , data.personInfo , data.isLike() , data.getLikeNo());
+        loadChattingLine(data.anotherProfileImage , data.anotherName , data.getAnotherTextMessage() , data.personInfo ,data.getKey(), data.isLike() , data.getLikeNo());
     }
-    private synchronized  void loadChattingLine(String profileImage , String speaker , String textMessage , ChattingData.AskPersonInfo isSamePerson , boolean isLike , int likeNo) {
-        IceChattingData chattingData =  new IceChattingData( profileImage,speaker, textMessage , isSamePerson ,isLike, likeNo);
+    private synchronized  void loadChattingLine(String profileImage , String speaker , String textMessage , ChattingData.AskPersonInfo isSamePerson ,String key, boolean isLike , int likeNo) {
+        IceChattingData chattingData =  new IceChattingData( profileImage,speaker, textMessage , isSamePerson, key ,isLike, likeNo);
 
         adapter.add(chattingData);
         //Log.e("count-----","getChildCount - "+recyclerView.getChildCount()+"/getItemCount - "+adapter.getItemCount()+"/ activienode - "+adapter.activeNode);

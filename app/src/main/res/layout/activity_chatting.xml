@@ -190,18 +190,18 @@
             android:layout_gravity="center_vertical"
             android:layout_marginBottom="30dp"
             />
-        <com.matthewtamlin.sliding_intro_screen_library.indicators.DotIndicator
-            android:id="@+id/dotindicator"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:numberOfDots="2"
-            app:selectedDotIndex="0"
-            android:layout_centerHorizontal="true"
-            android:layout_alignParentBottom="true"
-            android:layout_marginBottom="30dp"
-            app:selectedDotColor="#000000"
-            app:unselectedDotColor="#14000000"
-            />
+        <!--<com.matthewtamlin.sliding_intro_screen_library.indicators.DotIndicator-->
+            <!--android:id="@+id/dotindicator"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--app:numberOfDots="1"-->
+            <!--app:selectedDotIndex="0"-->
+            <!--android:layout_centerHorizontal="true"-->
+            <!--android:layout_alignParentBottom="true"-->
+            <!--android:layout_marginBottom="30dp"-->
+            <!--app:selectedDotColor="#000000"-->
+            <!--app:unselectedDotColor="#14000000"-->
+            <!--/>-->
     </RelativeLayout>
 
 </RelativeLayout>

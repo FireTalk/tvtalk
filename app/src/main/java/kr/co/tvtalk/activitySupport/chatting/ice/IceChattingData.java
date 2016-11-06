@@ -14,8 +14,8 @@ public class IceChattingData extends Data{
     public int likeNo;
 
 
-    public IceChattingData(String anotherProfileImage, String anotherName,String anotherTextMessage ,AskPersonInfo personInfo , boolean isLike , int likeNo ){
-        super(anotherProfileImage,anotherName,personInfo);
+    public IceChattingData(String anotherProfileImage, String anotherName,String anotherTextMessage ,AskPersonInfo personInfo ,String key, boolean isLike , int likeNo ){
+        super(anotherProfileImage,anotherName,personInfo, key);
         this.anotherTextMessage=anotherTextMessage;
         this.isLike = isLike;
         this.likeNo = likeNo;

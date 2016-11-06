@@ -27,9 +27,10 @@ public class ChattingMeWithViewHolder extends CustomViewHolder<Data> {
 
     @Override
     public void onBindView(Data item) {
-        this.me_with_text.setText(item.getAnotherTextMessage());
+
     }
     public void onBindView(Data item,Context context) {
+        me_with_text.setText(item.getAnotherTextMessage());
         Glide.with(context).load(item.getEmotion()).into(me_with_emoticon);
     }
 

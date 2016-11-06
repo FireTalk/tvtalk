@@ -9,11 +9,13 @@ public abstract class Data {
     public String anotherName;
     public AskPersonInfo personInfo;
 //    public String emoticon;
+    public String key;
 
-    public Data(String anotherProfileImage, String anotherName, AskPersonInfo personInfo) {
+    public Data(String anotherProfileImage, String anotherName, AskPersonInfo personInfo, String key) {
         this.anotherProfileImage = anotherProfileImage;
         this.anotherName = anotherName;
         this.personInfo = personInfo;
+        this.key = key;
 //        this.emoticon = emoticon;
     }
 
@@ -28,6 +30,10 @@ public abstract class Data {
     }
     public int getLikeNo(){
         return 0;
+    }
+
+    public String getKey() {
+        return key;
     }
 
     public enum AskPersonInfo{
