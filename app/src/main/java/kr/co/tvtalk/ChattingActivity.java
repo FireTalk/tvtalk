@@ -181,8 +181,6 @@ public class ChattingActivity extends AppCompatActivity {
         ref.limitToLast(100).addChildEventListener(new ChildEventListener() {
             String uid; // 회원 고유값
             String before_uid;
-            String key;
-            String before_key = "1";
             String type; // 1 이면 only 텍스트, 2면 only 이모티콘, 3은 둘다
             int emoticon = 0;
 
@@ -190,9 +188,9 @@ public class ChattingActivity extends AppCompatActivity {
 
             @Override
             public void onChildAdded(DataSnapshot data, String s) {
+
                 if(!data.getKey().toString().equals("1")){
                     before_uid = uid;
-                    before_key = key;
                 }
 
                 uid = data.child("uid").getValue().toString();
@@ -430,7 +428,7 @@ public class ChattingActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+            public void onScrolled(final RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
                 int size = layoutManager.getItemCount();
                 LinearLayoutManager linearLayoutManager = (LinearLayoutManager)recyclerView.getLayoutManager();
@@ -438,18 +436,126 @@ public class ChattingActivity extends AppCompatActivity {
                     chattingPreview.setVisibility(View.GONE);
                     loadMore = true;
                 }else if(linearLayoutManager.findFirstCompletelyVisibleItemPosition() == 0 && loadMore){
-                    int last = Integer.parseInt(datas.get(0).getKey());
-                    String end = ""+(last-1);
-                    String start = ""+(last-101);
-                    ref.orderByKey().startAt(start).endAt(end).addListenerForSingleValueEvent(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(DataSnapshot data) {
-                            data
-                        }
 
-                        @Override
-                        public void onCancelled(DatabaseError databaseError) {}
-                    });
+                    if(datas.get(0)!=null &&datas.get(0).getKey() != null && !datas.get(0).getKey().equals("0")){
+
+                        emoticonMode = false;
+
+                        isEmotionFalse.setVisibility(View.GONE);
+                        isEmotionTrue.setVisibility(View.VISIBLE);
+
+                        int last = Integer.parseInt(datas.get(0).getKey());
+                        final String end = ""+(last);
+                        final String start = ""+(last-100);
+
+                        ref.orderByKey().startAt(start).endAt(end).addListenerForSingleValueEvent(new ValueEventListener() {
+
+                            String uid; // 회원 고유값
+                            String before_uid;
+                            String type; // 1 이면 only 텍스트, 2면 only 이모티콘, 3은 둘다
+                            int emoticon = 0;
+
+                            ArrayList<Data> tmp = new ArrayList();
+                            ChatDTO dto = new ChatDTO();
+
+                            @Override
+                            public void onDataChange(DataSnapshot data) {
+
+                                for (DataSnapshot post: data.getChildren()) {
+                                    if(!post.getKey().toString().equals("1")){
+                                        before_uid = uid;
+                                    }
+
+                                    uid = post.child("uid").getValue().toString();
+
+                                    final FirebaseUser user = auth.getCurrentUser();
+                                    if(user != null && user.getUid().toString().equals(uid)){//내가 했던말
+
+                                        type = post.child("type").getValue().toString();
+                                        if (type.equals("1")) {
+                                            dto.setMsg(post.child("msg").getValue().toString());
+                                            dto.setIsSamePerson(ChattingData.AskPersonInfo.ME);
+
+                                        } else if (type.equals("2")) {
+                                            dto.setMsg("");
+                                            emoticon =  getEmoticonNum(post.child("emo").getValue().toString());
+                                            dto.setIsSamePerson(ChattingData.AskPersonInfo.ME_EMOTION);
+
+                                        } else if (type.equals("3")) {
+                                            dto.setMsg(post.child("msg").getValue().toString());
+                                            emoticon =  getEmoticonNum(post.child("emo").getValue().toString());
+                                            dto.setIsSamePerson(ChattingData.AskPersonInfo.ME_TEXT_WHIT_EMOTION);
+                                        }
+
+
+                                    }else{//남이 했던말
+
+                                        if(uid.equals(before_uid)){
+                                            type = post.child("type").getValue().toString();
+                                            if (type.equals("1")) {
+                                                dto.setMsg(post.child("msg").getValue().toString());
+                                                dto.setIsSamePerson(ChattingData.AskPersonInfo.SAME);
+
+                                            } else if (type.equals("2")) {
+                                                dto.setMsg("");
+                                                emoticon =  getEmoticonNum(""+post.child("emo").getValue());
+                                                dto.setIsSamePerson(ChattingData.AskPersonInfo.SAME_EMOTION);
+
+                                            } else if (type.equals("3")) {
+                                                dto.setMsg(post.child("msg").getValue().toString());
+                                                emoticon =  getEmoticonNum(post.child("emo").getValue().toString());
+                                                dto.setIsSamePerson(ChattingData.AskPersonInfo.ANOTHER_TEXT_WHIT_EMOTION_CONTINUE);
+                                            }
+                                        }else{
+                                            type = post.child("type").getValue().toString();
+                                            if (type.equals("1")) {
+                                                dto.setMsg(post.child("msg").getValue().toString());
+                                                dto.setIsSamePerson(ChattingData.AskPersonInfo.ANOTHER);
+
+                                            } else if (type.equals("2")) {
+                                                dto.setMsg("");
+                                                emoticon =  getEmoticonNum(post.child("emo").getValue().toString());
+                                                dto.setIsSamePerson(ChattingData.AskPersonInfo.ANOTHER_EMOTION);
+
+                                            } else if (type.equals("3")) {
+                                                dto.setMsg(post.child("msg").getValue().toString());
+                                                emoticon =  getEmoticonNum(post.child("emo").getValue().toString());
+                                                dto.setIsSamePerson(ChattingData.AskPersonInfo.ANOTHER_TEXT_WHIT_EMOTION);
+                                            }
+
+                                        getUserInfo(uid, dto.getMsg(), emoticon, dto.getIsSamePerson(), ""+post.getKey(), tmp.size());
+                                        }
+                                    }
+
+
+                                    tmp.add(new ChattingData( "", "", dto.getMsg() , dto.getIsSamePerson(), emoticon, post.getKey()));
+
+                                    if(tmp.size() == 101){
+                                        if(tmp.get(100).personInfo ==  ChattingData.AskPersonInfo.SAME ||
+                                            tmp.get(100).personInfo ==  ChattingData.AskPersonInfo.SAME_EMOTION||
+                                            tmp.get(100).personInfo ==  ChattingData.AskPersonInfo.ANOTHER_TEXT_WHIT_EMOTION_CONTINUE)
+                                        {
+                                            datas.remove(0);
+                                        }
+                                        tmp.addAll(datas);
+
+                                        datas.clear();
+                                        datas.addAll(tmp);
+                                        tmp.clear();
+                                        Toast.makeText(ChattingActivity.this, ""+datas.size(), Toast.LENGTH_SHORT).show();//
+                                        adapter = new ChattingAdapter( getApplicationContext() ,  datas);
+                                        recyclerView.setAdapter(adapter);
+                                        recyclerView.scrollToPosition(100);
+                                    }
+                                }
+                            }
+
+                            @Override
+                            public void onCancelled(DatabaseError databaseError) {}
+                        });
+
+                    }
+
 
                 }else{
 //                    chattingPreview.setVisibility(View.VISIBLE);
@@ -458,6 +564,8 @@ public class ChattingActivity extends AppCompatActivity {
             }
         });
     }
+
+
 
     @Bind(R.id.send_btn)
     TextView sendBtn;

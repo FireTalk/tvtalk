@@ -7,14 +7,15 @@ import kr.co.tvtalk.activitySupport.chatting.ChattingData;
  */
 
 public class ChatDTO {
-    String msg, emoticon, nickname, photo, key, uid;
+    String msg,  nickname, photo, key, uid;
     ChattingData.AskPersonInfo isSamePerson;
+    int emoticon;
 
     public ChatDTO(){
 
     }
 
-    public ChatDTO(String msg, String emoticon, String nickname, String photo, String key, String uid, ChattingData.AskPersonInfo isSamePerson) {
+    public ChatDTO(String msg, int emoticon, String nickname, String photo, String key, String uid, ChattingData.AskPersonInfo isSamePerson) {
         this.msg = msg;
         this.emoticon = emoticon;
         this.nickname = nickname;
@@ -34,10 +35,6 @@ public class ChatDTO {
 
     public String getMsg() {
         return msg;
-    }
-
-    public String getEmoticon() {
-        return emoticon;
     }
 
     public String getNickname() {
@@ -68,7 +65,11 @@ public class ChatDTO {
         this.msg = msg;
     }
 
-    public void setEmoticon(String emoticon) {
+    public int getEmoticon() {
+        return emoticon;
+    }
+
+    public void setEmoticon(int emoticon) {
         this.emoticon = emoticon;
     }
 
