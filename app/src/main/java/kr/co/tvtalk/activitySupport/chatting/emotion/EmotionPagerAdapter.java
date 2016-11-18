@@ -118,7 +118,7 @@ public class EmotionPagerAdapter extends android.support.v4.view.PagerAdapter {
     @Override
     public Object instantiateItem(ViewGroup container, int position) {
 
-        View view=null;
+        View view = null;
         Log.e("g2g2","position - "+position);
 
         localLocation= position;
