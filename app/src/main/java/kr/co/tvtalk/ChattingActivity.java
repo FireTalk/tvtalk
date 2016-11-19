@@ -657,7 +657,6 @@ public class ChattingActivity extends AppCompatActivity {
         clickEmotionNo = emotion;
 
         if( emoticonImg != 0) {//이모티콘 누를 시 영역띄우기
-
             Glide.with(this).load(emoticonImg).into(emotionPreview);
 
             sendBtn.setVisibility(View.VISIBLE);
