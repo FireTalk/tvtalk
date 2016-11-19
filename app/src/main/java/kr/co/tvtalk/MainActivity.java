@@ -156,6 +156,7 @@ public class MainActivity extends AppCompatActivity {
             Toast.makeText(MainActivity.this, "로그아웃",
                     Toast.LENGTH_SHORT).show();
         */
+
             startActivity(new Intent(getApplicationContext(),LoginAfterActivity.class));
         }else{
 

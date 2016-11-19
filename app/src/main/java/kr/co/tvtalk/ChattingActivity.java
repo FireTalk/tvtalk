@@ -74,7 +74,7 @@ public class ChattingActivity extends AppCompatActivity {
 
     @Bind(R.id.chat_recyclerview)
     RecyclerView recyclerView;
-    ChattingAdapter adapter;
+   ChattingAdapter adapter;
     RecyclerView.LayoutManager layoutManager;
     /*
      * Map속의 ArrayList로 바꿔야됌.

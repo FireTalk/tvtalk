@@ -75,7 +75,10 @@ public class LoginAfterActivity extends AppCompatActivity {
             loginEmailID.setText(user.getEmail());
         else
             loginEmailID.setText("Facebook 사용자");
-        Glide.with(this).load(user.getPhotoUrl().toString()).into(img);
+
+        //프로필화면 이동 오류 수정
+        if(user.getPhotoUrl()!=null)
+            Glide.with(this).load(user.getPhotoUrl().toString()).into(img);
 
     }
 
