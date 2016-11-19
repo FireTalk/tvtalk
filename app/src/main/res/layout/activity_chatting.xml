@@ -127,12 +127,10 @@
             android:layout_centerHorizontal="true"
             android:layout_margin="18dp"
             />
-        <TextView
+        <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="X"
-            android:textColor="#ffffff"
-            android:textStyle="bold"
+            android:src="@drawable/x"
             android:id="@+id/goneEmoticon"
             android:clickable="true"
             android:onClick="goneEmoticon"
