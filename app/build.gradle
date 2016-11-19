@@ -10,6 +10,7 @@ android {
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        multiDexEnabled true
     }
     buildTypes {
         release {
@@ -46,6 +47,6 @@ dependencies {
     compile 'com.facebook.android:facebook-android-sdk:[4,5)'
     compile 'com.matthew-tamlin:sliding-intro-screen:3.2.0'
     compile 'jp.wasabeef:glide-transformations:2.0.1'
-
+    compile 'com.github.rahatarmanahmed:circularprogressview:2.5.0'
 }
 apply plugin: 'com.google.gms.google-services'

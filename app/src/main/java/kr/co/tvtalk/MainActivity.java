@@ -7,11 +7,13 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
 import com.facebook.FacebookSdk;
 import com.facebook.login.LoginManager;
+import com.github.rahatarmanahmed.cpv.CircularProgressView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.ChildEventListener;
@@ -47,6 +49,12 @@ public class MainActivity extends AppCompatActivity {
 
     public static int selectedDramaNo = 0 ;
 
+    @Bind(R.id.am_progress)
+    CircularProgressView progressbar;
+
+    static int maxCount = 100;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -54,10 +62,23 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
 
+        progressbar.setVisibility(View.VISIBLE);
+        progressbar.startAnimation();
         auth = FirebaseAuth.getInstance();
         FirebaseUser user = auth.getCurrentUser();
         db = FirebaseDatabase.getInstance();
         ref = db.getReference().child("drama");
+        ref.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                maxCount = (int)dataSnapshot.getChildrenCount();
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
         if(user != null)    bookmarkRef = db.getReference().child("bookmark/"+user.getUid());
 
         context = getApplicationContext();
@@ -104,6 +125,14 @@ public class MainActivity extends AppCompatActivity {
                                         db.child("time").getValue().toString(),
                                         db.getKey());
                                 mainAdapter.add(mainData);
+                                if(--maxCount==0) {
+                                    runOnUiThread(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            progressbar.setVisibility(View.GONE);
+                                        }
+                                    });
+                                }
                             }
                         }
                         @Override
@@ -133,6 +162,9 @@ public class MainActivity extends AppCompatActivity {
         super.onResume();
 
         mainActivityRecyler.smoothScrollToPosition(selectedDramaNo);
+        if(maxCount == 0) {
+            progressbar.setVisibility(View.GONE);
+        }
     }
 
     /*

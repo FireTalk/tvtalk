@@ -2,7 +2,6 @@ package kr.co.tvtalk;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.drawable.ClipDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
@@ -10,17 +9,17 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.text.Html;
 import android.text.SpannableString;
-import android.text.Spanned;
 import android.text.style.UnderlineSpan;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.github.rahatarmanahmed.cpv.CircularProgressView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.ChildEventListener;
@@ -31,8 +30,6 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
 
 import butterknife.Bind;
 import butterknife.BindDrawable;
@@ -41,8 +38,6 @@ import butterknife.OnClick;
 import kr.co.tvtalk.activitySupport.FontFactory;
 import kr.co.tvtalk.activitySupport.dramalist.DramaData;
 import kr.co.tvtalk.activitySupport.dramalist.DramaListAdapter;
-import kr.co.tvtalk.activitySupport.main.MainAdapter;
-import kr.co.tvtalk.model.CustomPreference;
 
 /**
  * Created by kwongyo on 2016-09-16.
@@ -77,14 +72,19 @@ public class DramaListActivity extends AppCompatActivity {
     @BindDrawable(R.drawable.icon_fillheart)
     Drawable bookmarkTrue;
 
-
     private String title = "";
 
+    @Bind(R.id.adl_progress)
+    CircularProgressView progressBar;
+
+
+    static int maxData = 0;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_drama_list);
         ButterKnife.bind(this);
+        progressBar.startAnimation();
 
         dramaTitle.setTypeface(FontFactory.getFont(getApplicationContext(), FontFactory.Font.NOTOSANS_BOLD));
 
@@ -104,6 +104,18 @@ public class DramaListActivity extends AppCompatActivity {
         FirebaseUser user = auth.getCurrentUser();
         db = FirebaseDatabase.getInstance();
         ref = db.getReference().child("drama/"+key+"/list");
+
+        ref.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                maxData = (int) dataSnapshot.getChildrenCount();
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
         if(user != null){
             bookmarkRef = db.getReference().child("bookmark/"+user.getUid());
             bookmarkRef.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -115,7 +127,6 @@ public class DramaListActivity extends AppCompatActivity {
                         Glide.with(context).load(R.drawable.icon_emptyheart).into(isBookmark);
                     }
                 }
-
                 @Override
                 public void onCancelled(DatabaseError databaseError) {}
             });
@@ -152,26 +163,36 @@ public class DramaListActivity extends AppCompatActivity {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         if(dataSnapshot.getChildrenCount() == tmp.size()){
-                            for(int i = tmp.size()-1; i >= 0; i--){
-                                if(tmp.get(i) != null)
+                            for(int i = tmp.size()-1; i >= 0; i--) {
+                                if(tmp.get(i) != null) {
                                     dramaListAdapter.add(
-                                        new DramaData(
-                                                tmp.get(i).dramaImage,
-                                                tmp.get(i).dramaCountInfomation,
-                                                tmp.get(i).dramaBroadcastDay,
-                                                tmp.get(i).infomationEnterChattingRoom,
-                                                tmp.get(i).iconEnterChattingRoom,
-                                                tmp.get(i).key
-                                        )
+                                            new DramaData(
+                                                    tmp.get(i).dramaImage,
+                                                    tmp.get(i).dramaCountInfomation,
+                                                    tmp.get(i).dramaBroadcastDay,
+                                                    tmp.get(i).infomationEnterChattingRoom,
+                                                    tmp.get(i).iconEnterChattingRoom,
+                                                    tmp.get(i).key
+                                            )
                                     );
+
+                                    if(i==0) {
+                                        runOnUiThread(new Runnable() {
+                                            @Override
+                                            public void run() {
+                                                progressBar.setVisibility(View.GONE);
+                                            }
+                                        });
+                                    }
+                                }
                             }
                             tmp.clear();
                         }
                     }
-
                     @Override
                     public void onCancelled(DatabaseError databaseError) {}
                 });
+
             }
 
             @Override

@@ -5,4 +5,16 @@
     <color name="colorAccent">#FF4081</color>
 
     <color name="color_main">#FFFFFF</color>
+
+    <color name="red">#c83830</color>
+    <color name="yellow">#f8c828</color>
+    <color name="green">#189040</color>
+    <color name="blue">#2858f0</color>
+
+    <array name="google_colors">
+        <item>@color/red</item>
+        <item>@color/yellow</item>
+        <item>@color/green</item>
+        <item>@color/blue</item>
+    </array>
 </resources>
