@@ -32,6 +32,8 @@ public abstract class Data {
         return 0;
     }
 
+
+
     public String getKey() {
         return key;
     }

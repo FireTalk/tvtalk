@@ -13,45 +13,52 @@ import kr.co.tvtalk.R;
 import kr.co.tvtalk.activitySupport.CustomViewHolder;
 
 /**
- * Created by kwongyo on 2016-10-10.
+ * Created by 병윤 on 2016-11-18.
  */
 
-public class IceChattingViewHolder extends CustomViewHolder<IceChattingData> implements View.OnClickListener{
+public class IceChattingWithViewHolder extends CustomViewHolder<IceChattingData> implements View.OnClickListener{
+
     public CircleImageView iceAnotherProfileImage;
     public TextView iceAnotherName;
     public TextView iceAnotherTextMessage;
     public ImageView iceAnotherChattingLike;
+    public ImageView iceAnotherChattingEmotion;
     public TextView iceAnotherChattingLikeNo;
 
-    private IceChattingAdapter iceChattingAdapter;
     private boolean click;
 
-    public IceChattingViewHolder(View v, IceChattingAdapter iceChattingAdapter) {
+    private IceChattingAdapter iceChattingAdapter;
+
+    public IceChattingWithViewHolder(View v, IceChattingAdapter iceChattingAdapter) {
         super(v);
-        iceAnotherProfileImage = (CircleImageView) v.findViewById(R.id.ice_another_profile_image);
-        iceAnotherName = (TextView) v.findViewById(R.id.ice_another_name);
-        iceAnotherTextMessage = (TextView) v.findViewById(R.id.ice_another_text_message);
-        iceAnotherChattingLike = (ImageView)v.findViewById(R.id.ice_chatting_another_like);
-        iceAnotherChattingLikeNo = (TextView) v.findViewById(R.id.ice_chatting_another_like_no);
+        iceAnotherProfileImage = (CircleImageView) v.findViewById(R.id.ice_another_with_profile);
+        iceAnotherName = (TextView) v.findViewById(R.id.ice_another_with_name);
+        iceAnotherTextMessage = (TextView) v.findViewById(R.id.ice_another_with_text);
+        iceAnotherChattingEmotion = (ImageView) v.findViewById(R.id.ice_another_with_emotion);
+        iceAnotherChattingLike = (ImageView)v.findViewById(R.id.ice_chatting_another_with_like);
+        iceAnotherChattingLikeNo = (TextView) v.findViewById(R.id.ice_chatting_another_with_like_no);
 
         this.iceChattingAdapter = iceChattingAdapter;
 
         iceAnotherChattingLike.setOnClickListener(this);
 
-
     }
+
+    @Override
     public void onBindView(IceChattingData data) {
         this.iceAnotherName.setText(data.anotherName);
         this.iceAnotherTextMessage.setText(data.getAnotherTextMessage());
     }
+
     public void onBindView(IceChattingData data,Context context) {
         onBindView(data);
+        Glide.with(context).load(data.getEmotion()).into(this.iceAnotherChattingEmotion);
         Glide.with(context).load(data.anotherProfileImage).into(this.iceAnotherProfileImage);
         if(data.isLike())
             Glide.with(context).load(R.drawable.bookmark_true).into(this.iceAnotherChattingLike);
         else
             Glide.with(context).load(R.drawable.bookmark_false).into(this.iceAnotherChattingLike);
-        iceAnotherChattingLikeNo.setText(""+data.getLikeNo());
+        iceAnotherChattingLikeNo.setText(""+data.likeNo);
 
         click = data.isLike();
     }
@@ -60,12 +67,12 @@ public class IceChattingViewHolder extends CustomViewHolder<IceChattingData> imp
     public void onClick(View view) {
         int position = getAdapterPosition();
         switch (view.getId()){
-            case R.id.ice_chatting_another_like :
+            case R.id.ice_chatting_another_with_like :
                 if(iceChattingAdapter.clickEvent(position)){
                     if(click){
                         click =false;
                         Glide.with(view.getContext()).load(R.drawable.bookmark_false).into(this.iceAnotherChattingLike);
-                    }else{
+                    }else {
                         click = true;
                         Glide.with(view.getContext()).load(R.drawable.bookmark_true).into(this.iceAnotherChattingLike);
                     }
@@ -75,5 +82,6 @@ public class IceChattingViewHolder extends CustomViewHolder<IceChattingData> imp
                 break;
             default: break;
         }
+
     }
 }

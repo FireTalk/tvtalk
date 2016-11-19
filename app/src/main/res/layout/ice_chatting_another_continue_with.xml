@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/ice_chatting_another_continue_emotion_relativelayout"
+    android:id="@+id/ice_chatting_another_continue_with_relativelayout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginBottom="5dp"
     android:layout_marginTop="5dp"
     >
     <ImageView
-        android:id="@+id/ice_another_continue_emotion"
+        android:id="@+id/ice_another_continue_with_emotion"
         android:layout_width="110dp"
         android:layout_height="90dp"
         android:paddingLeft="10dp"
@@ -16,7 +16,6 @@
         android:paddingBottom="5dp"
         android:layout_marginLeft="57dp"
         android:layout_marginRight="70dp"
-        android:textColor="#FFFFFF"
         />
     <!--<ImageView-->
         <!--android:id="@+id/ice_chatting_another_continue_emotion_like"-->
@@ -38,4 +37,40 @@
         <!--android:layout_alignBottom="@id/ice_chatting_another_continue_emotion_like"-->
         <!--android:layout_marginBottom="-3dp"-->
         <!--/>-->
+    <TextView
+        android:layout_below="@+id/ice_another_continue_with_emotion"
+        android:id="@+id/ice_another_text_message_continue_with"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/icon_catbox"
+        android:paddingLeft="10dp"
+        android:paddingTop="5dp"
+        android:paddingRight="10dp"
+        android:paddingBottom="5dp"
+        android:layout_marginLeft="57dp"
+        android:layout_marginRight="70dp"
+        android:textColor="#FFFFFF"
+        />
+    <ImageView
+        android:id="@+id/ice_chatting_another_continue_with_like"
+        android:layout_width="14dp"
+        android:layout_height="13dp"
+        android:src="@drawable/bookmark_false"
+        android:layout_toRightOf="@+id/ice_another_text_message_continue_with"
+        android:layout_marginLeft="-63dp"
+        android:layout_alignBottom="@+id/ice_another_text_message_continue_with"
+        />
+    <TextView
+        android:id="@+id/ice_chatting_another_continue_with_like_no"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="15sp"
+        android:text="0"
+        android:layout_toRightOf="@+id/ice_another_text_message_continue_with"
+        android:layout_marginLeft="-47dp"
+        android:layout_alignBottom="@+id/ice_chatting_another_continue_with_like"
+        android:layout_marginBottom="-3dp"
+        />
+
+
 </RelativeLayout>

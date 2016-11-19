@@ -19,24 +19,24 @@
         android:layout_marginTop="5dp"
         android:layout_marginLeft="70dp"
         />
-    <ImageView
-        android:id="@+id/ice_chatting_me_emotion_like"
-        android:layout_width="14dp"
-        android:layout_height="13dp"
-        android:src="@drawable/bookmark_false"
-        android:layout_toLeftOf="@id/ice_chatting_me_emotion"
-        android:layout_marginRight="-63dp"
-        android:layout_alignBottom="@id/ice_chatting_me_emotion"
-        />
-    <TextView
-        android:id="@+id/ice_chatting_me_emotion_like_no"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textSize="15sp"
-        android:text="0"
-        android:layout_toLeftOf="@id/ice_chatting_me_emotion_like"
-        android:layout_marginRight="2dp"
-        android:layout_alignBottom="@id/ice_chatting_me_emotion_like"
-        android:layout_marginBottom="-3dp"
-        />
+    <!--<ImageView-->
+        <!--android:id="@+id/ice_chatting_me_emotion_like"-->
+        <!--android:layout_width="14dp"-->
+        <!--android:layout_height="13dp"-->
+        <!--android:src="@drawable/bookmark_false"-->
+        <!--android:layout_toLeftOf="@id/ice_chatting_me_emotion"-->
+        <!--android:layout_marginRight="-63dp"-->
+        <!--android:layout_alignBottom="@id/ice_chatting_me_emotion"-->
+        <!--/>-->
+    <!--<TextView-->
+        <!--android:id="@+id/ice_chatting_me_emotion_like_no"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:textSize="15sp"-->
+        <!--android:text="0"-->
+        <!--android:layout_toLeftOf="@id/ice_chatting_me_emotion_like"-->
+        <!--android:layout_marginRight="2dp"-->
+        <!--android:layout_alignBottom="@id/ice_chatting_me_emotion_like"-->
+        <!--android:layout_marginBottom="-3dp"-->
+        <!--/>-->
 </RelativeLayout>

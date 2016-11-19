@@ -10,4 +10,6 @@ public abstract class CustomViewHolder<E> extends RecyclerView.ViewHolder{
     }
     public abstract void onBindView(E item);
 
+
+
 }
