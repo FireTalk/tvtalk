@@ -76,7 +76,7 @@ public class ChattingActivity extends AppCompatActivity {
 
     @Bind(R.id.chatting_recyclerview)
     RecyclerView recyclerView;
-   ChattingAdapter adapter;
+    ChattingAdapter adapter;
     RecyclerView.LayoutManager layoutManager;
     /*
      * Map속의 ArrayList로 바꿔야됌.
@@ -129,6 +129,9 @@ public class ChattingActivity extends AppCompatActivity {
                 status=STATUS_BASIC;
                 emotionPreviewArea.setVisibility(View.GONE);
                 break;
+//            case STATUS_INPUT_MODE :
+//
+//                break;
             default :
                 finish();
         }
@@ -601,6 +604,8 @@ public class ChattingActivity extends AppCompatActivity {
         if ( isLogin() ) {
             setInputFormLayoutParams(0);
             emotionArea.setVisibility(View.GONE);
+            status=STATUS_INPUT_MODE;
+            recyclerView.scrollToPosition(adapter.getItemCount());
             return false;
         }
         return true;
@@ -756,14 +761,28 @@ public class ChattingActivity extends AppCompatActivity {
             startActivity(intent);
             return ;
         }
-//        hideKeybroad(v);
+        //이모티콘 켜져있을 때 이모티콘 버튼 다시 클릭하면 이모티콘 영역 사라지게끔 하려고!
+        if(status==STATUS_EMOTION) {
+            onBackPressed();
+            return ;
+        }
+        status = STATUS_EMOTION;
+        hideKeybroad(v);
         emotionArea.setVisibility(View.VISIBLE);
+
         setInputFormLayoutParams(220);
     }
     private void setInputFormLayoutParams(int dpiValue) {
+
         RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams)inputForm.getLayoutParams();
         layoutParams.bottomMargin = (int)TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,dpiValue,context.getResources().getDisplayMetrics());
         inputForm.setLayoutParams(layoutParams);
+
+        RelativeLayout.LayoutParams rlayoutParams = (RelativeLayout.LayoutParams)recyclerView.getLayoutParams();
+        rlayoutParams.bottomMargin = (int)TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,dpiValue+40,context.getResources().getDisplayMetrics());
+        recyclerView.setLayoutParams(rlayoutParams);
+
+
     }
 
 
@@ -951,10 +970,10 @@ public class ChattingActivity extends AppCompatActivity {
     }
 
     /*  상동  */
-    @OnTouch(R.id.chatting_recyclerview)
-    public boolean onBodyClickAndHideKeybroad(View v) {
+    @OnClick(R.id.chatting_recyclerview)
+    public void onBodyClickAndHideKeybroad(View v) {
         hideKeybroad(v);
-        return false;
+        //return false;
     }
 
     /**
