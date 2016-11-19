@@ -47,6 +47,7 @@ public class IceChattingActivity extends AppCompatActivity {
     public static IceChattingActivity instacne;
 
     private static int maxLikeNum = 0;//해당 채팅방 좋아요 최대값
+    private static int dataCount = 0;
 
     private FirebaseAuth auth;
     private FirebaseDatabase db;
@@ -275,7 +276,11 @@ public class IceChattingActivity extends AppCompatActivity {
 
         adapter.notifyDataSetChanged();
 
-        if(datas.size()==100) recyclerView.scrollToPosition(99);
+        if(dataCount < 100){
+            recyclerView.scrollToPosition(dataCount - 1);
+        }else {
+            if(datas.size()==100) recyclerView.scrollToPosition(99);
+        }
 
 
     }
@@ -651,6 +656,7 @@ public class IceChattingActivity extends AppCompatActivity {
         ref.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot data) {
+                dataCount = (int)data.getChildrenCount();
                 for (DataSnapshot post: data.getChildren()) {
                     if(post.child("like").exists()){
                         if(maxLikeNum<(int)post.child("like").getChildrenCount()){
