@@ -1,0 +1,5 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools" tools:context=".AppPermissionActivity">
+    <item android:id="@+id/action_settings" android:title="kmkkk"
+        android:orderInCategory="100"  />
+</menu>
