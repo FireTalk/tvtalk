@@ -20,6 +20,7 @@ import com.google.firebase.database.ValueEventListener;
 import jp.wasabeef.glide.transformations.GrayscaleTransformation;
 import kr.co.tvtalk.ChattingActivity;
 import kr.co.tvtalk.DramaListActivity;
+import kr.co.tvtalk.IceChattingActivity;
 import kr.co.tvtalk.R;
 import kr.co.tvtalk.activitySupport.CustomViewHolder;
 import kr.co.tvtalk.activitySupport.FontFactory;
@@ -121,7 +122,7 @@ public class DramaViewHolder extends CustomViewHolder<DramaData> {
                         intent.putExtra("key", key);
                         intent.putExtra("order", order);
                         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                        intent.setClass(DramaListActivity.context,ChattingActivity.class);
+                        intent.setClass(DramaListActivity.context,IceChattingActivity.class);
                         DramaListActivity.context.startActivity(intent);
                     }
                 }

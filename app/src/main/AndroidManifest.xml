@@ -47,6 +47,9 @@
         <activity android:name=".ChattingActivity" >
         </activity>
 
+        <activity android:name=".IceChattingActivity" >
+        </activity>
+
 
         <activity
             android:name="com.facebook.CustomTabActivity"

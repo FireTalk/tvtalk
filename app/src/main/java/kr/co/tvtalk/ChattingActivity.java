@@ -169,9 +169,7 @@ public class ChattingActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
+            public void onCancelled(DatabaseError databaseError) {}
         });
 
         ref = db.getReference().child("chat/"+key+"_"+order);//채팅방 db reference
@@ -437,7 +435,7 @@ public class ChattingActivity extends AppCompatActivity {
                     loadMore = true;
                 }else if(linearLayoutManager.findFirstCompletelyVisibleItemPosition() == 0 && loadMore){
 
-                    if(datas.get(0)!=null &&datas.get(0).getKey() != null && !datas.get(0).getKey().equals("0")){
+                    if(datas.get(0)!=null &&datas.get(0).getKey() != null && !datas.get(0).getKey().equals("1")){
 
                         emoticonMode = false;
 
@@ -445,8 +443,12 @@ public class ChattingActivity extends AppCompatActivity {
                         isEmotionTrue.setVisibility(View.VISIBLE);
 
                         int last = Integer.parseInt(datas.get(0).getKey());
-                        final String end = ""+(last);
-                        final String start = ""+(last-100);
+
+                        String end = ""+(last);
+                        String start = "";
+                        if(last-100<=1) {start = ""+1; }
+                        else {start = ""+(last-100); }
+                        final int cnt = last - Integer.parseInt(start);
 
                         ref.orderByKey().startAt(start).endAt(end).addListenerForSingleValueEvent(new ValueEventListener() {
 
@@ -530,10 +532,10 @@ public class ChattingActivity extends AppCompatActivity {
 
                                     tmp.add(new ChattingData( "", "", dto.getMsg() , dto.getIsSamePerson(), emoticon, post.getKey()));
 
-                                    if(tmp.size() == 101){
-                                        if(tmp.get(100).personInfo ==  ChattingData.AskPersonInfo.SAME ||
-                                            tmp.get(100).personInfo ==  ChattingData.AskPersonInfo.SAME_EMOTION||
-                                            tmp.get(100).personInfo ==  ChattingData.AskPersonInfo.ANOTHER_TEXT_WHIT_EMOTION_CONTINUE)
+                                    if(tmp.size() == cnt){
+                                        if(tmp.get(cnt -1).personInfo ==  ChattingData.AskPersonInfo.SAME ||
+                                            tmp.get(cnt -1).personInfo ==  ChattingData.AskPersonInfo.SAME_EMOTION||
+                                            tmp.get(cnt -1).personInfo ==  ChattingData.AskPersonInfo.ANOTHER_TEXT_WHIT_EMOTION_CONTINUE)
                                         {
                                             datas.remove(0);
                                         }
@@ -542,10 +544,9 @@ public class ChattingActivity extends AppCompatActivity {
                                         datas.clear();
                                         datas.addAll(tmp);
                                         tmp.clear();
-                                        Toast.makeText(ChattingActivity.this, ""+datas.size(), Toast.LENGTH_SHORT).show();//
                                         adapter = new ChattingAdapter( getApplicationContext() ,  datas);
                                         recyclerView.setAdapter(adapter);
-                                        recyclerView.scrollToPosition(100);
+                                        recyclerView.scrollToPosition(cnt -1);
                                     }
                                 }
                             }
