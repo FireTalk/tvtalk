@@ -32,6 +32,8 @@ import com.google.firebase.database.ValueEventListener;
 
 import com.matthewtamlin.sliding_intro_screen_library.indicators.DotIndicator;
 
+import org.w3c.dom.Text;
+
 import butterknife.BindDrawable;
 import butterknife.OnPageChange;
 
@@ -617,8 +619,17 @@ public class ChattingActivity extends AppCompatActivity {
     private int clickEmotionNo ;
     private int emoticonImg = 0;
 //    public static boolean emotionMutax = true;
+
+    //이모티콘 x버튼 누르면 감추기
+    @OnClick(R.id.goneEmoticon)
+    public void goneEmoticon(View v){
+        emotionPreviewArea.setVisibility(View.GONE);
+    }
+
     public void emotionClick(int emotion) {//이모티콘 전송
         emotionPreviewArea.setVisibility(View.GONE);
+
+
         Log.e("Chat_emotion",emotion+"");
         final FirebaseUser user = auth.getCurrentUser();
 
