@@ -137,7 +137,7 @@ public class EmotionPagerAdapter extends android.support.v4.view.PagerAdapter {
         Log.e("checking",position+"");
 
 
-
+        
         Glide.with(context).load(R.drawable.a).into(iconEmotion1);
         Glide.with(context).load(R.drawable.b).into(iconEmotion2);
         Glide.with(context).load(R.drawable.c).into(iconEmotion3);
