@@ -72,7 +72,7 @@ public class ChattingActivity extends AppCompatActivity {
 
     private static Context context;
 
-    @Bind(R.id.chat_recyclerview)
+    @Bind(R.id.chatting_recyclerview)
     RecyclerView recyclerView;
     ChattingAdapter adapter;
     RecyclerView.LayoutManager layoutManager;
@@ -259,6 +259,7 @@ public class ChattingActivity extends AppCompatActivity {
                     emoticon,
                     ""+data.getKey()
                 );
+
             }
 
             @Override
@@ -275,6 +276,8 @@ public class ChattingActivity extends AppCompatActivity {
         /*emotion*/
         EmotionPagerAdapter emotionPagerAdapter = new EmotionPagerAdapter(getLayoutInflater() , getApplicationContext());
         viewPager.setAdapter(emotionPagerAdapter);
+
+
 
 
 
@@ -416,6 +419,8 @@ public class ChattingActivity extends AppCompatActivity {
         //specify an adapter ( see also next example) ????
         adapter = new ChattingAdapter( getApplicationContext() ,  datas);
         recyclerView.setAdapter(adapter);
+
+
 
         recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener(){
 
@@ -749,20 +754,7 @@ public class ChattingActivity extends AppCompatActivity {
         layoutParams.bottomMargin = (int)TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,dpiValue,context.getResources().getDisplayMetrics());
         inputForm.setLayoutParams(layoutParams);
     }
-    /*  상동  */
-    @OnClick(R.id.chat_recyclerview)
-    public void bodyClickAndHideKeybroad(View v) {
-        hideKeybroad(v);
-    }
 
-    /**
-     * 이모티콘 버튼 혹은 , recyclerview를 선택했을 시 키보드가 활성화 되어 있다면 비 활성화 상태로 변경함.
-     * @param v
-     */
-    public void hideKeybroad(View v) {
-        if( inputMethodManager.isAcceptingText() )  // 만약 키보드가 활성화중이라면
-            inputMethodManager.hideSoftInputFromWindow(typingMessage.getWindowToken(), 0);
-    }
 
 
     private synchronized void addChattingLine(Data data) {
@@ -945,5 +937,21 @@ public class ChattingActivity extends AppCompatActivity {
         if(user == null)
             return false;
         return true;
+    }
+
+    /*  상동  */
+    @OnTouch(R.id.chatting_recyclerview)
+    public boolean onBodyClickAndHideKeybroad(View v) {
+        hideKeybroad(v);
+        return false;
+    }
+
+    /**
+     * 이모티콘 버튼 혹은 , recyclerview를 선택했을 시 키보드가 활성화 되어 있다면 비 활성화 상태로 변경함.
+     * @param v
+     */
+    public void hideKeybroad(View v) {
+        if( inputMethodManager.isAcceptingText() )  // 만약 키보드가 활성화중이라면
+            inputMethodManager.hideSoftInputFromWindow(typingMessage.getWindowToken(), 0);
     }
 }

@@ -61,7 +61,7 @@
             />
     </RelativeLayout>
     <android.support.v7.widget.RecyclerView
-        android:id="@+id/chat_recyclerview"
+        android:id="@+id/chatting_recyclerview"
         android:layout_below="@id/catting_action_bar"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -76,7 +76,7 @@
         android:layout_height="56dp"
         android:layout_marginRight="14dp"
         android:layout_marginLeft="14dp"
-        android:layout_alignBottom="@id/chat_recyclerview"
+        android:layout_alignBottom="@id/chatting_recyclerview"
         android:layout_marginBottom="14.6dp"
         android:visibility="gone"
         android:background="@drawable/preview_box"
@@ -178,7 +178,7 @@
         android:id="@+id/emotion_area"
         android:layout_width="match_parent"
         android:layout_height="227dp"
-        android:background="#f8f8f8"
+        android:background="#4Df8f8f8"
         android:layout_alignParentBottom="true"
         android:visibility="gone"
 
@@ -189,6 +189,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:layout_marginBottom="30dp"
+            android:background="#4Df8f8f8"
             />
         <!--<com.matthewtamlin.sliding_intro_screen_library.indicators.DotIndicator-->
             <!--android:id="@+id/dotindicator"-->
