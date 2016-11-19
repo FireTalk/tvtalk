@@ -118,7 +118,7 @@ public class IceChattingActivity extends AppCompatActivity {
             String uid; // 회원 고유값
             String before_uid;
             String type; // 1 이면 only 텍스트, 2면 only 이모티콘, 3은 둘다
-            boolean isLike;
+            boolean isLike, who;
             int emoticon = 0, likeNo;
 
             ChatDTO dto = new ChatDTO();
@@ -200,7 +200,7 @@ public class IceChattingActivity extends AppCompatActivity {
                             emoticon =  getEmoticonNum(data.child("emo").getValue().toString());
                             dto.setIsSamePerson(IceChattingData.AskPersonInfo.ANOTHER_TEXT_WHIT_EMOTION);
                         }
-                        getUserInfo(uid, dto.getMsg(), emoticon, dto.getIsSamePerson(), ""+data.getKey(), datas.size(), isLike, likeNo);
+                        getUserInfo(uid, dto.getMsg(), emoticon, dto.getIsSamePerson(), ""+data.getKey(), datas.size(), isLike, likeNo,  setColor(likeNo, who));
                     }
                 }
 
@@ -212,7 +212,9 @@ public class IceChattingActivity extends AppCompatActivity {
                         emoticon,
                         ""+data.getKey(),
                         isLike,
-                        likeNo
+                        likeNo,
+                        setColor(likeNo, who)
+
                 );
             }
 
@@ -228,10 +230,10 @@ public class IceChattingActivity extends AppCompatActivity {
 
     }
     private synchronized void loadChattingLine(IceChattingData data) {
-        loadChattingLine(data.anotherProfileImage , data.anotherName , data.getAnotherTextMessage() , data.personInfo, data.getEmotion() ,data.getKey(), data.isLike() , data.getLikeNo());
+        loadChattingLine(data.anotherProfileImage , data.anotherName , data.getAnotherTextMessage() , data.personInfo, data.getEmotion() ,data.getKey(), data.isLike() , data.getLikeNo(), data.getColor());
     }
-    private synchronized  void loadChattingLine(String profileImage , String speaker , String textMessage , IceChattingData.AskPersonInfo isSamePerson ,int emoticon,String key, boolean isLike , int likeNo) {
-        IceChattingData iceChattingData =  new IceChattingData( profileImage,speaker, textMessage , isSamePerson, emoticon, key ,isLike, likeNo);
+    private synchronized  void loadChattingLine(String profileImage , String speaker , String textMessage , IceChattingData.AskPersonInfo isSamePerson ,int emoticon,String key, boolean isLike , int likeNo, int color) {
+        IceChattingData iceChattingData =  new IceChattingData( profileImage,speaker, textMessage , isSamePerson, emoticon, key ,isLike, likeNo, color);
 
         adapter.add(iceChattingData);
 
@@ -246,22 +248,22 @@ public class IceChattingActivity extends AppCompatActivity {
                     || iceChattingData.personInfo == IceChattingData.AskPersonInfo.SAME_EMOTION){
                 if(iceChattingData.personInfo == IceChattingData.AskPersonInfo.ME_TEXT_WHIT_EMOTION){
 
-                    syncList.add(new IceChattingData("","",iceChattingData.getAnotherTextMessage(), IceChattingData.AskPersonInfo.ME, 0, iceChattingData.getKey(), iceChattingData.isLike, iceChattingData.likeNo ));
+                    syncList.add(new IceChattingData("","",iceChattingData.getAnotherTextMessage(), IceChattingData.AskPersonInfo.ME, 0, iceChattingData.getKey(), iceChattingData.isLike, iceChattingData.likeNo, iceChattingData.color ));
                 }else if(iceChattingData.personInfo == IceChattingData.AskPersonInfo.ANOTHER_TEXT_WHIT_EMOTION){
 
-                    syncList.add(new IceChattingData(iceChattingData.anotherProfileImage, iceChattingData.anotherName, iceChattingData.getAnotherTextMessage(), IceChattingData.AskPersonInfo.ANOTHER, 0, iceChattingData.getKey(), iceChattingData.isLike, iceChattingData.likeNo));
+                    syncList.add(new IceChattingData(iceChattingData.anotherProfileImage, iceChattingData.anotherName, iceChattingData.getAnotherTextMessage(), IceChattingData.AskPersonInfo.ANOTHER, 0, iceChattingData.getKey(), iceChattingData.isLike, iceChattingData.likeNo, iceChattingData.color));
                 }else if(iceChattingData.personInfo == IceChattingData.AskPersonInfo.ANOTHER_TEXT_WHIT_EMOTION_CONTINUE){
                     if(datas.get(before).personInfo == IceChattingData.AskPersonInfo.ANOTHER_EMOTION){
-                        syncList.add(new IceChattingData("", "", iceChattingData.getAnotherTextMessage(), IceChattingData.AskPersonInfo.ANOTHER, 0, iceChattingData.getKey(), isLike, likeNo));
+                        syncList.add(new IceChattingData("", "", iceChattingData.getAnotherTextMessage(), IceChattingData.AskPersonInfo.ANOTHER, 0, iceChattingData.getKey(), isLike, likeNo, iceChattingData.color));
                     }
                     else{
-                        syncList.add(new IceChattingData("", "", iceChattingData.getAnotherTextMessage(), IceChattingData.AskPersonInfo.SAME, 0, iceChattingData.getKey(), isLike, likeNo));
+                        syncList.add(new IceChattingData("", "", iceChattingData.getAnotherTextMessage(), IceChattingData.AskPersonInfo.SAME, 0, iceChattingData.getKey(), isLike, likeNo, iceChattingData.color));
                     }
                 }
             }else{
                 if(iceChattingData.personInfo == IceChattingData.AskPersonInfo.SAME){
                     if(datas.get(before).personInfo == IceChattingData.AskPersonInfo.ANOTHER_EMOTION){
-                        syncList.add(new IceChattingData("", "", iceChattingData.getAnotherTextMessage(), IceChattingData.AskPersonInfo.ANOTHER, 0, iceChattingData.getKey(), isLike, likeNo));
+                        syncList.add(new IceChattingData("", "", iceChattingData.getAnotherTextMessage(), IceChattingData.AskPersonInfo.ANOTHER, 0, iceChattingData.getKey(), isLike, likeNo,iceChattingData.color));
                     }else{
                         syncList.add(iceChattingData);
                     }
@@ -334,7 +336,7 @@ public class IceChattingActivity extends AppCompatActivity {
                             String before_uid;
                             String type; // 1 이면 only 텍스트, 2면 only 이모티콘, 3은 둘다
                             int emoticon = 0, likeNo;
-                            boolean isLike;
+                            boolean isLike, who;
 
 
                             ArrayList<IceChattingData> tmp = new ArrayList();
@@ -415,12 +417,12 @@ public class IceChattingActivity extends AppCompatActivity {
                                                 dto.setIsSamePerson(IceChattingData.AskPersonInfo.ANOTHER_TEXT_WHIT_EMOTION);
                                             }
 
-                                            getUserInfo(uid, dto.getMsg(), emoticon, dto.getIsSamePerson(), ""+post.getKey(), tmp.size(), isLike, likeNo);
+                                            getUserInfo(uid, dto.getMsg(), emoticon, dto.getIsSamePerson(), ""+post.getKey(), tmp.size(), isLike, likeNo, setColor(likeNo, who));
                                         }
                                     }
 
 
-                                    tmp.add(new IceChattingData( "", "", dto.getMsg() , dto.getIsSamePerson(), emoticon, post.getKey(), isLike, likeNo));
+                                    tmp.add(new IceChattingData( "", "", dto.getMsg() , dto.getIsSamePerson(), emoticon, post.getKey(), isLike, likeNo, setColor(likeNo, who)));
 
                                     if(tmp.size() == cnt){
                                         if(tmp.get(cnt-1).personInfo ==  IceChattingData.AskPersonInfo.SAME ||
@@ -455,7 +457,7 @@ public class IceChattingActivity extends AppCompatActivity {
     }
 
 
-    public void getUserInfo(String uid, final String msg, final int emoticon, final IceChattingData.AskPersonInfo IsSamePerson, final String key, final int index, final boolean isLike, final int likeNo){
+    public void getUserInfo(String uid, final String msg, final int emoticon, final IceChattingData.AskPersonInfo IsSamePerson, final String key, final int index, final boolean isLike, final int likeNo, final int color){
 
         ref2.child(uid).addListenerForSingleValueEvent(new ValueEventListener() {
             String nickName;
@@ -472,7 +474,7 @@ public class IceChattingActivity extends AppCompatActivity {
                         photo = "https://firebasestorage.googleapis.com/v0/b/tvtalk-c4d50.appspot.com/o/profile%2Fuser.png?alt=media&token=85a3c04e-07da-4ec8-b10b-6717edc2eefe";
                     }
 
-                    IceChattingData iceChattingData =  new IceChattingData( photo , nickName, msg , IsSamePerson , emoticon, key, isLike, likeNo);
+                    IceChattingData iceChattingData =  new IceChattingData( photo , nickName, msg , IsSamePerson , emoticon, key, isLike, likeNo, color);
 
                     datas.set(index, iceChattingData);
 
@@ -489,7 +491,8 @@ public class IceChattingActivity extends AppCompatActivity {
                                         syncList.get(i).anotherEmoticon ,
                                         syncList.get(i).getKey(),
                                         syncList.get(i).isLike(),
-                                        syncList.get(i).likeNo
+                                        syncList.get(i).likeNo,
+                                        syncList.get(i).getColor()
                                 ));
                                 break;
                             }
@@ -592,22 +595,22 @@ public class IceChattingActivity extends AppCompatActivity {
                     || datas.get(i).personInfo == IceChattingData.AskPersonInfo.SAME_EMOTION){
                 if(datas.get(i).personInfo == IceChattingData.AskPersonInfo.ME_TEXT_WHIT_EMOTION){
 
-                    syncList.add(new IceChattingData("","", datas.get(i).getAnotherTextMessage(), IceChattingData.AskPersonInfo.ME, 0, datas.get(i).getKey(), datas.get(i).isLike, datas.get(i).likeNo));
+                    syncList.add(new IceChattingData("","", datas.get(i).getAnotherTextMessage(), IceChattingData.AskPersonInfo.ME, 0, datas.get(i).getKey(), datas.get(i).isLike, datas.get(i).likeNo, datas.get(i).color));
                 }else if(datas.get(i).personInfo == IceChattingData.AskPersonInfo.ANOTHER_TEXT_WHIT_EMOTION){
 
-                    syncList.add(new IceChattingData(datas.get(i).anotherProfileImage, datas.get(i).anotherName, datas.get(i).getAnotherTextMessage(), IceChattingData.AskPersonInfo.ANOTHER, 0, datas.get(i).getKey(), datas.get(i).isLike, datas.get(i).likeNo));
+                    syncList.add(new IceChattingData(datas.get(i).anotherProfileImage, datas.get(i).anotherName, datas.get(i).getAnotherTextMessage(), IceChattingData.AskPersonInfo.ANOTHER, 0, datas.get(i).getKey(), datas.get(i).isLike, datas.get(i).likeNo, datas.get(i).color));
                 }else if(datas.get(i).personInfo == IceChattingData.AskPersonInfo.ANOTHER_TEXT_WHIT_EMOTION_CONTINUE){
                     if(datas.get(before).personInfo == IceChattingData.AskPersonInfo.ANOTHER_EMOTION){
-                        syncList.add(new IceChattingData(datas.get(before).anotherProfileImage, datas.get(before).anotherName, datas.get(i).getAnotherTextMessage(), IceChattingData.AskPersonInfo.ANOTHER, 0, datas.get(i).getKey(), datas.get(i).isLike, datas.get(i).likeNo));
+                        syncList.add(new IceChattingData(datas.get(before).anotherProfileImage, datas.get(before).anotherName, datas.get(i).getAnotherTextMessage(), IceChattingData.AskPersonInfo.ANOTHER, 0, datas.get(i).getKey(), datas.get(i).isLike, datas.get(i).likeNo, datas.get(i).color));
                     }
                     else{
-                        syncList.add(new IceChattingData("", "", datas.get(i).getAnotherTextMessage(), IceChattingData.AskPersonInfo.SAME, 0, datas.get(i).getKey(), datas.get(i).isLike, datas.get(i).likeNo));
+                        syncList.add(new IceChattingData("", "", datas.get(i).getAnotherTextMessage(), IceChattingData.AskPersonInfo.SAME, 0, datas.get(i).getKey(), datas.get(i).isLike, datas.get(i).likeNo, datas.get(i).color));
                     }
                 }
             }else{
                 if(datas.get(i).personInfo == IceChattingData.AskPersonInfo.SAME){
                     if(datas.get(before).personInfo == IceChattingData.AskPersonInfo.ANOTHER_EMOTION){
-                        syncList.add(new IceChattingData(datas.get(before).anotherProfileImage, datas.get(before).anotherName, datas.get(i).getAnotherTextMessage(), IceChattingData.AskPersonInfo.ANOTHER, 0, datas.get(i).getKey(), datas.get(i).isLike, datas.get(i).likeNo));
+                        syncList.add(new IceChattingData(datas.get(before).anotherProfileImage, datas.get(before).anotherName, datas.get(i).getAnotherTextMessage(), IceChattingData.AskPersonInfo.ANOTHER, 0, datas.get(i).getKey(), datas.get(i).isLike, datas.get(i).likeNo, datas.get(i).color));
                     }else{
                         syncList.add(datas.get(i));
                     }
@@ -660,5 +663,35 @@ public class IceChattingActivity extends AppCompatActivity {
             @Override
             public void onCancelled(DatabaseError databaseError) {}
         });
+    }
+
+    public int setColor(int likeNo, boolean me){
+        if(maxLikeNum < 8){
+            return 0;
+        }else{
+            int rest = maxLikeNum % 8;
+            int cut_line = (maxLikeNum - rest)/8;
+            for(int i = 1; i <=8; i++){
+                if(i == 1){
+                    if(likeNo >= 0 && likeNo <= cut_line*i + rest){
+                        if(me){
+
+                        }else{
+
+                        }
+                    }
+                }else{
+                    if(likeNo >= i*cut_line + rest && likeNo < (i+1)*cut_line + rest){
+                        if(me){
+
+                        }else{
+
+                        }
+                    }
+                }
+            }
+
+            return 0;
+        }
     }
 }
