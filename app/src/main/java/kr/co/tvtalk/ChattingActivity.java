@@ -657,10 +657,11 @@ public class ChattingActivity extends AppCompatActivity {
         clickEmotionNo = emotion;
 
         if( emoticonImg != 0) {//이모티콘 누를 시 영역띄우기
-            Glide.with(this).load(emoticonImg).into(emotionPreview);
+            emotionPreview.setImageResource(emoticonImg);
 
             sendBtn.setVisibility(View.VISIBLE);
             emotionPreviewArea.setVisibility(View.VISIBLE);
+
         }
         else if( System.currentTimeMillis() < emotionLastClick+1000) { // 1초 이내로 2번 클릭 시
 

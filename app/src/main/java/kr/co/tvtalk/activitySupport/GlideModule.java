@@ -19,8 +19,6 @@ public class GlideModule implements com.bumptech.glide.module.GlideModule{
 
     @Override
     public void applyOptions(Context context, GlideBuilder builder) {
-        if(true)
-            return ;
         builder.setDiskCache(new ExternalCacheDiskCacheFactory(context,"cache",DISK_CACHE_SIZE))
                 .setMemoryCache(new LruResourceCache(cacheSize))
                 .setDecodeFormat(DecodeFormat.PREFER_ARGB_8888); // default가 4444인데 8888로 변경.
