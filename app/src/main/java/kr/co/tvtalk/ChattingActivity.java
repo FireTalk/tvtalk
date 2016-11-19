@@ -61,7 +61,7 @@ import kr.co.tvtalk.activitySupport.chatting.emotion.EmotionPagerAdapter;
 
 
 public class ChattingActivity extends AppCompatActivity {
-    private static final ChattingObserver observer = ChattingObserver.getInstance();
+//    private static final ChattingObserver observer = ChattingObserver.getInstance();
 
     public static ChattingActivity instance;
     private static boolean isLiveActivity = false;
@@ -109,7 +109,7 @@ public class ChattingActivity extends AppCompatActivity {
     @Bind(R.id.viewpager)
     ViewPager viewPager;
 
-
+    private static int dataCount;
 
     private static int status=0;
 
@@ -180,7 +180,7 @@ public class ChattingActivity extends AppCompatActivity {
         ref = db.getReference().child("chat/"+key+"_"+order);//채팅방 db reference
         ref2= db.getReference().child("member");// 회원 db reference
 
-
+        getCount();
         ref.limitToLast(100).addChildEventListener(new ChildEventListener() {
             String uid; // 회원 고유값
             String before_uid;
@@ -845,7 +845,11 @@ public class ChattingActivity extends AppCompatActivity {
 
         adapter.notifyDataSetChanged();
 
-        if(datas.size()==100) recyclerView.scrollToPosition(99);
+        if(dataCount < 100){
+            recyclerView.scrollToPosition(dataCount - 1);
+        }else {
+            if(datas.size()==100) recyclerView.scrollToPosition(99);
+        }
 
 
         /* adapter에 item이 몇 개 있는지 조건문에서 사용하기 위하여 값을 받아옴. */
@@ -983,5 +987,17 @@ public class ChattingActivity extends AppCompatActivity {
     public void hideKeybroad(View v) {
         if( inputMethodManager.isAcceptingText() )  // 만약 키보드가 활성화중이라면
             inputMethodManager.hideSoftInputFromWindow(typingMessage.getWindowToken(), 0);
+    }
+
+    public void getCount(){
+        ref.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot data) {
+                dataCount  = (int)data.getChildrenCount();
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {}
+        });
     }
 }
