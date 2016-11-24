@@ -114,13 +114,8 @@ public class LoginAfterActivity extends AppCompatActivity {
 
             requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE},
                     MY_PERMISSION_REQUEST_STORAGE);
-
-            // MY_PERMISSION_REQUEST_STORAGE is an
-            // app-defined int constant
-
         } else {
             Log.e(TAG, "permission deny");
-            writeFile();
         }
     }
 
@@ -131,44 +126,26 @@ public class LoginAfterActivity extends AppCompatActivity {
                 if (grantResults[0] == PackageManager.PERMISSION_GRANTED
                         && grantResults[1] == PackageManager.PERMISSION_GRANTED) {
 
-                    writeFile();
-
-                    // permission was granted, yay! do the
-                    // calendar task you need to do.
-
                 } else {
 
                     Log.d(TAG, "Permission always deny");
 
-                    // permission denied, boo! Disable the
-                    // functionality that depends on this permission.
                 }
                 break;
         }
     }
-    private void writeFile() {
-        File file = new File(Environment.getExternalStorageDirectory().getPath() + File.separator + "temp.txt");
-        try {
-            Log.d(TAG, "create new File : " + file.createNewFile());
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_app_permission, menu);
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
+
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             return true;
         }
@@ -222,7 +199,7 @@ public class LoginAfterActivity extends AppCompatActivity {
 
     private static final int PICK_FROM_CAMER = 0;
     private static final int PICK_FROM_ALBUM = 1;
-    private static final int CROP_FROM_IMAGE = 2;
+    private static final int base_image = 2;
     Uri uri;
 
     //사진 촬영 이미지 가져오기
@@ -242,7 +219,8 @@ public class LoginAfterActivity extends AppCompatActivity {
 
     //디폴트 이미지 가져오기
     public void TakeDefaultAction(){
-
+        Intent intent = new Intent(this, LoginAfterActivity.class);
+        startActivityForResult(intent, base_image);
     }
 
 
@@ -354,6 +332,40 @@ public class LoginAfterActivity extends AppCompatActivity {
                     }
                 });
             }
+        } else if(requestCode == base_image){
+            final FirebaseUser user = auth.getCurrentUser();
+
+            Glide.with(this).load("https://firebasestorage.googleapis.com/v0/b/tvtalk-c4d50.appspot.com/o/profile%2Fuser.png?alt=media&token=85a3c04e-07da-4ec8-b10b-6717edc2eefe").into(img);
+
+            profileRef = storageReference.child("profile/"+user.getUid()+".png");
+
+            profileRef.putFile(uri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                @Override
+                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                    final Uri downloadUrl = taskSnapshot.getDownloadUrl();
+
+                    UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
+                            .setPhotoUri(downloadUrl)
+                            .build();
+
+                    user.updateProfile(profileUpdates)
+                            .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                @Override
+                                public void onComplete(@NonNull Task<Void> task) {
+                                    if (task.isSuccessful()) {
+                                        Ref.child(user.getUid()+"/profile").setValue("null");
+                                        Toast.makeText(LoginAfterActivity.this, "변경완료", Toast.LENGTH_SHORT).show();
+                                    }
+                                }
+                            });
+
+                }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    Toast.makeText(LoginAfterActivity.this, "네트워크 상태가 불안정합니다.", Toast.LENGTH_SHORT).show();
+                }
+            });
         }
     }
 
