@@ -7,7 +7,7 @@
     <RelativeLayout
         android:id="@+id/findpw_action_bar"
         android:layout_width="match_parent"
-        android:layout_height="46dp"
+        android:layout_height="@dimen/findpw_findpw_action_bar_height"
         android:background="@drawable/underline_bar"
         >
         <ImageView
@@ -15,7 +15,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/back_btn"
-            android:padding="13dp"
+            android:padding="@dimen/findpw_findpw_back_btn_padding"
             android:layout_centerVertical="true"
             />
         <TextView
@@ -24,7 +24,7 @@
             android:layout_centerHorizontal="true"
             android:layout_centerVertical="true"
             android:text="비밀번호 찾기"
-            android:textSize="15sp"
+            android:textSize="@dimen/findpw_findpw_first_textSize"
             android:textStyle="bold"
             />
     </RelativeLayout>
@@ -33,30 +33,30 @@
         android:layout_height="match_parent"
         android:layout_below="@id/findpw_action_bar"
         android:gravity="center_vertical"
-        android:layout_marginBottom="80dp"
+        android:layout_marginBottom="@dimen/findpw_second_marginB"
         >
         <EditText
             android:id="@+id/findpw_email_edit"
             android:inputType="textEmailAddress"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginRight="50dp"
-            android:layout_marginLeft="50dp"
+            android:layout_marginRight="@dimen/findpw_findpw_email_edit_marginRL"
+            android:layout_marginLeft="@dimen/findpw_findpw_email_edit_marginRL"
             android:backgroundTint="#252525"
             android:hint="hottalk@hotmail.com"
-            android:paddingLeft="53dp"
-            android:paddingBottom="18dp"
-            android:textSize="14sp"
+            android:paddingLeft="@dimen/findpw_findpw_email_edit_paddingL"
+            android:paddingBottom="@dimen/findpw_findpw_email_edit_paddingB"
+            android:textSize="@dimen/findpw_findpw_email_edit_textS"
             android:textColor="#252525"
             />
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="14sp"
+            android:textSize="@dimen/findpw_first_textSize"
             android:text="아이디"
             android:layout_alignLeft="@id/findpw_email_edit"
             android:layout_alignBaseline="@id/findpw_email_edit"
-            android:layout_marginLeft="2dp"
+            android:layout_marginLeft="@dimen/findpw_first_marginL"
             android:textColor="#252525"
             />
 
@@ -68,11 +68,11 @@
             android:textColor="#ffffff"
             android:background="#252525"
             android:onClick="confirm_request"
-            android:layout_marginRight="50dp"
-            android:layout_marginLeft="50dp"
-            android:layout_marginTop="20dp"
+            android:layout_marginRight="@dimen/findpw_confirm_request_marginLR"
+            android:layout_marginLeft="@dimen/findpw_confirm_request_marginLR"
+            android:layout_marginTop="@dimen/findpw_confirm_request_marginT"
             android:layout_below="@id/findpw_email_edit"
-            android:textSize="14sp"
+            android:textSize="@dimen/findpw_confirm_request_textSize"
             />
     </RelativeLayout>
 </RelativeLayout>

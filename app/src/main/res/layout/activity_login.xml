@@ -8,21 +8,21 @@
     >
     <ImageView
         android:id="@+id/login_logo"
-        android:layout_width="96dp"
-        android:layout_height="96dp"
+        android:layout_width="@dimen/login_login_logo_widthheight"
+        android:layout_height="@dimen/login_login_logo_widthheight"
         android:layout_centerHorizontal="true"
         android:src="@drawable/user"
-        android:layout_marginTop="95dp"
+        android:layout_marginTop="@dimen/login_login_logo_marginT"
         />
     <TextView
         android:id="@+id/login_description"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="LOGIN"
-        android:textSize="36sp"
+        android:textSize="@dimen/login_login_description_textSize"
         android:layout_centerHorizontal="true"
         android:layout_below="@id/login_logo"
-        android:layout_marginTop="5dp"
+        android:layout_marginTop="@dimen/login_login_description_marginT"
         android:textColor="#252525"
         />
     <EditText
@@ -31,15 +31,15 @@
         android:layout_height="wrap_content"
         android:inputType="textEmailAddress"
         android:hint="hottalk@hotmail.com"
-        android:paddingLeft="63dp"
+        android:paddingLeft="@dimen/login_email_id_paddingL"
         android:backgroundTint="#252525"
         android:textColorHint="#4d252525"
         android:layout_below="@id/login_description"
-        android:layout_marginTop="30dp"
-        android:layout_marginRight="30dp"
-        android:layout_marginLeft="30dp"
-        android:paddingBottom="15dp"
-        android:textSize="14sp"
+        android:layout_marginTop="@dimen/login_email_id_marginTRL"
+        android:layout_marginRight="@dimen/login_email_id_marginTRL"
+        android:layout_marginLeft="@dimen/login_email_id_marginTRL"
+        android:paddingBottom="@dimen/login_email_id_paddingB"
+        android:textSize="@dimen/login_email_id_textSize"
         />
     <TextView
         android:id="@+id/id_description"
@@ -49,8 +49,8 @@
         android:layout_alignBaseline="@id/email_id"
         android:textColor="#252525"
         android:text="아이디"
-        android:textSize="14sp"
-        android:layout_marginLeft="2dp"
+        android:textSize="@dimen/login_id_description_textSize"
+        android:layout_marginLeft="@dimen/login_id_description_marginL"
         />
 
     <EditText
@@ -59,15 +59,15 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:inputType="textPassword"
-        android:paddingLeft="63dp"
-        android:paddingBottom="15dp"
+        android:paddingLeft="@dimen/login_password_paddingL"
+        android:paddingBottom="@dimen/login_password_paddingB"
         android:hint="영문,숫자 혼용 6~12자리"
         android:backgroundTint="#252525"
         android:textColorHint="#4d252525"
         android:layout_centerVertical="true"
-        android:layout_marginRight="30dp"
-        android:layout_marginLeft="30dp"
-        android:textSize="14sp"
+        android:layout_marginRight="@dimen/login_password_marginLR"
+        android:layout_marginLeft="@dimen/login_password_marginLR"
+        android:textSize="@dimen/login_password_textSize"
         />
     <TextView
         android:id="@+id/password_description"
@@ -77,43 +77,43 @@
         android:textColor="#252525"
         android:layout_alignBaseline="@id/password"
         android:layout_alignLeft="@id/password"
-        android:textSize="14sp"
-        android:layout_marginLeft="2dp"
+        android:textSize="@dimen/login_password_description_textSize"
+        android:layout_marginLeft="@dimen/login_password_description_marginL"
         />
 
     <Button
         android:id="@+id/login_btn"
         android:layout_below="@id/password"
         android:layout_width="match_parent"
-        android:layout_height="50dp"
+        android:layout_height="@dimen/login_login_btn_height"
         android:text="로그인"
         android:textColor="#252525"
         android:background="@drawable/registent_button"
-        android:layout_marginRight="30dp"
-        android:layout_marginLeft="30dp"
-        android:layout_marginTop="15dp"
+        android:layout_marginRight="@dimen/login_login_btn_marginRL"
+        android:layout_marginLeft="@dimen/login_login_btn_marginRL"
+        android:layout_marginTop="@dimen/login_login_btn_marginT"
         />
     <Button
         android:id="@+id/register_btn"
         android:layout_width="match_parent"
-        android:layout_marginTop="6dp"
-        android:layout_height="50dp"
+        android:layout_marginTop="@dimen/login_register_btn_marginT"
+        android:layout_height="@dimen/login_register_btn_height"
         android:layout_below="@id/login_btn"
         android:text="회원가입"
         android:textColor="#ffffff"
         android:background="#252525"
-        android:layout_marginRight="30dp"
-        android:layout_marginLeft="30dp"
+        android:layout_marginRight="@dimen/login_register_btn_marginRL"
+        android:layout_marginLeft="@dimen/login_register_btn_marginRL"
         />
     <LinearLayout
         android:id="@+id/register_linear"
         android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:layout_marginRight="30dp"
-        android:layout_marginLeft="30dp"
+        android:layout_height="@dimen/login_register_linear_height"
+        android:layout_marginRight="@dimen/login_register_linear_marginRL"
+        android:layout_marginLeft="@dimen/login_register_linear_marginRL"
         android:weightSum="2"
         android:layout_below="@id/login_btn"
-        android:layout_marginTop="6dp"
+        android:layout_marginTop="@dimen/login_register_linear_marginT"
         android:visibility="gone"
         >
 
@@ -125,8 +125,8 @@
             android:background="#233edb"
             android:text="페이스북"
             android:textColor="#ffffff"
-            android:textSize="14sp"
-            android:layout_marginRight="3dp"
+            android:textSize="@dimen/login_register_facebook_btn_textSize"
+            android:layout_marginRight="@dimen/login_register_facebook_btn_marginR"
             />
 
         <Button
@@ -136,22 +136,22 @@
             android:layout_weight="1"
             android:background="#ff0453"
             android:text="이메일 인증"
-            android:textSize="14sp"
+            android:textSize="@dimen/login_register_email_btn_textSize"
             android:textColor="#ffffff"
-            android:layout_marginLeft="3dp"
+            android:layout_marginLeft="@dimen/login_register_email_btn_marginL"
             />
     </LinearLayout>
     <TextView
         android:id="@+id/forget_password"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="14sp"
+        android:textSize="@dimen/login_forget_password_textSize"
         android:text="비밀번호를 잊어버리셨나요?"
         android:layout_centerHorizontal="true"
         android:layout_below="@id/login_btn"
-        android:layout_marginTop="62dp"
+        android:layout_marginTop="@dimen/login_forget_password_marginT"
         android:textColor="#252525"
-        android:padding="10dp"
+        android:padding="@dimen/login_forget_password_padding"
         android:backgroundTint="#252525"
         />
 

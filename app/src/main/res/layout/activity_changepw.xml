@@ -10,7 +10,7 @@
     <RelativeLayout
         android:id="@+id/changePW_action_bar"
         android:layout_width="match_parent"
-        android:layout_height="46dp"
+        android:layout_height="@dimen/changepw_changePW_action_bar_height"
         android:background="@drawable/underline_bar"
         >
         <ImageView
@@ -18,7 +18,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/back_btn"
-            android:padding="13dp"
+            android:padding="@dimen/changepw_changePW_back_btn_padding"
             android:layout_centerVertical="true"
             />
         <TextView
@@ -27,7 +27,7 @@
             android:layout_centerHorizontal="true"
             android:layout_centerVertical="true"
             android:text="비밀번호 변경하기"
-            android:textSize="15sp"
+            android:textSize="@dimen/changepw_first_textSize"
             android:textStyle="bold"
             />
     </RelativeLayout>
@@ -37,21 +37,21 @@
         android:layout_height="match_parent"
         android:layout_below="@id/changePW_action_bar"
         android:gravity="center_vertical"
-        android:layout_marginBottom="60dp">
+        android:layout_marginBottom="@dimen/changepw_second_marginB">
 
         <EditText
             android:id="@+id/changePW_current"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingLeft="63dp"
-            android:paddingBottom="15dp"
+            android:paddingLeft="@dimen/changepw_changePW_current_paddingL"
+            android:paddingBottom="@dimen/changepw_changePW_current_paddingB"
             android:hint="영문, 숫자 혼용 4~6자리"
             android:backgroundTint="#252525"
             android:textColorHint="#4d252525"
             android:layout_centerVertical="true"
-            android:layout_marginRight="30dp"
-            android:layout_marginLeft="30dp"
-            android:textSize="14sp"
+            android:layout_marginRight="@dimen/changepw_changePW_current_marginRL"
+            android:layout_marginLeft="@dimen/changepw_changePW_current_marginRL"
+            android:textSize="@dimen/changepw_changePW_current_textSize"
             android:inputType="textPassword"
             />
         <TextView
@@ -62,23 +62,23 @@
             android:textColor="#252525"
             android:layout_alignBaseline="@id/changePW_current"
             android:layout_alignLeft="@id/changePW_current"
-            android:textSize="14sp"
-            android:layout_marginLeft="2dp"
+            android:textSize="@dimen/changepw_changePW_currentText_textSize"
+            android:layout_marginLeft="@dimen/changepw_changePW_currentText_marginL"
             />
         <EditText
             android:id="@+id/changePW_new"
             android:layout_below="@id/changePW_current"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingLeft="63dp"
-            android:paddingBottom="15dp"
+            android:paddingLeft="@dimen/changepw_changePW_new_paddingL"
+            android:paddingBottom="@dimen/changepw_changePW_new_paddingB"
             android:hint="변경할 비번을 입력하세요."
             android:backgroundTint="#252525"
             android:textColorHint="#4d252525"
             android:layout_centerVertical="true"
-            android:layout_marginRight="30dp"
-            android:layout_marginLeft="30dp"
-            android:textSize="14sp"
+            android:layout_marginRight="@dimen/changepw_changePW_new_marginRL"
+            android:layout_marginLeft="@dimen/changepw_changePW_new_marginRL"
+            android:textSize="@dimen/changepw_changePW_new_textSize"
             android:inputType="textPassword"
             />
         <TextView
@@ -89,22 +89,22 @@
             android:textColor="#252525"
             android:layout_alignBaseline="@id/changePW_new"
             android:layout_alignLeft="@id/changePW_new"
-            android:textSize="14sp"
-            android:layout_marginLeft="2dp"
+            android:textSize="@dimen/changepw_changePW_newText_textSize"
+            android:layout_marginLeft="@dimen/changepw_changePW_newText_marginL"
             />
         <EditText
             android:id="@+id/changePW_more"
             android:layout_below="@id/changePW_new"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingLeft="63dp"
-            android:paddingBottom="15dp"
+            android:paddingLeft="@dimen/changepw_changePW_more_paddingL"
+            android:paddingBottom="@dimen/changepw_changePW_more_paddingB"
             android:hint="다시 한번 입력해주세요."
             android:backgroundTint="#252525"
             android:textColorHint="#4d252525"
-            android:layout_marginRight="30dp"
-            android:layout_marginLeft="30dp"
-            android:textSize="14sp"
+            android:layout_marginRight="@dimen/changepw_changePW_more_marginRL"
+            android:layout_marginLeft="@dimen/changepw_changePW_more_marginRL"
+            android:textSize="@dimen/changepw_changePW_more_textSize"
             android:inputType="textPassword"
             />
         <TextView
@@ -115,20 +115,20 @@
             android:textColor="#252525"
             android:layout_alignBaseline="@id/changePW_more"
             android:layout_alignLeft="@id/changePW_more"
-            android:textSize="14sp"
-            android:layout_marginLeft="2dp"
+            android:textSize="@dimen/changepw_changePW_moreText_textSize"
+            android:layout_marginLeft="@dimen/changepw_changePW_moreText_marginL"
             />
         <Button
             android:id="@+id/changePW_BTN"
             android:layout_below="@id/changePW_more"
             android:layout_width="match_parent"
-            android:layout_height="50dp"
+            android:layout_height="@dimen/changepw_changePW_BTN_height"
             android:text="비밀번호 변경하기"
             android:textColor="#252525"
             android:background="@drawable/registent_button"
-            android:layout_marginRight="30dp"
-            android:layout_marginLeft="30dp"
-            android:layout_marginTop="20dp"
+            android:layout_marginRight="@dimen/changepw_changePW_BTN_marginRL"
+            android:layout_marginLeft="@dimen/changepw_changePW_BTN_marginRL"
+            android:layout_marginTop="@dimen/changepw_changePW_BTN_marginT"
             />
     </RelativeLayout>
 
