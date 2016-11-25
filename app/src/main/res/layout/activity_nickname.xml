@@ -7,7 +7,7 @@
     <RelativeLayout
         android:id="@+id/nickname_action_bar"
         android:layout_width="match_parent"
-        android:layout_height="46dp"
+        android:layout_height="@dimen/nickname_nickname_action_bar_height"
         android:background="@drawable/underline_bar"
         >
         <ImageView
@@ -15,7 +15,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/back_btn"
-            android:padding="13dp"
+            android:padding="@dimen/nickname_nickname_back_btn_padding"
             android:layout_centerVertical="true"
             />
         <TextView
@@ -24,7 +24,7 @@
             android:layout_centerHorizontal="true"
             android:layout_centerVertical="true"
             android:text="닉네임 변경하기"
-            android:textSize="15sp"
+            android:textSize="@dimen/nickname_first_text"
             android:textStyle="bold"
             />
     </RelativeLayout>
@@ -32,21 +32,21 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@id/nickname_action_bar"
-        android:layout_marginBottom="100dp"
+        android:layout_marginBottom="@dimen/nickname_second_marginBottom"
         >
         <TextView
             android:id="@+id/nickname_current"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingLeft="63dp"
-            android:paddingBottom="10dp"
+            android:paddingLeft="@dimen/nickname_nickname_current_paddingLeft"
+            android:paddingBottom="@dimen/nickname_nickname_current_paddingBottom"
             android:text="테디아"
             android:textColor="#252525"
             android:backgroundTint="#252525"
             android:layout_centerVertical="true"
-            android:layout_marginRight="30dp"
-            android:layout_marginLeft="30dp"
-            android:textSize="14sp"
+            android:layout_marginRight="@dimen/nickname_nickname_current_marginRL"
+            android:layout_marginLeft="@dimen/nickname_nickname_current_marginRL"
+            android:textSize="@dimen/nickname_nickname_current_textSize"
             />
         <TextView
             android:id="@+id/nickname_currentText"
@@ -54,16 +54,16 @@
             android:layout_height="wrap_content"
             android:text="현재별명"
             android:textColor="#252525"
-            android:textSize="14sp"
+            android:textSize="@dimen/nickname_nickname_currentText_textSize"
             android:layout_alignBaseline="@+id/nickname_current"
             android:layout_alignLeft="@+id/nickname_current"
             />
         <View
             android:layout_below = "@id/nickname_current"
-            android:layout_height="1dip"
+            android:layout_height="@dimen/nickname_third_height"
             android:layout_width="fill_parent"
-            android:layout_marginRight="30dp"
-            android:layout_marginLeft="30dp"
+            android:layout_marginRight="@dimen/nickname_third_marginRL"
+            android:layout_marginLeft="@dimen/nickname_third_marginRL"
             android:background="#252525" />
 
         <EditText
@@ -71,15 +71,15 @@
             android:layout_below="@id/nickname_current"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingLeft="63dp"
-            android:paddingBottom="15dp"
+            android:paddingLeft="@dimen/nickname_nickname_new_paddingL"
+            android:paddingBottom="@dimen/nickname_nickname_new_paddingB"
             android:hint="변경할 닉네임을 입력하세요."
             android:backgroundTint="#252525"
             android:textColorHint="#4d252525"
             android:layout_centerVertical="true"
-            android:layout_marginRight="30dp"
-            android:layout_marginLeft="30dp"
-            android:textSize="14sp"
+            android:layout_marginRight="@dimen/nickname_nickname_new_marginRL"
+            android:layout_marginLeft="@dimen/nickname_nickname_new_marginRL"
+            android:textSize="@dimen/nickname_nickname_new_textSize"
             />
         <TextView
             android:id="@+id/nickname_newText"
@@ -89,21 +89,21 @@
             android:textColor="#252525"
             android:layout_alignBaseline="@id/nickname_new"
             android:layout_alignLeft="@id/nickname_new"
-            android:textSize="14sp"
-            android:layout_marginLeft="2dp"
+            android:textSize="@dimen/nickname_nickname_newText_textSize"
+            android:layout_marginLeft="@dimen/nickanme_nickname_newText_marginL"
             />
         <Button
             android:id="@+id/nickname_changeBTN"
             android:layout_below="@id/nickname_new"
             android:layout_width="match_parent"
-            android:layout_height="50dp"
+            android:layout_height="@dimen/nickname_nickname_changeBTN_height"
             android:text="닉네임 변경하기"
             android:textColor="#252525"
             android:background="@drawable/registent_button"
-            android:layout_marginRight="30dp"
-            android:layout_marginLeft="30dp"
-            android:layout_marginTop="20dp"
-            android:layout_marginBottom="20dp"
+            android:layout_marginRight="@dimen/nickname_nickname_changeBTN_marginRL"
+            android:layout_marginLeft="@dimen/nickname_nickname_changeBTN_marginRL"
+            android:layout_marginTop="@dimen/nickname_nickname_changBTN_marginTB"
+            android:layout_marginBottom="@dimen/nickname_nickname_changBTN_marginTB"
             />
 
 

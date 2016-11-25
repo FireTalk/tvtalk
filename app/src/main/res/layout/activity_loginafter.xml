@@ -9,7 +9,7 @@
     <RelativeLayout
         android:id="@+id/loginafter_action_bar"
         android:layout_width="match_parent"
-        android:layout_height="46dp"
+        android:layout_height="@dimen/loginafter_loginafter_action_bar_height"
         android:background="@drawable/underline_bar"
         >
         <ImageView
@@ -17,7 +17,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/back_btn"
-            android:padding="13dp"
+            android:padding="@dimen/loginafter_loginafter_back_btn_padding"
             android:layout_centerVertical="true"
             />
         <TextView
@@ -26,16 +26,16 @@
             android:layout_centerHorizontal="true"
             android:layout_centerVertical="true"
             android:text="계정정보 변경"
-            android:textSize="15sp"
+            android:textSize="@dimen/loginafter_first_textSize"
             android:textStyle="bold"
             />
     </RelativeLayout>
     <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/profile_image"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
+        android:layout_width="@dimen/loginafter_profile_image_widthheight"
+        android:layout_height="@dimen/loginafter_profile_image_widthheight"
         android:src="@drawable/user"
-        android:layout_marginTop="65dp"
+        android:layout_marginTop="@dimen/loginafter_profile_image_marginT"
         android:layout_below="@+id/loginafter_action_bar"
         android:layout_centerHorizontal="true" />
 
@@ -53,17 +53,17 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="테디아"
-            android:textSize="36sp"
-            android:layout_marginTop="5dp"
+            android:textSize="@dimen/loginafter_profile_name_textSize"
+            android:layout_marginTop="@dimen/loginafter_profile_name_marginT"
             android:textColor="#252525"
             />
         <ImageView
             android:id="@+id/name_repair"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
+            android:layout_width="@dimen/loginafter_name_repair_widthheight"
+            android:layout_height="@dimen/loginafter_name_repair_widthheight"
             android:background="@drawable/capa_1"
             android:layout_gravity="center_vertical"
-            android:layout_marginLeft="5dp"
+            android:layout_marginLeft="@dimen/loginafter_name_repair_marginL"
              />
     </LinearLayout>
 
@@ -72,15 +72,15 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="hottalk@hotmail.com"
-        android:paddingLeft="63dp"
+        android:paddingLeft="@dimen/loginafter_login_email_id_paddingL"
         android:backgroundTint="#252525"
         android:textColor="#252525"
         android:layout_below="@id/profile_layout"
-        android:layout_marginTop="40dp"
-        android:layout_marginRight="30dp"
-        android:layout_marginLeft="30dp"
-        android:paddingBottom="10dp"
-        android:textSize="18sp"
+        android:layout_marginTop="@dimen/loginafter_login_email_id_marginT"
+        android:layout_marginRight="@dimen/loginafter_login_email_id_marginLR"
+        android:layout_marginLeft="@dimen/loginafter_login_email_id_marginLR"
+        android:paddingBottom="@dimen/loginafter_login_email_id_paddingB"
+        android:textSize="@dimen/loginafter_login_email_id_textSize"
         />
     <TextView
         android:id="@+id/login_id_description"
@@ -90,40 +90,40 @@
         android:layout_alignBaseline="@id/login_email_id"
         android:textColor="#252525"
         android:text="아이디"
-        android:textSize="18sp"
-        android:layout_marginLeft="2dp"
+        android:textSize="@dimen/loginafter_login_id_description_textSize"
+        android:layout_marginLeft="@dimen/loginafter_login_id_description_marginL"
         />
     <View
         android:layout_below = "@id/login_email_id"
-        android:layout_height="1dip"
+        android:layout_height="@dimen/loginafter_login_email_id_height"
         android:layout_width="fill_parent"
-        android:layout_marginRight="30dp"
-        android:layout_marginLeft="30dp"
+        android:layout_marginRight="@dimen/loginafter_login_email_id_marginRL"
+        android:layout_marginLeft="@dimen/loginafter_login_email_id_marginRL"
         android:background="#252525" />
 
     <Button
         android:id="@+id/login_repair_btn"
         android:layout_below="@id/login_email_id"
         android:layout_width="match_parent"
-        android:layout_height="50dp"
+        android:layout_height="@dimen/loginafter_login_repair_btn_height"
         android:text="비밀번호 변경하기"
         android:textColor="#252525"
         android:background="@drawable/registent_button"
-        android:layout_marginRight="30dp"
-        android:layout_marginLeft="30dp"
-        android:layout_marginTop="30dp"
+        android:layout_marginRight="@dimen/loginafter_login_repair_btn_marginRLT"
+        android:layout_marginLeft="@dimen/loginafter_login_repair_btn_marginRLT"
+        android:layout_marginTop="@dimen/loginafter_login_repair_btn_marginRLT"
         />
     <Button
         android:id="@+id/logout_btn"
         android:layout_width="match_parent"
-        android:layout_marginTop="6dp"
-        android:layout_height="50dp"
+        android:layout_marginTop="@dimen/loginafter_logout_btn_marginT"
+        android:layout_height="@dimen/loginafter_logout_btn_height"
         android:layout_below="@id/login_repair_btn"
         android:text="로그아웃"
         android:textColor="#ffffff"
         android:background="#252525"
-        android:layout_marginRight="30dp"
-        android:layout_marginLeft="30dp"
+        android:layout_marginRight="@dimen/loginafter_logout_btn_marginRL"
+        android:layout_marginLeft="@dimen/loginafter_logout_btn_marginRL"
         />
 
 

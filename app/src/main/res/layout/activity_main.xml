@@ -8,14 +8,14 @@
     <RelativeLayout
         android:id="@+id/main_action_bar"
         android:layout_width="match_parent"
-        android:layout_height="46dp"
+        android:layout_height="@dimen/main_main_action_bar_height"
         android:background="@drawable/underline_bar"
         >
         <ImageView
             android:id="@+id/is_login"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:padding="12dp"
+            android:padding="@dimen/main_is_login_padding"
             android:src="@drawable/icon_login_on"
             android:layout_centerVertical="true"
             />
@@ -32,7 +32,7 @@
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:padding="12dp"
+            android:padding="@dimen/main_imageView_padding"
             android:src="@drawable/icon_setting"
             android:layout_alignBottom="@+id/is_login"
             android:layout_alignParentRight="true"
@@ -46,20 +46,20 @@
         android:layout_below="@id/main_action_bar"
         />
     <View
-        android:layout_width="1dp"
+        android:layout_width="@dimen/main_first_width"
         android:layout_height="match_parent"
         android:layout_centerHorizontal="true"
         android:layout_below="@id/main_action_bar"
         android:background="#07000000"
         />
     <View
-        android:layout_width="12dp"
+        android:layout_width="@dimen/main_second_width"
         android:layout_height="match_parent"
         android:layout_below="@id/main_action_bar"
         android:background="#fafafa"
         />
     <View
-        android:layout_width="12dp"
+        android:layout_width="@dimen/main_third_width"
         android:layout_height="match_parent"
         android:layout_below="@id/main_action_bar"
         android:background="#fafafa"
@@ -68,8 +68,8 @@
     <com.github.rahatarmanahmed.cpv.CircularProgressView
         xmlns:app="http://schemas.android.com/apk/res-auto"
         android:id="@+id/am_progress"
-        android:layout_width="70dp"
-        android:layout_height="70dp"
+        android:layout_width="@dimen/main_am_progress_widthheight"
+        android:layout_height="@dimen/main_am_progress_widthheight"
         app:cpv_indeterminate="true"
         app:cpv_animAutostart="true"
         android:layout_centerVertical="true"
