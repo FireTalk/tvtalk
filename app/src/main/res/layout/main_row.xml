@@ -16,7 +16,7 @@
         android:scaleType="fitXY"
         android:id="@+id/broadcast_image"
         android:layout_width="match_parent"
-        android:layout_height="214dp"
+        android:layout_height="@dimen/main_row_broadcast_image_height"
         android:layout_marginBottom="@dimen/main_row_second_marginB"
         />
 
