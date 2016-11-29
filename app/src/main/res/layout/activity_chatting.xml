@@ -9,7 +9,7 @@
     <RelativeLayout
         android:id="@+id/catting_action_bar"
         android:layout_width="match_parent"
-        android:layout_height="46dp"
+        android:layout_height="@dimen/chatting_catting_action_bar_height"
         android:background="@drawable/underline_bar"
         >
         <ImageView
@@ -17,7 +17,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/back_btn"
-            android:padding="13dp"
+            android:padding="@dimen/chatting_catting_back_btn"
             android:layout_centerVertical="true"
             />
         <TextView
@@ -27,7 +27,7 @@
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
             android:text="질투의 화신 3화"
-            android:textSize="17sp"
+            android:textSize="@dimen/chatting_talking_room_title"
             android:textColor="#252525"
             />
         <ImageView
@@ -36,13 +36,13 @@
             android:src="@drawable/icon_blackclock"
             android:layout_centerVertical="true"
             android:layout_toLeftOf="@id/talking_room_title"
-            android:layout_marginRight="4dp"
+            android:layout_marginRight="@dimen/chatting_first_image"
             />
         <ImageView
             android:id="@+id/is_emotion_true"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:padding="11dp"
+            android:padding="@dimen/chatting_is_emotion_true_false"
             android:layout_alignParentEnd="true"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
@@ -52,7 +52,7 @@
             android:id="@+id/is_emotion_false"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:padding="11dp"
+            android:padding="@dimen/chatting_is_emotion_true_false"
             android:layout_alignParentEnd="true"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
@@ -65,46 +65,46 @@
         android:layout_below="@id/catting_action_bar"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginBottom="40dp"
+        android:layout_marginBottom="@dimen/chatting_chatting_recyclerview_marginB"
         android:scrollbars="vertical"
-        android:paddingRight="14dp"
-        android:paddingLeft="14dp"
+        android:paddingRight="@dimen/chatting_chatting_recyclerview_paddingRL"
+        android:paddingLeft="@dimen/chatting_chatting_recyclerview_paddingRL"
     />
 
     <RelativeLayout
         android:id="@+id/chatting_preview"
         android:layout_width="match_parent"
-        android:layout_height="56dp"
-        android:layout_marginRight="14dp"
-        android:layout_marginLeft="14dp"
+        android:layout_height="@dimen/chatting_preview_height"
+        android:layout_marginRight="@dimen/chatting_preview_marginRL"
+        android:layout_marginLeft="@dimen/chatting_preview_marginRL"
         android:layout_alignBottom="@id/chatting_recyclerview"
-        android:layout_marginBottom="14.6dp"
+        android:layout_marginBottom="@dimen/chatting_marginB"
         android:visibility="gone"
         android:background="@drawable/preview_box"
         >
         <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/preview_profile_image"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
+            android:layout_width="@dimen/chatting_preview_imageWH"
+            android:layout_height="@dimen/chatting_preview_imageWH"
             android:layout_centerVertical="true"
-            android:layout_marginLeft="9.6dp"
+            android:layout_marginLeft="@dimen/chatting_marginL"
             />
         <TextView
             android:id="@+id/preview_text_message"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginTop="12dp"
-            android:layout_marginBottom="12dp"
-            android:layout_marginRight="43.4dp"
+            android:layout_marginTop="@dimen/chatting_preview_text_message_maginTB"
+            android:layout_marginBottom="@dimen/chatting_preview_text_message_maginTB"
+            android:layout_marginRight="@dimen/chatting_preview_text_message_marginR"
             android:layout_toRightOf="@id/preview_profile_image"
-            android:layout_marginLeft="11dp"
-            android:textSize="12sp"
+            android:layout_marginLeft="@dimen/chatting_preview_text_message_marginL"
+            android:textSize="@dimen/chatting_preview_text_message_textSize"
             />
         <ImageView
             android:id="@+id/preview_arrow_btn"
-            android:layout_width="16dp"
-            android:layout_height="13dp"
-            android:layout_marginRight="10.9dp"
+            android:layout_width="@dimen/chatting_preview_arrow_btn_width"
+            android:layout_height="@dimen/chatting_preview_arrow_btn_height"
+            android:layout_marginRight="@dimen/chatting_preview_arrow_btn_marginR"
             android:src="@drawable/preview_arrow_btn"
             android:layout_centerVertical="true"
             android:layout_alignParentRight="true"
@@ -115,7 +115,7 @@
     <RelativeLayout
         android:id="@+id/emotion_preview_area"
         android:layout_width="match_parent"
-        android:layout_height="110dp"
+        android:layout_height="@dimen/chatting_emotion_preview_area_height"
         android:layout_above="@+id/input_form"
         android:background="#b3000000"
         android:visibility="gone"
@@ -126,7 +126,7 @@
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:layout_centerHorizontal="true"
-            android:layout_margin="18dp"
+            android:layout_margin="@dimen/chatting_emotion_prview_margin"
             />
         <ImageView
             android:layout_width="wrap_content"
@@ -136,14 +136,14 @@
             android:clickable="true"
             android:onClick="goneEmoticon"
             android:layout_alignParentRight="true"
-            android:layout_margin="10dp"/>
+            android:layout_margin="@dimen/chatting_second_margin"/>
 
     </RelativeLayout>
 
     <RelativeLayout
         android:id="@+id/emotion_area"
         android:layout_width="match_parent"
-        android:layout_height="227dp"
+        android:layout_height="@dimen/chatting_emotion_area_height"
         android:background="#f8f8f8"
         android:layout_alignParentBottom="true"
         android:visibility="gone"
@@ -154,7 +154,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
-            android:layout_marginBottom="30dp"
+            android:layout_marginBottom="@dimen/chatting_viewpager_marginB"
             />
         <!--<com.matthewtamlin.sliding_intro_screen_library.indicators.DotIndicator-->
             <!--android:id="@+id/dotindicator"-->
@@ -173,37 +173,37 @@
     <RelativeLayout
         android:id="@+id/input_form"
         android:layout_width="match_parent"
-        android:layout_height="40dp"
+        android:layout_height="@dimen/chatting_input_form_height"
         android:background="#F8F8F8"
-        android:paddingLeft="5dp"
-        android:paddingRight="5dp"
+        android:paddingLeft="@dimen/chatting_input_formRL"
+        android:paddingRight="@dimen/chatting_input_formRL"
 
         android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true">
         <ImageView
             android:id="@+id/icon_btn"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
+            android:layout_width="@dimen/chatting_icon_btnWH"
+            android:layout_height="@dimen/chatting_icon_btnWH"
             android:src="@drawable/icon_login_on"
-            android:padding="7dp"
-            android:layout_marginLeft="-5dp"
+            android:padding="@dimen/chatting_icon_btn_padding"
+            android:layout_marginLeft="@dimen/chatting_icon_btn_marginL"
             android:layout_centerVertical="true"
             />
         <EditText
             android:id="@+id/typing_message"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:maxHeight="100dp"
-            android:paddingTop="2dp"
-            android:paddingBottom="2dp"
-            android:paddingLeft="8dp"
+            android:maxHeight="@dimen/chatting_typing_message_maxHeight"
+            android:paddingTop="@dimen/chatting_typing_messageTB"
+            android:paddingBottom="@dimen/chatting_typing_messageTB"
+            android:paddingLeft="@dimen/chatting_typing_message_paddingL"
             android:background="@drawable/white"
             android:layout_centerVertical="true"
             android:focusableInTouchMode="true"
-            android:layout_marginLeft="34dp"
-            android:paddingRight="34dp"
-            android:textSize="13sp"
+            android:layout_marginLeft="@dimen/chatting_typing_message_marginL"
+            android:paddingRight="@dimen/chatting_typing_message_paddingR"
+            android:textSize="@dimen/chatting_typing_message_textSize"
             />
         <TextView
             android:id="@+id/send_btn"
@@ -212,7 +212,7 @@
             android:layout_alignParentRight="true"
             android:layout_alignParentBottom="true"
             android:text="보내기"
-            android:layout_marginRight="4dp"
+            android:layout_marginRight="@dimen/chtting_send_btn_marginR"
             android:layout_alignBaseline="@id/typing_message"
             android:visibility="gone"
             />
