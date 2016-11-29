@@ -223,6 +223,6 @@
     <dimen name="main_row_broadcast_kind_of_height">21dp</dimen>
     <dimen name="main_row_broadcast_description_textSize">18sp</dimen>
     <dimen name="main_row_broadcast_description_marginL">6dp</dimen>
-
+    <dimen name="main_row_broadcast_image_height">321dp</dimen>
 
 </resources>
